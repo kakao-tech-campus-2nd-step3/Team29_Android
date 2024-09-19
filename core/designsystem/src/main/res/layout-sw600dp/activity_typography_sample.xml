@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/notaiBackgroundDefault"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        style="@style/ExtraBold56"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ExtraBold 56"
+        android:textColor="@color/black" />
+
+
+    <TextView
+        style="@style/Bold56"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bold 56"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Bold36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bold 36"
+        android:textColor="@color/black" />
+
+
+    <TextView
+        style="@style/SemiBold24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SemiBold 24"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Medium24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium 24"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Light24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Light 24"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/ExtraLight24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ExtraLight 24"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Thin24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thin 24"
+        android:textColor="@color/black" />
+
+
+    <TextView
+        style="@style/Medium16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium 16"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Medium14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medium 14"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Regular12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regular 12"
+        android:textColor="@color/black" />
+
+
+    <TextView
+        style="@style/Regular9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regular 9"
+        android:textColor="@color/black" />
+
+    <TextView
+        style="@style/Regular8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regular 8 " />
+
+
+</LinearLayout>

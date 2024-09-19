@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application android:theme="@style/AppTheme">
+        <activity
+            android:name=".sample.DashBoardSampleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".sample.LoginSampleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".sample.TypographySampleActivity"
+            android:exported="false" />
+    </application>
+
 </manifest>

@@ -1,0 +1,27 @@
+<resources>
+    <!-- Primary Colors -->
+    <color name="blue_90">#1E90FF</color>  <!-- Blue90 -->
+    <color name="blue_10">#F0F8FF</color>  <!-- Blue10 -->
+    <color name="light_blue_90">#ADD8E6</color>  <!-- LightBlue90 -->
+    <color name="light_blue_10">#EFF7FA</color>  <!-- LightBlue10 -->
+
+    <!-- Background Colors -->
+    <color name="white">#FFFFFF</color>  <!-- White -->
+    <color name="grey_90">#F9F9F9</color>  <!-- Grey90 -->
+    <color name="grey_80">#F8F8F8</color>  <!-- Grey80 -->
+    <color name="grey_70">#F1F3F5</color>  <!-- Grey70 -->
+    <color name="grey_60">#D3D3D3</color>  <!-- Grey60 -->
+
+    <!-- Common Colors -->
+    <color name="blue_50">#1E90FF</color>  <!-- Blue50 -->
+    <color name="blue_20">#D5E6F6</color>  <!-- Blue20 -->
+    <color name="grey_50">#696969</color>  <!-- Grey50 -->
+    <color name="grey_40">#E2E2E2</color>  <!-- Grey40 -->
+
+    <!-- Text Colors -->
+    <color name="black">#000000</color>  <!-- Black -->
+    <color name="grey_30">#757575</color>  <!-- Grey30 -->
+    <color name="grey_20">#A9A9A9</color>  <!-- Grey20 -->
+    <color name="white_text">#FFFFFF</color>  <!-- WhiteText -->
+    <color name="navy">#363853</color>  <!-- Navy -->
+</resources>
