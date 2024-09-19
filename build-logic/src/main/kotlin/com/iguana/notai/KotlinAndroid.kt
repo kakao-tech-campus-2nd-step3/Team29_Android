@@ -52,6 +52,8 @@ internal fun Project.configureKotlinAndroid() {
 
     dependencies {
         add("coreLibraryDesugaring", libs.findLibrary("android.desugarJdkLibs").get())
+        // Material Components 추가
+        add("implementation", libs.findLibrary("material").get())
     }
 }
 

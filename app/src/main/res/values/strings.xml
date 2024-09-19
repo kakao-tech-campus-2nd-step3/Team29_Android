@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">notai</string>
+    <string name="kakao_native_key">c9aaf8bac87ce149276160e19b5e6e63</string>
 </resources>

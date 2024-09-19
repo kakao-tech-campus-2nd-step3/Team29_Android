@@ -1,4 +1,5 @@
 import com.iguana.notai.configureHiltAndroid
+import com.iguana.notai.configureKotestAndroid
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.getByType
 
@@ -14,6 +15,7 @@ android {
 }
 
 configureHiltAndroid()
+configureKotestAndroid()
 
 dependencies {
     // VersionCatalogsExtension을 통해 libs를 가져옵니다
