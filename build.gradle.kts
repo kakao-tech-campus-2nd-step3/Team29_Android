@@ -24,3 +24,4 @@ plugins {
 }
 
 apply(plugin="com.vanniktech.dependency.graph.generator")
+
