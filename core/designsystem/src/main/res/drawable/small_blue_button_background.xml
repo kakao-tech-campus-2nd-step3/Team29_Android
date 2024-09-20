@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 모서리 둥글게 설정 -->
+    <corners android:radius="12dp"/>
+    <!-- 버튼 배경 색상 (활성화된 상태 - 파란색) -->
+    <solid android:color="@color/blue_90"/> <!-- PrimaryMainColor -->
+</shape>

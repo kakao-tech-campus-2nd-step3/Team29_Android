@@ -1,0 +1,27 @@
+<resources>
+    <!-- Primary Colors -->
+    <color name="blue_90">#1E90FF</color>  <!-- Blue90 -->
+    <color name="blue_10">#F0F8FF</color>  <!-- Blue10 -->
+    <color name="light_blue_90">#ADD8E6</color>  <!-- LightBlue90 -->
+    <color name="light_blue_10">#EFF7FA</color>  <!-- LightBlue10 -->
+
+    <!-- Background Colors (밝기 순으로 정렬된 그레이 색상) -->
+    <color name="white">#FFFFFF</color>  <!-- White (완전 흰색) -->
+    <color name="grey_90">#F8F8F8</color>  <!-- Grey90 (가장 밝은 회색) -->
+    <color name="grey_80">#F9F9F9</color>  <!-- Grey80 (밝은 회색) -->
+    <color name="grey_70">#F1F3F5</color>  <!-- Grey70 (중간 밝기의 회색) -->
+    <color name="grey_60">#E2E2E2</color>  <!-- Grey60 (밝은 회색) -->
+    <color name="grey_50">#D3D3D3</color>  <!-- Grey50 (중간 밝기의 회색) -->
+    <color name="grey_40">#A9A9A9</color>  <!-- Grey40 (좀 더 어두운 회색) -->
+    <color name="grey_30">#757575</color>  <!-- Grey30 (어두운 회색) -->
+    <color name="grey_20">#696969</color>  <!-- Grey20 (더 어두운 회색) -->
+
+    <!-- Common Colors -->
+    <color name="blue_50">#1E90FF</color>  <!-- Blue50 -->
+    <color name="blue_20">#D5E6F6</color>  <!-- Blue20 -->
+
+    <!-- Text Colors -->
+    <color name="black">#000000</color>  <!-- Black (가장 어두운 색상) -->
+    <color name="white_text">#FFFFFF</color>  <!-- WhiteText (가장 밝은 색상) -->
+    <color name="navy">#363853</color>  <!-- Navy (어두운 네이비 색상) -->
+</resources>

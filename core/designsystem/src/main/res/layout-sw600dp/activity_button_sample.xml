@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".sample.ButtonSampleActivity"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/button1_layout" />
+
+    <include layout="@layout/button2_layout" />
+
+    <include layout="@layout/button3_layout" />
+
+    <include layout="@layout/button4_layout" />
+
+    <include layout="@layout/small_button_blue_layout" />
+    <include layout="@layout/small_button_grey_layout" />
+    <include layout="@layout/small_more_button_layout" />
+
+
+</LinearLayout>
