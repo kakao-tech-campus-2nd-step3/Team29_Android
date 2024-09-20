@@ -1,0 +1,45 @@
+<!-- res/layout/activity_sample.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/Bold24"
+        android:text="폰트 적용 테스트"
+    />
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button4_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:layout_margin="8dp">
+
+        <!-- 아이콘 (좌측) -->
+        <ImageView
+            android:id="@+id/buttonIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ai_active" />
+
+        <!-- 텍스트 (AI 요약하기) -->
+        <TextView
+            android:id="@+id/buttonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="AI 요약하기"
+            style="@style/Regular9" />
+    </LinearLayout>
+
+
+</LinearLayout>

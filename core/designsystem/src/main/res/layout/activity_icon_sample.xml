@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/editActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_edit_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/editInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_edit_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/textActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_text_active" />
+
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/textInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_text_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/aiActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_ai_active" />
+
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/aiInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_ai_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/recordActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_record_active" />
+
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/recordInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_record_inactive" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/userActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_user_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/userInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_user_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/dashActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_dash_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/dashInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_dash_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/savedActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_saved_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/savedInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_saved_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/settingsActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_setting_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/settingsInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_setting_inactive" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <!-- 활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/folderActiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="활성화"
+            android:src="@drawable/ic_folder_active" />
+        <!-- 비활성화된 아이콘 (기본) -->
+        <ImageView
+            android:id="@+id/folderInactiveSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="비활성화"
+            android:src="@drawable/ic_folder_inactive" />
+    </LinearLayout>
+</LinearLayout>

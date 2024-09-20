@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="332dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/stt_box_background"
+    android:orientation="vertical"
+    android:paddingVertical="24dp"
+    android:paddingHorizontal="24dp"
+    android:gravity="center_horizontal"
+    tools:ignore="MissingDefaultResource">
+
+    <!-- 내용 (텍스트, 버튼 등) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:text="여기엔 STT 적힌 텍스트가 들어값니다. 실시간으로 텍스트가 적힐 것 같아요. "
+        style="@style/Regular8" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <!-- 비활성화된 버튼 -->
+        <include layout="@layout/small_button_grey_layout" />
+        <!-- 활성화된 버튼 -->
+        <include layout="@layout/small_button_blue_layout" />
+
+    </LinearLayout>
+
+</LinearLayout>
