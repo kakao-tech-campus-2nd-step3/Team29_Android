@@ -2,9 +2,42 @@
     <!-- Base application theme. -->
     <style name="Theme.Notai" parent="Theme.Material3.DayNight.NoActionBar" />
 
-
     <style name="Theme.Notai.TransparentSystemBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.Notai.AppTheme">
+        <!-- Primary colors -->
+        <item name="notaiColorPrimary">@color/blue_90</item> <!-- 메인 포인트 컬러 (일부 버튼)-->
+        <item name="notaiColorPrimaryVariant">@color/blue_10</item> <!-- 연하늘색 컴포넌트 배경  -->
+        <!-- Secondary colors -->
+        <item name="notaiColorSecondary">@color/light_blue_90</item>
+        <item name="notaiColorSecondaryVariant">@color/light_blue_10</item> <!-- sideBar 에서 활성화된 버튼 배경 -->
+
+        <!-- Background colors -->
+        <item name="notaiBackgroundPDF">@color/grey_90</item> <!-- PDF 옆 빈 공간 배경색 (BackgroundPDFColor) -->
+        <item name="notaiBackgroundButtonSet">@color/grey_80</item> <!-- 필기 화면에서 버튼셋의 배경색 (BackgroundCardColor) -->
+        <item name="notaiBackgroundDefault">@color/white</item> <!-- BackgroundWhiteColor 로그인 외 다른 화면 백그라운드 컬러(화이트)-->
+        <item name="notaiBackgroundLogin">@color/grey_70</item> <!-- BackgroundCoolGreyColor 로그인 백그라운드 컬러 (쿨그레이)-->
+
+        <!-- Border colors -->
+        <item name="notaiBorderColor">@color/grey_50</item> <!-- BorderColor (테두리, 경계선) -->
+
+        <!-- Button colors -->
+        <item name="notaiButtonColorActiveBorder">@color/blue_50</item> <!-- ActiveButtonBorderColor (아이콘 활성화 시 테두리)-->
+        <item name="notaiButtonColorActiveBackground">@color/blue_20</item> <!-- ActiveButtonBackgroundColor (아이콘 활성화 시 배경)-->
+        <item name="notaiButtonColorInactiveBorder">@color/grey_30</item> <!-- InactiveButtonBorderColor (아이콘 비활성화 시 테두리)-->
+        <item name="notaiButtonColorInactiveBackground">@color/grey_40</item> <!-- InactiveButtonBackgroundColor (아이콘 비활성화 시 배경)-->
+
+        <!-- Text colors -->
+        <item name="notaiTextColorPrimary">@color/black</item> <!-- TextBlackColor -->
+        <item name="notaiTextColorSecondary">@color/grey_20</item> <!-- TextSubtextColor -->
+        <item name="notaiTextColorDisabled">@color/grey_30</item> <!-- TextDisabledColor -->
+        <item name="notaiTextColorComponent">@color/white_text</item> <!-- TextComponentColor -->
+        <item name="notaiTextColorNavy">@color/navy</item> <!-- TextNavyColor -->
+
+        <!-- Font settings (Pretendard 적용) -->
+        <item name="android:fontFamily">@font/pretendard_regular</item>
     </style>
 </resources>
