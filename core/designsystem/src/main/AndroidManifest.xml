@@ -3,6 +3,9 @@
 
     <application android:theme="@style/AppTheme">
         <activity
+            android:name=".sample.ComponentSampleActivity"
+            android:exported="false" />
+        <activity
             android:name=".sample.ButtonSampleActivity"
             android:exported="false" />
         <activity

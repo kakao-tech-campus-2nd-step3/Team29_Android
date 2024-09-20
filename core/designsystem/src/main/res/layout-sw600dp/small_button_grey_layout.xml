@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="128dp"
+    android:layout_width="112dp"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
+    android:paddingHorizontal="4dp"
     android:paddingVertical="12dp"
     android:background="@drawable/small_grey_button_background"
     android:layout_margin="8dp"

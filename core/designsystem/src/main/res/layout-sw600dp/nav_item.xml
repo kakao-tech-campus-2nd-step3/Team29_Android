@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="16dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/nav_item_background"
+    tools:ignore="MissingDefaultResource">
+
+    <!-- 아이콘 -->
+    <ImageView
+        android:id="@+id/navIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_dash_selector"
+        android:layout_marginEnd="12dp" />
+
+    <!-- 텍스트 -->
+    <TextView
+        android:id="@+id/navText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="대시보드"
+        android:textColor="?attr/notaiTextColorDisabled"
+        android:textSize="16sp"
+        android:fontFamily="@font/pretendard_regular" />
+</LinearLayout>

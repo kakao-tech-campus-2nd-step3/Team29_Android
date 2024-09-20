@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="AI 요약 노트 보러가기"
         android:textColor="@android:color/black"
-        style="@style/Medium16" />
+        style="@style/Medium14" />
 
     <Space
         android:layout_width="20dp"
