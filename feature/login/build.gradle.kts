@@ -26,6 +26,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(project(":core:data"))
 
     kapt("com.google.dagger:hilt-compiler:2.44")
 }
