@@ -102,6 +102,7 @@
         <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">@dimen/text_size_8</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
     <!-- 그 외 -->

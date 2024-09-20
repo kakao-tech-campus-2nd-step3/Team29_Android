@@ -3,6 +3,9 @@
 
     <application android:theme="@style/AppTheme">
         <activity
+            android:name=".sample.IconSampleActivity"
+            android:exported="false" />
+        <activity
             android:name=".sample.DashBoardSampleActivity"
             android:exported="false" />
         <activity

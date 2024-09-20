@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="420dp"
+    android:layout_height="210dp"
+    android:background="@drawable/card_background"
+    android:orientation="horizontal"
+    android:paddingHorizontal="36dp"
+    android:paddingVertical="32dp">
+    <!-- 텍스트 부분 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- 타이틀 부분 포함 -->
+        <include layout="@layout/card_title_layout" />
+
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="강의 노트에서 AI 요약 기능을 활용한 요약 노트 목록을 볼 수 있어요 🤩 요약은 녹음, 강의자료, 필기를 통합하여 요약되었어요."
+            android:textColor="?attr/notaiTextColorDisabled"
+            style="@style/Regular8" />
+    </LinearLayout>
+</LinearLayout>
