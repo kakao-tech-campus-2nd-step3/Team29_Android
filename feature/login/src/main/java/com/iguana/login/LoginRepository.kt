@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class LoginRepository @Inject constructor(
-    private val loginApi: LoginApi,
+    private val loginApi: com.iguana.data.remote.api.LoginApi,
     @ApplicationContext private val context: Context
 ) {
     companion object {
@@ -37,7 +37,11 @@ class LoginRepository @Inject constructor(
 
     suspend fun sendKakaoToken(token: String): Boolean = withContext(Dispatchers.IO) {
         try {
-            val response = loginApi.sendKakaoToken(KakaoTokenRequest(token))
+            val response = loginApi.sendKakaoToken(
+                com.iguana.data.remote.api.KakaoTokenRequest(
+                    token
+                )
+            )
             if (response.isSuccessful) {
                 response.body()?.let { loginResponse ->
                     saveTokens(loginResponse)
@@ -51,7 +55,7 @@ class LoginRepository @Inject constructor(
         }
     }
 
-    private fun saveTokens(loginResponse: LoginResponse) {
+    private fun saveTokens(loginResponse: com.iguana.data.remote.api.LoginResponse) {
         sharedPreferences.edit().apply {
             putString(KEY_ACCESS_TOKEN, loginResponse.accessToken)
             putString(KEY_REFRESH_TOKEN, loginResponse.refreshToken)

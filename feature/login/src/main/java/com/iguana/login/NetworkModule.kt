@@ -25,8 +25,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
+    fun provideLoginApi(retrofit: Retrofit): com.iguana.data.remote.api.LoginApi {
+        return retrofit.create(com.iguana.data.remote.api.LoginApi::class.java)
     }
 
     @Provides
