@@ -1,4 +1,4 @@
-package com.iguana.login
+package com.iguana.data.di
 
 import android.content.Context
 import dagger.Module
