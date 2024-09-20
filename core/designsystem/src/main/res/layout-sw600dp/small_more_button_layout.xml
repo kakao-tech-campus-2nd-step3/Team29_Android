@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="더보기"
-        android:textColor="?attr/notaiTextColorComponent"
+        android:textColor="@color/white"
         style="@style/Regular8" />
 </LinearLayout>

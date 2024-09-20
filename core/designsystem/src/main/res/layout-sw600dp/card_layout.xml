@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="강의 노트에서 AI 요약 기능을 활용한 요약 노트 목록을 볼 수 있어요 🤩 요약은 녹음, 강의자료, 필기를 통합하여 요약되었어요."
-            android:textColor="?attr/notaiTextColorDisabled"
+            android:textColor="@color/grey_20"
             style="@style/Regular8" />
+
     </LinearLayout>
 </LinearLayout>

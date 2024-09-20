@@ -1,7 +1,7 @@
 <resources>
     <declare-styleable name="NotaiCustomTheme">
         <!-- Button Colors -->
-        <attr name="notaiButtonColorActiveBorder" format="color" />
+        <public type="attr" name="notaiButtonColorActiveBorder" format="color" />
         <attr name="notaiButtonColorActiveBackground" format="color" />
         <attr name="notaiButtonColorInactiveBorder" format="color" />
         <attr name="notaiButtonColorInactiveBackground" format="color" />
@@ -9,7 +9,7 @@
         <!-- Border Color -->
         <attr name="notaiBorderColor" format="color" />
 
-        <attr name="notaiColorPrimary" format="color" />
+        <public type="attr"  name="notaiColorPrimary" format="color" />
         <attr name="notaiColorPrimaryVariant" format="color" />
         <attr name="notaiColorSecondary" format="color" />
         <attr name="notaiColorSecondaryVariant" format="color" />

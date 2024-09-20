@@ -32,4 +32,8 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.dashBoard)
     implementation(projects.core.designsystem)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
 }
