@@ -14,6 +14,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -27,6 +28,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(project(":core:data"))
+    implementation(project(":core:designsystem"))
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
 
     kapt("com.google.dagger:hilt-compiler:2.44")
 }
