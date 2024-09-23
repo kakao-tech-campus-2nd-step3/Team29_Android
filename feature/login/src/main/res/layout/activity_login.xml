@@ -27,23 +27,21 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
+                style="@style/SemiBold24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="환영합니다!"
                 android:layout_marginBottom="5dp"
-                android:textColor="@color/text_color_secondary"
-                android:textSize="24sp"
-                android:fontFamily="@font/pretendard_light" />
+                android:textColor="@color/grey_30"/>
 
             <TextView
+                style="@style/ExtraBold56"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:text="NOTAI에 로그인"
-                android:textColor="@color/text_color_primary"
-                android:textSize="56sp"
-                android:fontFamily="@font/pretendard_extrabold" />
+                android:textColor="@color/black" />
 
             <Space
                 android:layout_width="match_parent"
