@@ -1,12 +1,17 @@
 package com.iguana.login
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.data.repository.LoginRepository
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,45 +21,70 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+    val loginState: StateFlow<LoginState> = _loginState
 
-    private val _kakaoLoginUrl = MutableStateFlow<String?>(null)
-    val kakaoLoginUrl: StateFlow<String?> = _kakaoLoginUrl.asStateFlow()
+    private lateinit var context: Context
+    private val TAG = "LoginViewModel"
 
-    init {
-        if (loginRepository.isLoggedIn()) {
-            _loginState.value = LoginState.LoggedIn
-        }
+    fun setContext(context: Context) {
+        this.context = context
     }
 
-    fun getKakaoLoginUrl() {
+    fun loginWithKakao() {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
-            val url = loginRepository.getKakaoLoginUrl()
-            if (url != null) {
-                _kakaoLoginUrl.value = url
-                _loginState.value = LoginState.Idle
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                loginWithKakaoTalk()
             } else {
-                _loginState.value = LoginState.Error("카카오 로그인 URL을 가져오는데 실패했습니다.")
+                loginWithKakaoAccount()
             }
         }
     }
 
-    fun login(token: String) {
-        viewModelScope.launch {
-            _loginState.value = LoginState.Loading
-            val success = loginRepository.sendKakaoToken(token)
-            _loginState.value = if (success) {
-                LoginState.LoggedIn
-            } else {
-                LoginState.Error("로그인에 실패했습니다.")
+    private fun loginWithKakaoTalk() {
+        UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
+            if (error != null) {
+                Log.e(TAG, "카카오톡으로 로그인 실패", error)
+
+                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                    _loginState.value = LoginState.Idle
+                    return@loginWithKakaoTalk
+                }
+
+                loginWithKakaoAccount()
+            } else if (token != null) {
+                Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                login(token.accessToken)
             }
         }
     }
 
-    fun isUserLoggedIn() = loginRepository.isLoggedIn()
+    private fun loginWithKakaoAccount() {
+        UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
+            if (error != null) {
+                Log.e(TAG, "카카오계정으로 로그인 실패", error)
+                _loginState.value = LoginState.Error("로그인에 실패했습니다: ${error.message}")
+            } else if (token != null) {
+                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+                login(token.accessToken)
+            }
+        }
+    }
 
-    fun getAccessToken() = loginRepository.getAccessToken()
+    private fun login(token: String) {
+        viewModelScope.launch {
+            val result = loginRepository.sendKakaoToken(token)
+            if (result) {
+                _loginState.value = LoginState.LoggedIn
+            } else {
+                _loginState.value = LoginState.Error("로그인에 실패했습니다.")
+            }
+        }
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return loginRepository.isLoggedIn()
+    }
 
     sealed class LoginState {
         object Idle : LoginState()

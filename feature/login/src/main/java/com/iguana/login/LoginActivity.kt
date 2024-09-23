@@ -7,10 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.iguana.login.databinding.ActivityLoginBinding
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import android.util.Log
 import kotlinx.coroutines.launch
@@ -28,6 +24,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.login = this
 
+        viewModel.setContext(this)
+
         setupObservers()
         
         // 로그인 상태 확인
@@ -37,44 +35,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun onLoginButtonClicked() {
-        loginWithKakao()
-    }
-
-    private fun loginWithKakao() {
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-            loginWithKakaoTalk()
-        } else {
-            loginWithKakaoAccount()
-        }
-    }
-
-    private fun loginWithKakaoTalk() {
-        UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-            if (error != null) {
-                Log.e(TAG, "카카오톡으로 로그인 실패", error)
-
-                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                    return@loginWithKakaoTalk
-                }
-
-                loginWithKakaoAccount()
-            } else if (token != null) {
-                Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                viewModel.login(token.accessToken)
-            }
-        }
-    }
-
-    private fun loginWithKakaoAccount() {
-        UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
-            if (error != null) {
-                Log.e(TAG, "카카오계정으로 로그인 실패", error)
-                Toast.makeText(this, "로그인에 실패했습니다: ${error.message}", Toast.LENGTH_SHORT).show()
-            } else if (token != null) {
-                Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-                viewModel.login(token.accessToken)
-            }
-        }
+        viewModel.loginWithKakao()
     }
 
     private fun setupObservers() {
