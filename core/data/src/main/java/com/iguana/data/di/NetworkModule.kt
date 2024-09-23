@@ -1,10 +1,8 @@
-package com.iguana.login
+package com.iguana.data.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,13 +23,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideContext(@ApplicationContext context: Context): Context {
-        return context
+    fun provideLoginApi(retrofit: Retrofit): com.iguana.data.remote.api.LoginApi {
+        return retrofit.create(com.iguana.data.remote.api.LoginApi::class.java)
     }
 }
