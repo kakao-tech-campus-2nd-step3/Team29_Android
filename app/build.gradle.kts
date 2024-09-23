@@ -26,10 +26,16 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
 }
 
 dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.dashBoard)
     implementation(projects.core.designsystem)
+    implementation("com.kakao.sdk:v2-user:2.20.6")
 }
