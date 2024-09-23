@@ -1,6 +1,5 @@
 plugins {
     id("iguana.android.library")
-    id("iguana.android.compose")
     id("org.jetbrains.kotlin.android")
 }
 
@@ -10,4 +9,10 @@ android {
 
 dependencies {
     implementation(libs.androidx.appcompat)
+    implementation(projects.core.designsystem)
+    // Test dependencies
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.kotlin.test)
 }

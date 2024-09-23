@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
+
 interface LoginApi {
     @GET("api/members/login/kakao")
     suspend fun getKakaoLoginUrl(): Response<KakaoLoginUrlResponse>

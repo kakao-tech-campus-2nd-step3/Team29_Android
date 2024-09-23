@@ -8,8 +8,8 @@ android {
     namespace = "com.iguana.data"
 }
 dependencies {
-
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.retrofit.gson)
+    implementation(projects.core.domain) // domain 에 있는 걸 구현하므로
 }

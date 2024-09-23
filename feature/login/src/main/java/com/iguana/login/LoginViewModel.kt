@@ -4,8 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.data.repository.LoginRepository
-import com.kakao.sdk.auth.model.OAuthToken
+import com.iguana.domain.repository.LoginRepository
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient

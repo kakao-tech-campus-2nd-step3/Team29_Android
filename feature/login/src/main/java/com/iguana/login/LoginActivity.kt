@@ -45,13 +45,13 @@ class LoginActivity : AppCompatActivity() {
                     is LoginViewModel.LoginState.LoggedIn -> navigateToMainScreen()
                     is LoginViewModel.LoginState.Error -> {
                         Toast.makeText(this@LoginActivity, state.message, Toast.LENGTH_SHORT).show()
-                        binding.btnKakaoLogin.isEnabled = true
+                        binding.btnKakaoLogin?.isEnabled = true
                     }
                     is LoginViewModel.LoginState.Loading -> {
-                        binding.btnKakaoLogin.isEnabled = false
+                        binding.btnKakaoLogin?.isEnabled = false
                     }
                     is LoginViewModel.LoginState.Idle -> {
-                        binding.btnKakaoLogin.isEnabled = true
+                        binding.btnKakaoLogin?.isEnabled = true
                     }
                 }
             }
