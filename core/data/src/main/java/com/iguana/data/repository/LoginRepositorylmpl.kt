@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.KakaoTokenRequest
 import com.iguana.data.remote.api.LoginResponse
-import com.iguana.domain.repository.AuthRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +15,7 @@ import javax.inject.Singleton
 class LoginRepositoryImpl @Inject constructor(
     private val loginApi: LoginApi,
     @ApplicationContext private val context: Context
-) : AuthRepository {
+) : LoginRepository {
 
     companion object {
         private const val PREFS_NAME = "login_prefs"

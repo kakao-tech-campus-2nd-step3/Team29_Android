@@ -2,7 +2,7 @@ package com.iguana.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.domain.repository.AuthRepository
+import com.iguana.data.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val loginRepository: LoginRepository
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
@@ -22,7 +22,7 @@ class LoginViewModel @Inject constructor(
     val kakaoLoginUrl: StateFlow<String?> = _kakaoLoginUrl.asStateFlow()
 
     init {
-        if (authRepository.isLoggedIn()) {
+        if (loginRepository.isLoggedIn()) {
             _loginState.value = LoginState.LoggedIn
         }
     }
@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
     fun getKakaoLoginUrl() {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
-            val url = authRepository.getKakaoLoginUrl()
+            val url = loginRepository.getKakaoLoginUrl()
             if (url != null) {
                 _kakaoLoginUrl.value = url
                 _loginState.value = LoginState.Idle
@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
     fun login(token: String) {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
-            val success = authRepository.sendKakaoToken(token)
+            val success = loginRepository.sendKakaoToken(token)
             _loginState.value = if (success) {
                 LoginState.LoggedIn
             } else {
@@ -52,9 +52,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun isUserLoggedIn() = authRepository.isLoggedIn()
+    fun isUserLoggedIn() = loginRepository.isLoggedIn()
 
-    fun getAccessToken() = authRepository.getAccessToken()
+    fun getAccessToken() = loginRepository.getAccessToken()
 
     sealed class LoginState {
         object Idle : LoginState()

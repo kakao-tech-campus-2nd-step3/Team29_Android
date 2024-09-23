@@ -1,6 +1,6 @@
-package com.iguana.domain.repository
+package com.iguana.data.repository
 
-interface AuthRepository {
+interface LoginRepository {
     suspend fun getKakaoLoginUrl(): String?
     suspend fun sendKakaoToken(token: String): Boolean
     fun getAccessToken(): String?
