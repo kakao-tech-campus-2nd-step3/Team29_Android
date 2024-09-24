@@ -14,18 +14,19 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
+    implementation(projects.core.data)
     implementation(projects.core.domain)
-    implementation(libs.appcompat)
-    implementation(libs.androidx.constraintlayout)
+    implementation(projects.core.designsystem)
     implementation("com.kakao.sdk:v2-user:2.20.6")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
 
-    kapt("com.google.dagger:hilt-compiler:2.44")
+    // Test dependencies
+    androidTestImplementation(libs.androidx.test.ext)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.kotlin.test)
 }
