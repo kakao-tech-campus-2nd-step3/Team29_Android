@@ -23,7 +23,7 @@ internal fun Project.configureKotlinAndroid() {
     // Android settings
     val android = extensions.getByName<BaseExtension>("android")
     android.apply {
-        compileSdkVersion(33)
+        compileSdkVersion(34)
 
         defaultConfig {
             minSdk = 24

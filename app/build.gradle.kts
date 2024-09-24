@@ -1,6 +1,9 @@
 plugins {
     id("iguana.android.application")
     id("org.jetbrains.kotlin.android")
+    id("iguana.android.room")
+    id("iguana.android.hilt")
+    id("iguana.kotlin.hilt")
 }
 
 android {
@@ -34,8 +37,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.login)
-    implementation(projects.feature.dashBoard)
     implementation(projects.core.designsystem)
+    implementation(projects.feature.login)
     implementation("com.kakao.sdk:v2-user:2.20.6")
 }
