@@ -23,6 +23,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.designsystem)
     implementation("com.kakao.sdk:v2-user:2.20.6")
+    implementation(project(":core:ui"))
 
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
