@@ -12,8 +12,8 @@ internal fun Project.configureHiltKotlin() {
     }
     val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
     dependencies {
-        "implementation"(libs.findLibrary("hilt.core").get())
-        "kapt"(libs.findLibrary("hilt.compiler").get())
+        "implementation"(libs.findLibrary("hilt-core").get())
+        "kapt"(libs.findLibrary("hilt-compiler").get())
     }
 }
 

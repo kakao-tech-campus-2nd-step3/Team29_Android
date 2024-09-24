@@ -1,4 +1,6 @@
-package com.iguana.data.repository
+package com.iguana.domain.repository
+
+
 
 interface LoginRepository {
     suspend fun getKakaoLoginUrl(): String?

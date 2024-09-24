@@ -9,7 +9,6 @@ buildscript {
     dependencies {
         // gradlew generateProjectDependencyGraph
         classpath(libs.gradle.dependency.graph.generator.plugin)
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
     }
 }
 

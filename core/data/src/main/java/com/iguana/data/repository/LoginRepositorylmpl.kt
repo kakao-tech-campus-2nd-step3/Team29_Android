@@ -10,8 +10,8 @@ import javax.inject.Singleton
 @Singleton
 class LoginRepositoryImpl @Inject constructor(
     private val loginApi: LoginApi,
-    private val sharedPreferencesHelper: SharedPreferencesHelper
-) : LoginRepository {
+    private val sharedPreferencesHelper: com.iguana.domain.repository.SharedPreferencesHelper
+) : com.iguana.domain.repository.LoginRepository {
 
     override suspend fun getKakaoLoginUrl(): String? = withContext(Dispatchers.IO) {
         try {
