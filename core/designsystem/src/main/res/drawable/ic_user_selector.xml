@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 활성화된 상태 -->
-    <item android:state_selected="true" android:drawable="@drawable/ic_text_active" />
+    <item android:state_selected="true" android:drawable="@drawable/ic_user_active" />
     <!-- 기본(비활성화된) 상태 -->
-    <item android:drawable="@drawable/ic_text_inactive" />
+    <item android:drawable="@drawable/ic_user_inactive" />
 </selector>
