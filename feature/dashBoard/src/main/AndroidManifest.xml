@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".Test"
+            android:name="com.iguana.dashboard.DashBoradFragment"
             android:exported="false" />
     </application>
 
