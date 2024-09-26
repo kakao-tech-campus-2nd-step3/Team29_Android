@@ -35,10 +35,10 @@ class RecentFilesViewModel @Inject constructor(
     private fun addDummyData() {
         viewModelScope.launch {
             val dummyFiles = listOf(
-                RecentFileEntity("1", "프로젝트 계획서.pdf", "file:///dummy/path1", System.currentTimeMillis(), 1),
-                RecentFileEntity("2", "회의록.docx", "file:///dummy/path2", System.currentTimeMillis() - 86400000, 3),
-                RecentFileEntity("3", "분기별 보고서.xlsx", "file:///dummy/path3", System.currentTimeMillis() - 172800000, null),
-                RecentFileEntity("4", "제품 매뉴얼.pdf", "file:///dummy/path4", System.currentTimeMillis() - 259200000, 5)
+                RecentFileEntity("1", "바이오 빅데이터.pdf", "file:///dummy/path1", System.currentTimeMillis(), 1),
+                RecentFileEntity("2", "기계학습.pdf", "file:///dummy/path2", System.currentTimeMillis() - 86400000, 3),
+                RecentFileEntity("3", "유전체 정보학.pdf", "file:///dummy/path3", System.currentTimeMillis() - 172800000, null),
+                RecentFileEntity("4", "의생명 정보과학.pdf", "file:///dummy/path4", System.currentTimeMillis() - 259200000, 5)
             )
             dummyFiles.forEach { recentFileRepository.insertRecentFile(it.id, it.fileName, it.fileUri) }
         }
