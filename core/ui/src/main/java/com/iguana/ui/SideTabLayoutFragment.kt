@@ -5,18 +5,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.iguana.ui.databinding.FragmentSideTabLayoutBinding
 
 class SideTabLayoutFragment : Fragment() {
+
     private var _binding: FragmentSideTabLayoutBinding? = null
     private val binding get() = _binding!!
 
+    private val _selectedItem = MutableLiveData<Int>(0)
+    val selectedItem: LiveData<Int> = _selectedItem
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSideTabLayoutBinding.inflate(inflater, container, false)
+        binding.fragment = this
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.dashboard.setOnClickListener { onDashboardClick() }
+        binding.documents.setOnClickListener { onDocumentsClick() }
+        binding.favorites.setOnClickListener { onFavoritesClick() }
+        binding.profile.setOnClickListener { onProfileClick() }
+        binding.settings.setOnClickListener { onSettingsClick() }
     }
 
     override fun onDestroyView() {
@@ -25,22 +47,23 @@ class SideTabLayoutFragment : Fragment() {
     }
 
     fun onDashboardClick() {
-        // 나중에 DashboardFragment를 추가할 때 구현
+        _selectedItem.value = 0
+        (activity as? BaseActivity)?.showDashBoard()
     }
 
     fun onDocumentsClick() {
-        // 나중에 DocumentsFragment를 추가할 때 구현
+        _selectedItem.value = 1
     }
 
     fun onFavoritesClick() {
-        // 나중에 FavoritesFragment를 추가할 때 구현
+        _selectedItem.value = 2
     }
 
     fun onProfileClick() {
-        // 나중에 ProfileFragment를 추가할 때 구현
+        _selectedItem.value = 3
     }
 
     fun onSettingsClick() {
-        // 나중에 SettingsFragment를 추가할 때 구현
+        _selectedItem.value = 4
     }
 }

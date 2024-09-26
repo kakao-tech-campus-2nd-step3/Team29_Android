@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:onClick="@{() -> fragment.onDashboardClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -50,7 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:onClick="@{() -> fragment.onDocumentsClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -71,7 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:onClick="@{() -> fragment.onFavoritesClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -92,7 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:onClick="@{() -> fragment.onProfileClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -113,7 +117,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:onClick="@{() -> fragment.onSettingsClick()}">
 
             <ImageView
                 android:layout_width="24dp"
