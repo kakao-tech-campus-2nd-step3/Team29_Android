@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application>
+        <activity
+            android:name=".PdfViewerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SampleFilePickerViewModel"
+            android:exported="false" />
+        <activity
+            android:name=".SampleFilePickerActivity"
+            android:exported="true" />
+    </application>
+
 </manifest>
