@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.iguana.ui.databinding.ActivityBaseBinding
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.ui.SideTabLayoutFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBaseBinding
 
