@@ -3,6 +3,9 @@
 
     <application>
         <activity
+            android:name=".NotetakingActivity"
+            android:exported="false" />
+        <activity
             android:name=".PDFBoxActivity"
             android:exported="false" />
         <activity

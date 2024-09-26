@@ -23,5 +23,9 @@
     <!-- Text Colors -->
     <color name="black">#000000</color>  <!-- Black (가장 어두운 색상) -->
     <color name="white_text">#FFFFFF</color>  <!-- WhiteText (가장 밝은 색상) -->
-    <color name="navy">#363853</color>  <!-- Navy (어두운 네이비 색상) -->
+    <color name="navy">#363853</color>
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>  <!-- Navy (어두운 네이비 색상) -->
 </resources>
