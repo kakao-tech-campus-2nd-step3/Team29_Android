@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
         <variable
             name="fragment"
@@ -29,7 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:background="@drawable/nav_item_background"
+            android:selected="@{fragment.selectedItem == 0}"
+            android:onClick="@{() -> fragment.onDashboardClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -50,7 +52,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:background="@drawable/nav_item_background"
+            android:selected="@{fragment.selectedItem == 1}"
+            android:onClick="@{() -> fragment.onDocumentsClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -71,7 +76,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:background="@drawable/nav_item_background"
+            android:selected="@{fragment.selectedItem == 2}"
+            android:onClick="@{() -> fragment.onFavoritesClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -92,7 +100,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:background="@drawable/nav_item_background"
+            android:selected="@{fragment.selectedItem == 3}"
+            android:onClick="@{() -> fragment.onProfileClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -113,7 +124,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:background="@drawable/nav_item_background"
+            android:selected="@{fragment.selectedItem == 4}"
+            android:onClick="@{() -> fragment.onSettingsClick()}">
 
             <ImageView
                 android:layout_width="24dp"
@@ -127,10 +141,6 @@
                 android:layout_height="wrap_content"
                 android:text="설정"
                 android:paddingStart="8dp" />
-
         </LinearLayout>
-
-
     </LinearLayout>
-
 </layout>
