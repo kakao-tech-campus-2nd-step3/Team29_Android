@@ -13,6 +13,8 @@ gradleDependencyGraphGeneratorPlugin = "0.8.0"
 room = "2.5.2"
 hilt = "2.46.1"
 hiltNavigationCompose = "1.0.0"
+pdfbox = "2.0.27.0"
+jp2 = "1.0.3"
 
 okhttp = "4.11.0"
 retrofit = "2.9.0"
@@ -51,6 +53,10 @@ material = "1.9.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 appcompat = "1.7.0"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.8.6"
+lifecycleViewmodelKtx = "2.8.6"
+fragmentKtx = "1.5.6"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -134,6 +140,12 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+pdfbox = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfbox"}
+jp2-android = { group = "com.gemalto.jp2", name = "jp2-android", version.ref = "jp2"}
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 
 [bundles]
 
