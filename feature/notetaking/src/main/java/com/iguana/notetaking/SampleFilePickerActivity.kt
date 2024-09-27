@@ -43,6 +43,7 @@ class SampleFilePickerActivity : AppCompatActivity() {
                     // 선택된 파일을 NotetakingActivity Activity 로 전달
                     val intent = Intent(this, NotetakingActivity::class.java)
                     intent.putExtra("PDF_URI", uri.toString())  // Uri를 전달
+                    intent.putExtra("PDF_TITLE", fileName)  // 파일 이름을 전달
                     startActivity(intent)
                 } else {
                     Toast.makeText(this, "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
