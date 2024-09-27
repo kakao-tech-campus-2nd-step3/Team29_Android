@@ -2,6 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.iguana.notetaking.NotetakingViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,15 +46,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintWidth_percent="0.75" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <!-- 사이드바 프라그먼트 (Default: Closed) TODO : visibility 변수화-->
         <FrameLayout
             android:id="@+id/side_bar_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="visible"
+            android:visibility="@{viewModel.isSideBarVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleBar"
@@ -60,6 +68,7 @@
             android:layout_margin="0dp"
             android:layout_marginTop="72dp"
             android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> viewModel.toggleSideBarVisibility()}"
             android:src="@drawable/slider_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
