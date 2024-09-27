@@ -21,28 +21,25 @@
         layout="@layout/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/pdf_viewer_container"
+        app:layout_constraintBottom_toTopOf="@id/pdf_fragment_container"
         app:layout_constraintEnd_toStartOf="@id/side_bar_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleBar" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- PDF Viewer 프라그먼트 -->
-    <include
-        android:id="@+id/pdf_viewer_container"
-        layout="@layout/fragment_pdf_viewer"
+    <!-- PDF Viewer Fragment Container (동적으로 프래그먼트 추가) -->
+    <FrameLayout
+        android:id="@+id/pdf_fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/grey_90"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/side_bar_container"
-        app:layout_constraintWidth_default="percent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.75"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <!-- 사이드바 프라그먼트 (Default: Closed) TODO : visibility 변수화-->
-    <include
+    <FrameLayout
         android:id="@+id/side_bar_container"
-        layout="@layout/fragment_side_bar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
