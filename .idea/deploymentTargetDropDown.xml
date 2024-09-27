@@ -19,7 +19,20 @@
         </State>
       </entry>
       <entry key="SampleFilePickerActivity (1)">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_Tablet_API_33_2.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-09-27T14:37:18.048718Z" />
+        </State>
       </entry>
       <entry key="app">
         <State>
