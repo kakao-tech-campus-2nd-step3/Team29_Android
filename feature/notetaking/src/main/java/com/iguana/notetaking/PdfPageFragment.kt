@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.iguana.notetaking.databinding.FragmentPdfPageBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PdfPageFragment : Fragment() {
 
     private val viewModel: PdfViewerViewModel by viewModels()
+    private var _binding: FragmentPdfPageBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         private const val ARG_PDF_URI = "PDF_URI"
@@ -35,7 +38,8 @@ class PdfPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // XML 레이아웃 파일을 인플레이트하여 반환
-        return inflater.inflate(R.layout.fragment_pdf_page, container, false)
+        _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,7 +54,12 @@ class PdfPageFragment : Fragment() {
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
             val bitmap = viewModel.renderPage(pdfUri, pageIndex)
-            imageView.setImageBitmap(bitmap)
+            binding.pdfImageView.setImageBitmap(bitmap)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
