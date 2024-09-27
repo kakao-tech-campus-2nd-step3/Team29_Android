@@ -42,7 +42,7 @@ class SampleFilePickerActivity : AppCompatActivity() {
                     viewModel.getAdvancedPdfMetadata(this, uri)
 
                     // 선택된 파일을 PDFBox Activity 로 전달
-                    val intent = Intent(this, PDFBoxActivity::class.java)
+                    val intent = Intent(this, NotetakingActivity::class.java)
                     intent.putExtra("PDF_URI", uri.toString())  // Uri를 전달
                     startActivity(intent)
                 } else {
