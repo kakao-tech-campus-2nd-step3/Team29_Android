@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.iguana.dashBoard.databinding.FragmentAiHistoryBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AiHistoryFragment : Fragment() {
     private var _binding: FragmentAiHistoryBinding? = null
     private val binding get() = _binding!!

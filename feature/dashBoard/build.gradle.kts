@@ -23,6 +23,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(projects.core.data)
+    implementation("androidx.fragment:fragment-ktx:1.5.5")
 
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
