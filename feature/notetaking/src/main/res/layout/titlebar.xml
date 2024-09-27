@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/title_appbar_background"
+    android:gravity="center_vertical|start"
+    android:orientation="horizontal"
+    android:paddingHorizontal="8dp">
+
+    <!-- 뒤로가기 버튼 TODO: 이벤트 정의하기 -->
+    <ImageButton
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/ic_left_inactive" />
+
+    <!-- 문서 타이틀 TODO: 데이터 바인딩하기 -->
+    <TextView
+        android:id="@+id/title_bar"
+        style="@style/Regular12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="16dp"
+        android:text="여기엔 타이틀"
+        android:textColor="@color/black" />
+</LinearLayout>

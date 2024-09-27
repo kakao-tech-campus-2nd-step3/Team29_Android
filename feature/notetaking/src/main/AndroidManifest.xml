@@ -3,8 +3,11 @@
 
     <application>
         <activity
-            android:name=".PdfViewerActivity"
-            android:exported="true" />
+            android:name=".NotetakingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PDFBoxActivity"
+            android:exported="false" />
         <activity
             android:name=".SampleFilePickerViewModel"
             android:exported="false" />

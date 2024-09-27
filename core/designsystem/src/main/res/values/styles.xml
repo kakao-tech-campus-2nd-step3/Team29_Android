@@ -7,22 +7,31 @@
         <item name="notaiColorPrimaryVariant">@color/blue_10</item> <!-- 연하늘색 컴포넌트 배경  -->
         <!-- Secondary colors -->
         <item name="notaiColorSecondary">@color/light_blue_90</item>
-        <item name="notaiColorSecondaryVariant">@color/light_blue_10</item> <!-- sideBar 에서 활성화된 버튼 배경 -->
+        <item name="notaiColorSecondaryVariant">@color/light_blue_10
+        </item> <!-- sideBar 에서 활성화된 버튼 배경 -->
 
         <!-- Background colors -->
-        <item name="notaiBackgroundPDF">@color/grey_90</item> <!-- PDF 옆 빈 공간 배경색 (BackgroundPDFColor) -->
-        <item name="notaiBackgroundButtonSet">@color/grey_80</item> <!-- 필기 화면에서 버튼셋의 배경색 (BackgroundCardColor) -->
-        <item name="notaiBackgroundDefault">@color/white</item> <!-- BackgroundWhiteColor 로그인 외 다른 화면 백그라운드 컬러(화이트)-->
-        <item name="notaiBackgroundLogin">@color/grey_70</item> <!-- BackgroundCoolGreyColor 로그인 백그라운드 컬러 (쿨그레이)-->
+        <item name="notaiBackgroundPDF">@color/grey_90
+        </item> <!-- PDF 옆 빈 공간 배경색 (BackgroundPDFColor) -->
+        <item name="notaiBackgroundButtonSet">@color/grey_80
+        </item> <!-- 필기 화면에서 버튼셋의 배경색 (BackgroundCardColor) -->
+        <item name="notaiBackgroundDefault">@color/white
+        </item> <!-- BackgroundWhiteColor 로그인 외 다른 화면 백그라운드 컬러(화이트)-->
+        <item name="notaiBackgroundLogin">@color/grey_70
+        </item> <!-- BackgroundCoolGreyColor 로그인 백그라운드 컬러 (쿨그레이)-->
 
         <!-- Border colors -->
         <item name="notaiBorderColor">@color/grey_50</item> <!-- BorderColor (테두리, 경계선) -->
 
         <!-- Button colors -->
-        <item name="notaiButtonColorActiveBorder">@color/blue_50</item> <!-- ActiveButtonBorderColor (아이콘 활성화 시 테두리)-->
-        <item name="notaiButtonColorActiveBackground">@color/blue_20</item> <!-- ActiveButtonBackgroundColor (아이콘 활성화 시 배경)-->
-        <item name="notaiButtonColorInactiveBorder">@color/grey_30</item> <!-- InactiveButtonBorderColor (아이콘 비활성화 시 테두리)-->
-        <item name="notaiButtonColorInactiveBackground">@color/grey_40</item> <!-- InactiveButtonBackgroundColor (아이콘 비활성화 시 배경)-->
+        <item name="notaiButtonColorActiveBorder">@color/blue_50
+        </item> <!-- ActiveButtonBorderColor (아이콘 활성화 시 테두리)-->
+        <item name="notaiButtonColorActiveBackground">@color/blue_20
+        </item> <!-- ActiveButtonBackgroundColor (아이콘 활성화 시 배경)-->
+        <item name="notaiButtonColorInactiveBorder">@color/grey_30
+        </item> <!-- InactiveButtonBorderColor (아이콘 비활성화 시 테두리)-->
+        <item name="notaiButtonColorInactiveBackground">@color/grey_40
+        </item> <!-- InactiveButtonBackgroundColor (아이콘 비활성화 시 배경)-->
 
         <!-- Text colors -->
         <item name="notaiTextColorPrimary">@color/black</item> <!-- TextBlackColor -->
@@ -138,6 +147,10 @@
         <item name="android:fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">@dimen/text_size_24</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.AppTheme.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
     </style>
 
 </resources>
