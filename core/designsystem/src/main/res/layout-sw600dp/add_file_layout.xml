@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
     android:layout_height="200dp"
+    android:layout_margin="10dp"
     android:background="@drawable/file_item_background"
+    android:clickable="true"
     android:elevation="2dp"
+    android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    android:layout_margin="10dp"
     tools:ignore="MissingDefaultResource">
 
     <!-- Plus 아이콘 -->
@@ -21,11 +23,10 @@
     <!-- 텍스트 정보 -->
     <TextView
         android:id="@+id/loadLectureText"
+        style="@style/Regular8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="강의자료 불러오기"
-        style="@style/Regular8"
-         />
+        android:text="강의자료 불러오기" />
 </LinearLayout>

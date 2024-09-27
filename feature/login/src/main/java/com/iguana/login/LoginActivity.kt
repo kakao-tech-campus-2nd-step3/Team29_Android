@@ -28,10 +28,12 @@ class LoginActivity : AppCompatActivity() {
 
         setupObservers()
         
-        // 로그인 상태 확인
-        if (viewModel.isUserLoggedIn()) {
-            navigateToMainScreen()
-        }
+        // 해당 부분은 화면 넘김을 위해 무조건 넘어가도록 설정했습니다.
+//        if (viewModel.isUserLoggedIn()) {
+//            navigateToMainScreen()
+//        }
+
+        navigateToMainScreen()
     }
 
     fun onLoginButtonClicked() {
@@ -60,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateToMainScreen() {
         Log.d(TAG, "메인 화면으로 이동")
-        val intent = Intent(this, TestActivity::class.java)
+        val intent = Intent(this, com.iguana.ui.BaseActivity::class.java)
         startActivity(intent)
         finish()
     }
