@@ -18,8 +18,8 @@
 
         <ImageButton
             android:id="@+id/btnRecord"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="녹음"
             android:padding="2dp"
@@ -44,8 +44,8 @@
 
         <ImageButton
             android:id="@+id/btnText"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="텍스트"
             android:padding="2dp"
@@ -70,8 +70,8 @@
 
         <ImageButton
             android:id="@+id/btnAI"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="AI"
             android:padding="2dp"
