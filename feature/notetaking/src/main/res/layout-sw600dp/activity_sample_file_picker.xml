@@ -8,7 +8,7 @@
     android:gravity="center"
     tools:context=".SampleFilePickerActivity">
 
-    <include android:id="@+id/addButton" layout="@layout/add_file_layout" />
+    <include android:id="@+id/addFileButton" layout="@layout/add_file_layout" />
 
 
 </LinearLayout>

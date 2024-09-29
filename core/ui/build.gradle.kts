@@ -19,8 +19,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.fragment:fragment-ktx:1.3.6")
-    implementation(project(":feature:dashBoard"))
+    implementation(libs.androidx.fragment.ktx)
+    implementation(projects.feature.dashBoard)
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)

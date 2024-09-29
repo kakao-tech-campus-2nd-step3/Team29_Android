@@ -3,9 +3,9 @@ plugins {
     id("iguana.android.hilt")
     id("iguana.kotlin.hilt")
     id("iguana.android.feature")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
