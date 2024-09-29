@@ -1,4 +1,4 @@
-package com.iguana.dashBoard
+package com.iguana.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.iguana.dashBoard.R
 import com.iguana.dashBoard.databinding.FragmentDashBoardBinding
 import dagger.hilt.android.AndroidEntryPoint
 
