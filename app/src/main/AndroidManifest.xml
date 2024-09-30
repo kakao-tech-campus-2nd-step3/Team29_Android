@@ -18,7 +18,7 @@
             android:name=".DesignSampleActivity"
             android:exported="false" />
         <activity
-            android:name="com.iguana.notetaking.SampleFilePickerActivity"
+            android:name="com.iguana.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
