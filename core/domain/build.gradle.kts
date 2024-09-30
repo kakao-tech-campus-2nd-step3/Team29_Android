@@ -6,5 +6,5 @@ android {
     namespace = "com.iguana.domain"
 }
 dependencies {
-
+    implementation(projects.core.data)
 }

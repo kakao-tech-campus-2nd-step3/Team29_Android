@@ -8,6 +8,8 @@ import com.iguana.data.repository.LoginRepositoryImpl
 import com.iguana.domain.repository.LoginRepository
 import com.iguana.domain.repository.SharedPreferencesHelper
 import com.iguana.data.local.db.SharedPreferencesHelperImpl
+import com.iguana.data.repository.RecentFileRepositoryImpl
+import com.iguana.domain.repository.RecentFileRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,6 +33,12 @@ abstract class DataModule {
     abstract fun bindSharedPreferencesHelper(
         sharedPreferencesHelperImpl: SharedPreferencesHelperImpl
     ): com.iguana.domain.repository.SharedPreferencesHelper
+
+    @Binds
+    @Singleton
+    abstract fun bindRecentFileRepository(
+        recentFileRepositoryImpl: RecentFileRepositoryImpl
+    ): RecentFileRepository
 
     companion object {
         @Provides
