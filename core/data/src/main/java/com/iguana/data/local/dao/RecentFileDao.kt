@@ -19,7 +19,7 @@ interface RecentFileDao {
     fun updateRecentFile(recentFile: RecentFileEntity)
 
     @Query("UPDATE recent_files SET lastOpened = :lastOpened WHERE id = :id")
-    fun updateLastOpened(id: String, lastOpened: Long)
+    fun updateLastOpened(id: String, lastOpened: Long): Int
 
     @Delete
     fun deleteRecentFile(recentFile: RecentFileEntity)

@@ -1,4 +1,4 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

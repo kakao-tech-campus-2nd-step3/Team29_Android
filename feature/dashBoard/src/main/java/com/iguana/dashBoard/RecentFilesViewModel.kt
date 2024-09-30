@@ -1,4 +1,4 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

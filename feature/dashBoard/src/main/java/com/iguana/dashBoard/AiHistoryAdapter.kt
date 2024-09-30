@@ -1,10 +1,9 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.iguana.dashBoard.databinding.ItemAiHistoryBinding
-
 class AiHistoryAdapter(private val aiHistoryItems: List<AiHistoryItem>) :
     RecyclerView.Adapter<AiHistoryAdapter.AiHistoryViewHolder>() {
 
