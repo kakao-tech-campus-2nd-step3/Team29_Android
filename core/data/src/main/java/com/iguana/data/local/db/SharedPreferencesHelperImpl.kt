@@ -2,6 +2,7 @@ package com.iguana.data.local.db
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.iguana.domain.repository.SharedPreferencesHelper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -9,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class SharedPreferencesHelperImpl @Inject constructor(
     @ApplicationContext context: Context
-) : com.iguana.domain.repository.SharedPreferencesHelper {
+) : SharedPreferencesHelper {
 
     companion object {
         private const val PREFS_NAME = "login_prefs"

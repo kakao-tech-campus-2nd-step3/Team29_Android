@@ -18,6 +18,10 @@
             android:name=".DesignSampleActivity"
             android:exported="false" />
         <activity
+            android:name="com.iguana.login.LoginActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name="com.iguana.notetaking.SampleFilePickerActivity"
             android:exported="true">
             <intent-filter>

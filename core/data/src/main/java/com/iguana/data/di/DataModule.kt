@@ -8,6 +8,8 @@ import com.iguana.data.repository.LoginRepositoryImpl
 import com.iguana.domain.repository.LoginRepository
 import com.iguana.domain.repository.SharedPreferencesHelper
 import com.iguana.data.local.db.SharedPreferencesHelperImpl
+import com.iguana.data.repository.RecentFileRepositoryImpl
+import com.iguana.domain.repository.RecentFileRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,13 +26,19 @@ abstract class DataModule {
     @Singleton
     abstract fun bindLoginRepository(
         loginRepositoryImpl: LoginRepositoryImpl
-    ): com.iguana.domain.repository.LoginRepository
+    ): LoginRepository
 
     @Binds
     @Singleton
     abstract fun bindSharedPreferencesHelper(
         sharedPreferencesHelperImpl: SharedPreferencesHelperImpl
-    ): com.iguana.domain.repository.SharedPreferencesHelper
+    ): SharedPreferencesHelper
+
+    @Binds
+    @Singleton
+    abstract fun bindRecentFileRepository(
+        recentFileRepositoryImpl: RecentFileRepositoryImpl
+    ): RecentFileRepository
 
     companion object {
         @Provides

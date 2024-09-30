@@ -2,8 +2,8 @@ package com.iguana.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
-import com.iguana.dashboard.DashBoardFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

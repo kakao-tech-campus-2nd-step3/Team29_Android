@@ -11,6 +11,7 @@
 
         <!-- 뒤로가기 버튼 TODO: 이벤트 정의하기 -->
         <ImageButton
+            android:id="@+id/backButton"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/ic_left_inactive" />

@@ -13,21 +13,36 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.iguana.domain.usecase.SaveRecentFileUsecase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 //import com.itextpdf.kernel.pdf.PdfReader
 import java.io.File
 import java.io.FileOutputStream
+import javax.inject.Inject
 
-
-class SampleFilePickerViewModel : ViewModel() {
+@HiltViewModel
+class SampleFilePickerViewModel @Inject constructor(private val saveRecentFileUsecase: SaveRecentFileUsecase) :
+    ViewModel() {
     private val _pdfUri = MutableLiveData<Uri?>()
     val pdfUri: LiveData<Uri?> get() = _pdfUri
 
     // PDF 파일 선택 처리
-    fun handlePdf(uri: Uri?) {
+    fun handlePdf(uri: Uri?, context: Context) {
         if (uri != null) {
             _pdfUri.value = uri
+            val fileName = getFileName(context, uri)
+            viewModelScope.launch {
+                saveRecentFileUsecase(
+                    id = uri.toString(),
+                    fileName = fileName,
+                    fileUri = uri.toString()
+                )
+            }
         }
     }
+
     fun createSamplePdf() {
         // PDFDocument 객체 생성
         val document = PdfDocument()
@@ -57,7 +72,8 @@ class SampleFilePickerViewModel : ViewModel() {
 
     // PDF 메타데이터 가져오기 (안드로이드 내장된 파일디스크립터 사용시)
     fun getPdfMetadata(context: Context, uri: Uri) {
-        val fileDescriptor: ParcelFileDescriptor? = context.contentResolver.openFileDescriptor(uri, "r")
+        val fileDescriptor: ParcelFileDescriptor? =
+            context.contentResolver.openFileDescriptor(uri, "r")
         fileDescriptor?.use {
             val fileSize = File(uri.path).length()  // 파일 크기
             val fileName = File(uri.path).name      // 파일 이름
@@ -66,7 +82,10 @@ class SampleFilePickerViewModel : ViewModel() {
             val pageCount = renderer.pageCount     // 페이지 수
 
             // 로그에 PDF 정보 출력
-            Log.d("PDF_INFO", "파일 이름: $fileName, 파일 크기: $fileSize, 페이지 수: $pageCount, 마지막 수정일: $lastModified")
+            Log.d(
+                "PDF_INFO",
+                "파일 이름: $fileName, 파일 크기: $fileSize, 페이지 수: $pageCount, 마지막 수정일: $lastModified"
+            )
 
             renderer.close()
         } ?: Toast.makeText(context, "PDF 파일을 열 수 없습니다.", Toast.LENGTH_SHORT).show()
@@ -78,7 +97,8 @@ class SampleFilePickerViewModel : ViewModel() {
             val cursor = context.contentResolver.query(uri, null, null, null, null)
             try {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    result =
+                        cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             } finally {
                 cursor?.close()
