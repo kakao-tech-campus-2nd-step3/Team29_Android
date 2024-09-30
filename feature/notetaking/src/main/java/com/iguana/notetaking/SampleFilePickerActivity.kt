@@ -11,8 +11,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
 import com.iguana.notetaking.databinding.ActivitySampleFilePickerBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SampleFilePickerActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySampleFilePickerBinding
     private lateinit var openPdfLauncher: ActivityResultLauncher<Array<String>>
@@ -31,7 +32,7 @@ class SampleFilePickerActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
                 if (uri != null) {
                     // PDF 파일 처리 로직 호출
-                    viewModel.handlePdf(uri)
+                    viewModel.handlePdf(uri, this)
 
                     // PDF 파일의 이름을 정확히 가져오기
                     val fileName = viewModel.getFileName(this, uri)

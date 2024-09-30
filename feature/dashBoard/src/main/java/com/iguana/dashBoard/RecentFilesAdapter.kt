@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.iguana.dashBoard.databinding.ItemRecentFilesBinding
 import com.iguana.data.local.entity.RecentFileEntity
+import com.iguana.domain.model.RecentFile
 
-class RecentFilesAdapter(private var recentFiles: List<RecentFileEntity> = emptyList()) :
+class RecentFilesAdapter(private var recentFiles: List<RecentFile> = emptyList()) :
     RecyclerView.Adapter<RecentFilesAdapter.RecentFileViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentFileViewHolder {
@@ -20,13 +21,13 @@ class RecentFilesAdapter(private var recentFiles: List<RecentFileEntity> = empty
 
     override fun getItemCount(): Int = recentFiles.size
 
-    fun updateData(newRecentFiles: List<RecentFileEntity>) {
+    fun updateData(newRecentFiles: List<RecentFile>) {
         recentFiles = newRecentFiles
         notifyDataSetChanged()
     }
 
     class RecentFileViewHolder(private val binding: ItemRecentFilesBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(recentFile: RecentFileEntity) {
+        fun bind(recentFile: RecentFile) {
             binding.fileName.text = recentFile.fileName
             binding.fileTimestamp.text = formatLastOpened(recentFile.lastOpened)
         }

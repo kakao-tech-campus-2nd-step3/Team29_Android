@@ -3,7 +3,8 @@ package com.iguana.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.data.local.entity.RecentFileEntity
-import com.iguana.data.local.repository.RecentFileRepository
+import com.iguana.domain.model.RecentFile
+import com.iguana.domain.repository.RecentFileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,8 @@ class DashBoardViewModel @Inject constructor(
     private val recentFileRepository: RecentFileRepository
 ) : ViewModel() {
 
-    private val _recentFiles = MutableStateFlow<List<RecentFileEntity>>(emptyList())
-    val recentFiles: StateFlow<List<RecentFileEntity>> = _recentFiles.asStateFlow()
+    private val _recentFiles = MutableStateFlow<List<RecentFile>>(emptyList())
+    val recentFiles: StateFlow<List<RecentFile>> = _recentFiles.asStateFlow()
 
     init {
         loadRecentFiles()

@@ -26,13 +26,13 @@ abstract class DataModule {
     @Singleton
     abstract fun bindLoginRepository(
         loginRepositoryImpl: LoginRepositoryImpl
-    ): com.iguana.domain.repository.LoginRepository
+    ): LoginRepository
 
     @Binds
     @Singleton
     abstract fun bindSharedPreferencesHelper(
         sharedPreferencesHelperImpl: SharedPreferencesHelperImpl
-    ): com.iguana.domain.repository.SharedPreferencesHelper
+    ): SharedPreferencesHelper
 
     @Binds
     @Singleton
