@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(projects.feature.dashBoard)
+    implementation(projects.feature.documents)
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
