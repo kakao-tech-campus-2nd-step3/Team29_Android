@@ -132,9 +132,9 @@ class RecentFilesViewModel @Inject constructor(
         val fileDescriptor: ParcelFileDescriptor? =
             context.contentResolver.openFileDescriptor(uri, "r")
         fileDescriptor?.use {
-            val fileSize = File(uri.path).length()  // 파일 크기
-            val fileName = File(uri.path).name      // 파일 이름
-            val lastModified = File(uri.path).lastModified() // 마지막 수정일
+            val fileSize = File(uri.path!!).length()  // 파일 크기
+            val fileName = File(uri.path!!).name      // 파일 이름
+            val lastModified = File(uri.path!!).lastModified() // 마지막 수정일
             val renderer = PdfRenderer(it)
             val pageCount = renderer.pageCount     // 페이지 수
 
