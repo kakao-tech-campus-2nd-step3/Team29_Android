@@ -15,7 +15,7 @@ import javax.inject.Inject
 class RecentFileRepositoryImpl @Inject constructor(
     private val recentFileDao: RecentFileDao
 ) : RecentFileRepository {
-    override suspend fun insertRecentFile(id: String, fileName: String, fileUri: String) {
+    override suspend fun insertRecentFile(id: Long, fileName: String, fileUri: String) {
         withContext(Dispatchers.IO) {
             val recentFileEntity =
                 RecentFileEntity(id, fileName, fileUri, System.currentTimeMillis(), null)
