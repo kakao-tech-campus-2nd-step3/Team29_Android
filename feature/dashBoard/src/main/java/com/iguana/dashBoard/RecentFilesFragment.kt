@@ -67,7 +67,7 @@ class RecentFilesFragment : Fragment() {
     private fun setupFilePicker() {
         openPdfLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
             uri?.let {
-                viewModel.handlePdf(it, requireContext())
+                viewModel.uploadPdf(it, requireContext())
             } ?: run {
                 Toast.makeText(requireContext(), "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
             }

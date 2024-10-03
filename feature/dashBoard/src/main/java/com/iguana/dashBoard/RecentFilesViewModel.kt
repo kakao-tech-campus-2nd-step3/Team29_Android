@@ -10,9 +10,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.data.local.entity.RecentFileEntity
 import com.iguana.domain.model.RecentFile
 import com.iguana.domain.repository.RecentFileRepository
+import com.iguana.domain.usecase.SaveFileInLocalUsecase
+import com.iguana.domain.usecase.SaveFileInRemoteUsecase
+import com.iguana.domain.usecase.SaveRecentFileUsecase
 import com.iguana.notetaking.NotetakingActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecentFilesViewModel @Inject constructor(
-    private val recentFileRepository: RecentFileRepository
+    private val recentFileRepository: RecentFileRepository,
+    private val saveFileInLocalUseCase: SaveFileInLocalUsecase,
+    private val saveFileInRemoteUseCase: SaveFileInRemoteUsecase,
+    private val saveRecentFileUsecase: SaveRecentFileUsecase
 ) : ViewModel() {
-
     private val _recentFiles = MutableStateFlow<List<RecentFile>>(emptyList())
     val recentFiles: StateFlow<List<RecentFile>> = _recentFiles.asStateFlow()
 
@@ -42,56 +46,13 @@ class RecentFilesViewModel @Inject constructor(
         }
     }
 
-    private fun addDummyData() {
-        viewModelScope.launch {
-            val dummyFiles = listOf(
-                RecentFileEntity(
-                    "1",
-                    "바이오 빅데이터.pdf",
-                    "file:///dummy/path1",
-                    System.currentTimeMillis(),
-                    1
-                ),
-                RecentFileEntity(
-                    "2",
-                    "기계학습.pdf",
-                    "file:///dummy/path2",
-                    System.currentTimeMillis() - 86400000,
-                    3
-                ),
-                RecentFileEntity(
-                    "3",
-                    "유전체 정보학.pdf",
-                    "file:///dummy/path3",
-                    System.currentTimeMillis() - 172800000,
-                    null
-                ),
-                RecentFileEntity(
-                    "4",
-                    "의생명 정보과학.pdf",
-                    "file:///dummy/path4",
-                    System.currentTimeMillis() - 259200000,
-                    5
-                )
-            )
-            dummyFiles.forEach {
-                recentFileRepository.insertRecentFile(
-                    it.id,
-                    it.fileName,
-                    it.fileUri
-                )
-            }
-        }
-    }
-
-
-    fun openFile(id: String, fileName: String, fileUri: String) {
+    fun openFile(id: Long, fileName: String, fileUri: String) {
         viewModelScope.launch {
             recentFileRepository.insertRecentFile(id, fileName, fileUri)
         }
     }
 
-    fun updateBookmark(fileId: String, bookmarkedPage: Int) {
+    fun updateBookmark(fileId: Long, bookmarkedPage: Int) {
         viewModelScope.launch {
             recentFileRepository.updateBookmark(fileId, bookmarkedPage)
         }
@@ -105,27 +66,62 @@ class RecentFilesViewModel @Inject constructor(
 
 
     // PDF 파일 선택 처리
-    fun handlePdf(uri: Uri?, context: Context) {
+    fun uploadPdf(uri: Uri?, context: Context) {
         if (uri != null) {
+            Log.d("testt", "업로드 pdf 시작: $uri")
             val fileName = getFileName(context, uri)
+            Log.d("testt", "fileName: $fileName")
 
             viewModelScope.launch {
-                recentFileRepository.insertRecentFile(
-                    uri.toString(),
-                    fileName,
-                    uri.toString()
-                ) // Save recent file
-                getPdfMetadata(context, uri)
+                try {
+                    Log.d("testt", "uri: $uri")
+                    // 1. 로컬에 파일 저장 -> 내부 URI 리턴
+                    val internalUri = saveFileInLocalUseCase.execute(uri, fileName)
 
-                // 선택된 파일을 NotetakingActivity로 전달
-                val intent = Intent(context, NotetakingActivity::class.java).apply {
-                    putExtra("PDF_URI", uri.toString())
-                    putExtra("PDF_TITLE", fileName)
+                    if (internalUri != null) {
+                        // TODO 메인대시보드에서 파일 upload 를 수행할땐 folderId 어떻게 해야하는 지 논의 필요
+                        // NOTE 서버 구현 전이라 파일 업로드 부분을 주석 처리하고 로컬 저장만 수행
+
+                        // 2. 서버에 파일 업로드 - 서버 구현이 되면 주석 해제
+                        /*
+                        val result = saveFileInRemoteUseCase.execute(0, internalUri, fileName)
+                        result.onSuccess { document ->
+                            // 3. Room 데이터베이스에 저장 (내부 URI 사용)
+                            saveFileInRecentFile.execute(
+                                document.id,
+                                internalUri,
+                                fileName
+                            )
+                        }.onFailure {
+                            Toast.makeText(context, "파일 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        */
+
+                        // 임시로 로컬에 저장하는 로직
+                        val dummyDocumentId = System.currentTimeMillis() // 임시 ID 생성
+                        saveRecentFileUsecase.invoke(
+                            dummyDocumentId,
+                            fileName,
+                            internalUri.toString()
+                        )
+
+                        // 4. 선택된 파일을 NotetakingActivity로 전달
+                        val intent = Intent(context, NotetakingActivity::class.java).apply {
+                            putExtra("PDF_URI", internalUri.toString())
+                            putExtra("PDF_TITLE", fileName)
+                        }
+                        context.startActivity(intent)
+
+                    } else {
+                        Toast.makeText(context, "파일 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
-                context.startActivity(intent)
             }
         }
     }
+
 
     // PDF 메타데이터 가져오기
     private fun getPdfMetadata(context: Context, uri: Uri) {

@@ -18,7 +18,6 @@ import javax.inject.Inject
 import retrofit2.HttpException
 
 class DocumentsRepositoryImpl @Inject constructor(
-    private val context: Context,
     private val api: DocumentApi
 ) : DocumentsRepository {
 

@@ -3,13 +3,14 @@ package com.iguana.data.utils
 import android.content.Context
 import android.net.Uri
 import com.iguana.domain.utils.FileHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import javax.inject.Inject
 
 class FileHelperImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : FileHelper {
     override fun copyFileToInternalStorage(uri: Uri, fileName: String): Uri? {
         return try {
