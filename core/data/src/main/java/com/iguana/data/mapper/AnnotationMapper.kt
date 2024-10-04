@@ -15,7 +15,7 @@ fun AnnotationResponseDto.toDomain() = Annotation(
 
 fun GetAnnotationsResponseDto.toDomain() = annotations.map { it.toDomain() }
 
-fun Annotation.toCreateAnnotationRequestDto(documentId: Long, pageNumber: Int) =
+fun Annotation.toCreateAnnotationRequestDto(pageNumber: Int): CreateAnnotationRequestDto =
     CreateAnnotationRequestDto(
         pageNumber = pageNumber,
         x = x,
@@ -25,10 +25,11 @@ fun Annotation.toCreateAnnotationRequestDto(documentId: Long, pageNumber: Int) =
         content = content
     )
 
-fun Annotation.toUpdateAnnotationRequestDto() = UpdateAnnotationRequestDto(
-    content = content,
-    x = x,
-    y = y,
-    width = width,
-    height = height
-)
+fun Annotation.toUpdateAnnotationRequestDto(): UpdateAnnotationRequestDto =
+    UpdateAnnotationRequestDto(
+        content = content,
+        x = x,
+        y = y,
+        width = width,
+        height = height
+    )
