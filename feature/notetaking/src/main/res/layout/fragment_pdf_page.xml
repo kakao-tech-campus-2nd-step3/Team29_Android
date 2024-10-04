@@ -6,4 +6,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter" />
+    <!-- 텍스트 박스를 추가할 컨테이너 -->
+    <FrameLayout
+        android:id="@+id/pdfPageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

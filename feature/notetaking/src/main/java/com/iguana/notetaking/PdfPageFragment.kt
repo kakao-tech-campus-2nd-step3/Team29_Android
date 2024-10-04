@@ -4,9 +4,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
@@ -57,6 +61,72 @@ class PdfPageFragment : Fragment() {
             binding.pdfImageView.setImageBitmap(bitmap)
         }
     }
+
+    // 텍스트 박스를 추가하는 함수
+    fun addTextBox() {
+        val editText = EditText(requireContext()).apply {
+            setText("텍스트")
+            setBackgroundColor(Color.Transparent.toArgb())
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+            // 스타일 적용 (예: 테두리 및 패딩 추가)
+            setBackgroundResource(R.drawable.textbox_background) // 테두리와 배경색을 위한 drawable
+            setPadding(16, 16, 16, 16)
+            setTextColor(Color.Black.toArgb())
+            textSize = 16f
+
+            // 초기 위치를 중앙으로 설정
+            post {
+                x = (binding.pdfPageContainer.width / 2 - width / 2).toFloat()
+                y = (binding.pdfPageContainer.height / 2 - height / 2).toFloat()
+            }
+
+            // 터치 이벤트로 위치 이동 설정
+            var dX = 0f
+            var dY = 0f
+            var isDragging = false
+
+            setOnTouchListener { view, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // 터치 시작 시점의 위치를 기록
+                        dX = view.x - event.rawX
+                        dY = view.y - event.rawY
+                        isDragging = false
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        // 터치 움직임에 따라 뷰를 이동
+                        view.animate()
+                            .x(event.rawX + dX)
+                            .y(event.rawY + dY)
+                            .setDuration(0)
+                            .start()
+                        isDragging = true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        // 사용자가 드래그하지 않고 클릭만 한 경우 편집 모드로 전환
+                        if (!isDragging) {
+                            view.performClick() // 클릭 이벤트 수행
+                        }
+                    }
+                    else -> return@setOnTouchListener false
+                }
+                true
+            }
+
+            // 클릭 이벤트로 편집 모드 활성화
+            setOnClickListener {
+                this.isFocusableInTouchMode = true
+                this.requestFocus()
+            }
+        }
+        binding.pdfPageContainer.addView(editText)
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
