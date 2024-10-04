@@ -1,5 +1,7 @@
 package com.iguana.data.di
 
+import com.iguana.data.remote.api.AnnotationApi
+import com.iguana.data.remote.api.DocumentApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +27,17 @@ object NetworkModule {
     @Singleton
     fun provideLoginApi(retrofit: Retrofit): com.iguana.data.remote.api.LoginApi {
         return retrofit.create(com.iguana.data.remote.api.LoginApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDocumentApi(retrofit: Retrofit): DocumentApi {
+        return retrofit.create(DocumentApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnnotationApi(retrofit: Retrofit): AnnotationApi {
+        return retrofit.create(AnnotationApi::class.java)
     }
 }

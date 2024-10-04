@@ -2,7 +2,6 @@ package com.iguana.dashBoard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.data.local.entity.RecentFileEntity
 import com.iguana.domain.model.RecentFile
 import com.iguana.domain.repository.RecentFileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,14 +32,14 @@ class DashBoardViewModel @Inject constructor(
     }
 
     // 파일을 열 때 호출되는 함수
-    fun openFile(id: String, fileName: String, fileUri: String) {
+    fun openFile(id: Long, fileName: String, fileUri: String) {
         viewModelScope.launch {
             recentFileRepository.insertRecentFile(id, fileName, fileUri)
         }
     }
 
     // 북마크 업데이트 함수
-    fun updateBookmark(fileId: String, bookmarkedPage: Int) {
+    fun updateBookmark(fileId: Long, bookmarkedPage: Int) {
         viewModelScope.launch {
             recentFileRepository.updateBookmark(fileId, bookmarkedPage)
         }

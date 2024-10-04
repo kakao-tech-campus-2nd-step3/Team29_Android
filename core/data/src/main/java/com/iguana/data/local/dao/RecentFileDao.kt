@@ -10,7 +10,7 @@ interface RecentFileDao {
     fun insertRecentFile(recentFile: RecentFileEntity)
 
     @Query("SELECT * FROM recent_files WHERE id = :id")
-    fun getRecentFileById(id: String): RecentFileEntity?
+    fun getRecentFileById(id: Long): RecentFileEntity?
 
     @Query("SELECT * FROM recent_files ORDER BY lastOpened DESC")
     fun getRecentFiles(): Flow<List<RecentFileEntity>>

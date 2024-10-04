@@ -1,5 +1,6 @@
 package com.iguana.data.repository
 
+import android.net.Uri
 import com.iguana.data.local.dao.RecentFileDao
 import com.iguana.data.local.entity.RecentFileEntity
 import com.iguana.data.mapper.toDomainModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class RecentFileRepositoryImpl @Inject constructor(
     private val recentFileDao: RecentFileDao
 ) : RecentFileRepository {
-    override suspend fun insertRecentFile(id: String, fileName: String, fileUri: String) {
+    override suspend fun insertRecentFile(id: Long, fileName: String, fileUri: String) {
         withContext(Dispatchers.IO) {
             val recentFileEntity =
                 RecentFileEntity(id, fileName, fileUri, System.currentTimeMillis(), null)
@@ -29,7 +30,7 @@ class RecentFileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateBookmark(fileId: String, bookmarkedPage: Int) {
+    override suspend fun updateBookmark(fileId: Long, bookmarkedPage: Int) {
         val recentFile = recentFileDao.getRecentFileById(fileId)
         recentFile?.let {
             val updatedFile = it.copy(bookmarkedPage = bookmarkedPage)
