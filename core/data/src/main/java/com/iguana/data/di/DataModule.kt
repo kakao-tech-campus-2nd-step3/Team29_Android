@@ -28,33 +28,16 @@ abstract class DataModule {
 
     @Binds
     @Singleton
-    abstract fun bindLoginRepository(
-        loginRepositoryImpl: LoginRepositoryImpl
-    ): LoginRepository
-
-    @Binds
-    @Singleton
     abstract fun bindSharedPreferencesHelper(
         sharedPreferencesHelperImpl: SharedPreferencesHelperImpl
     ): SharedPreferencesHelper
 
-    @Binds
-    @Singleton
-    abstract fun bindRecentFileRepository(
-        recentFileRepositoryImpl: RecentFileRepositoryImpl
-    ): RecentFileRepository
 
     @Binds
     @Singleton
     abstract fun bindFileHelper(
         fileHelperImpl: FileHelperImpl
     ): FileHelper
-
-    @Binds
-    @Singleton
-    abstract fun bindDocumentsRepository(
-        documentsRepositoryImpl: DocumentsRepositoryImpl
-    ): DocumentsRepository
 
     companion object {
         @Provides
