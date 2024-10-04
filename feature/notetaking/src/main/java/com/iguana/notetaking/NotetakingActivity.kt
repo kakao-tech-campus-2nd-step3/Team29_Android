@@ -3,12 +3,10 @@ package com.iguana.notetaking
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
-import com.iguana.notetaking.databinding.ActivitySampleFilePickerBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,6 +28,10 @@ class NotetakingActivity : AppCompatActivity() {
         val pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "무제"
 
         binding.titleBar.titleBar.text = pdfTitle
+        // 뒤로가기 버튼 클릭 리스너 설정
+        binding.titleBar.backButton.setOnClickListener {
+            finish()
+        }
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)

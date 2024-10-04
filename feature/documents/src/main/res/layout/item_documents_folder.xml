@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:background="@drawable/folder_item_background"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        android:orientation="vertical">
+        <!-- 상단 색상 및 책갈피 아이콘 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <ImageView
+                android:id="@+id/bookmarkIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="35dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_file_saved_inactive" />
+
+        </LinearLayout>
+        <!-- 파일 정보 텍스트 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="8dp"
+            android:orientation="vertical">
+
+            <!-- 제목 텍스트, 줄이 넘치면 '...' 표시 -->
+            <TextView
+                android:id="@+id/fileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DeepLearning (1)"
+                android:textStyle="bold"
+                style="@style/Regular6"
+                android:textColor="@android:color/black"
+                android:maxLines="1"
+                android:ellipsize="end" /> <!-- 줄이 넘치면 ... 표시 -->
+
+            <!-- 타임스탬프 텍스트 -->
+            <TextView
+                android:id="@+id/fileTimestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 files"
+                style="@style/Regular6"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -53,6 +53,7 @@ class SideTabLayoutFragment : Fragment() {
 
     fun onDocumentsClick() {
         _selectedItem.value = 1
+        (activity as? BaseActivity)?.showDocuments()
     }
 
     fun onFavoritesClick() {

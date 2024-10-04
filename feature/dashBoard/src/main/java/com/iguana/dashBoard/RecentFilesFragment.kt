@@ -1,9 +1,14 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -22,6 +27,8 @@ class RecentFilesFragment : Fragment() {
     private val viewModel: RecentFilesViewModel by viewModels()
     private lateinit var recentFilesAdapter: RecentFilesAdapter
 
+    private lateinit var openPdfLauncher: ActivityResultLauncher<Array<String>>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRecentFilesBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,6 +39,11 @@ class RecentFilesFragment : Fragment() {
 
         setupRecentFilesRecyclerView()
         observeRecentFiles()
+        setupFilePicker()
+
+        binding.plusIcon.setOnClickListener {
+            openPdfLauncher.launch(arrayOf("application/pdf"))
+        }
     }
 
     private fun setupRecentFilesRecyclerView() {
@@ -48,6 +60,16 @@ class RecentFilesFragment : Fragment() {
                 viewModel.recentFiles.collect { recentFiles ->
                     recentFilesAdapter.updateData(recentFiles)
                 }
+            }
+        }
+    }
+
+    private fun setupFilePicker() {
+        openPdfLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                viewModel.uploadPdf(it, requireContext())
+            } ?: run {
+                Toast.makeText(requireContext(), "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
             }
         }
     }

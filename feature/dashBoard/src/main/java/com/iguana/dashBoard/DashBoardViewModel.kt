@@ -1,9 +1,9 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.data.local.entity.RecentFileEntity
-import com.iguana.data.local.repository.RecentFileRepository
+import com.iguana.domain.model.RecentFile
+import com.iguana.domain.repository.RecentFileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +16,8 @@ class DashBoardViewModel @Inject constructor(
     private val recentFileRepository: RecentFileRepository
 ) : ViewModel() {
 
-    private val _recentFiles = MutableStateFlow<List<RecentFileEntity>>(emptyList())
-    val recentFiles: StateFlow<List<RecentFileEntity>> = _recentFiles.asStateFlow()
+    private val _recentFiles = MutableStateFlow<List<RecentFile>>(emptyList())
+    val recentFiles: StateFlow<List<RecentFile>> = _recentFiles.asStateFlow()
 
     init {
         loadRecentFiles()
@@ -32,14 +32,14 @@ class DashBoardViewModel @Inject constructor(
     }
 
     // 파일을 열 때 호출되는 함수
-    fun openFile(id: String, fileName: String, fileUri: String) {
+    fun openFile(id: Long, fileName: String, fileUri: String) {
         viewModelScope.launch {
             recentFileRepository.insertRecentFile(id, fileName, fileUri)
         }
     }
 
     // 북마크 업데이트 함수
-    fun updateBookmark(fileId: String, bookmarkedPage: Int) {
+    fun updateBookmark(fileId: Long, bookmarkedPage: Int) {
         viewModelScope.launch {
             recentFileRepository.updateBookmark(fileId, bookmarkedPage)
         }

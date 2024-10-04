@@ -2,8 +2,9 @@ package com.iguana.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.iguana.dashBoard.DashBoardFragment
+import com.iguana.documents.DocumentsFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
-import com.iguana.dashboard.DashBoardFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,6 +27,12 @@ class BaseActivity : AppCompatActivity() {
     fun showDashBoard() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_frame, DashBoardFragment())
+            .commit()
+    }
+
+    fun showDocuments() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_frame, DocumentsFragment())
             .commit()
     }
 }
