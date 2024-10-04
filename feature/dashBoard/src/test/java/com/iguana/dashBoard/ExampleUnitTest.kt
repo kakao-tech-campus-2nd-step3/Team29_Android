@@ -1,4 +1,4 @@
-package com.iguana.dashboard
+package com.iguana.dashBoard
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

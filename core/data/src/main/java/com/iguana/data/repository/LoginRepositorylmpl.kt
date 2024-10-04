@@ -2,6 +2,7 @@ package com.iguana.data.repository
 
 import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.KakaoTokenRequest
+import com.iguana.domain.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -11,7 +12,7 @@ import javax.inject.Singleton
 class LoginRepositoryImpl @Inject constructor(
     private val loginApi: LoginApi,
     private val sharedPreferencesHelper: com.iguana.domain.repository.SharedPreferencesHelper
-) : com.iguana.domain.repository.LoginRepository {
+) : LoginRepository {
 
     override suspend fun getKakaoLoginUrl(): String? = withContext(Dispatchers.IO) {
         try {
