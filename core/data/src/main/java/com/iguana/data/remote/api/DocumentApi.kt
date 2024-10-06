@@ -19,10 +19,10 @@ interface DocumentApi {
     @GET("/api/folders/{folderId}")
     suspend fun getFolderContents(
         @Path("folderId") folderId: Long?,
-        @Query("page") page: Int = 1,
+        @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
         @Query("sortBy") sortBy: String = "updatedAt",
-        @Query("sortDirection") sortDirection: String = "desc"
+        @Query("sortDirection") sortDirection: String = "DESC"
     ): FolderContentResponseDto
 
     @GET("/api/documents")

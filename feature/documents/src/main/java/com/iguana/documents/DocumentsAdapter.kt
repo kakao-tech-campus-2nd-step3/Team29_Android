@@ -80,12 +80,14 @@ class DocumentsAdapter(private val onItemClick: (DocumentItem) -> Unit) :
 
 sealed class DocumentItem {
     data class FolderItem(
+        val id : Long,
         val name: String,
         val fileCount: Int,
         val isBookmarked: Boolean
     ) : DocumentItem()
 
     data class PdfItem(
+        val id : Long,
         val title: String,
         val timestamp: String,
         val isBookmarked: Boolean

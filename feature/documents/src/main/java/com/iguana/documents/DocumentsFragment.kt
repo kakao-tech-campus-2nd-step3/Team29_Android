@@ -14,6 +14,10 @@ import java.util.Stack
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.graphics.Rect
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.iguana.domain.model.FolderContent
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DocumentsFragment : Fragment() {
@@ -22,8 +26,7 @@ class DocumentsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: DocumentsAdapter
-    private val currentItems = mutableListOf<DocumentItem>()
-    private val folderStack = Stack<String>()
+    private val viewModel: DocumentsViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDocumentsBinding.inflate(inflater, container, false)
@@ -35,18 +38,15 @@ class DocumentsFragment : Fragment() {
 
         setupRecyclerView()
         setupToolbar()
-        loadRootFolder()
+        observeViewModel()
+        viewModel.loadAllDocuments()
     }
 
     private fun setupRecyclerView() {
-        val spacing = 1
         adapter = DocumentsAdapter(::onItemClick)
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            addItemDecoration(GridSpacingItemDecoration(2, spacing, false))
-            adapter = this@DocumentsFragment.adapter
-            setPadding(0, 0, 0, 0)
-            clipToPadding = true
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            this.adapter = this@DocumentsFragment.adapter
         }
     }
 
@@ -56,52 +56,61 @@ class DocumentsFragment : Fragment() {
         binding.btnAdd.setOnClickListener { /* 추가 기능 구현 */ }
     }
 
-    private fun loadRootFolder() {
-        currentItems.clear()
-        currentItems.addAll(listOf(
-            DocumentItem.FolderItem("NOTAI 가이드", 5, false)))
-        adapter.setItems(currentItems)
-        updateToolbarTitle("문서")
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.documents.collect { folderContent ->
+                folderContent?.let { updateUI(it) }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentFolderName.collect { folderName ->
+                updateToolbarTitle(folderName)
+            }
+        }
+    }
+
+    private fun updateUI(folderContent: FolderContent) {
+        val items = folderContent.content.map { item ->
+            when (item.type) {
+                "FOLDER" -> DocumentItem.FolderItem(
+                    id = item.id,
+                    name = item.name,
+                    fileCount = item.totalElements.toInt(),
+                    isBookmarked = false  // 이 정보가 FolderContentItem에 없다면 기본값으로 설정
+                )
+                else -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
+                    isBookmarked = false  // 이 정보가 FolderContentItem에 없다면 기본값으로 설정
+                )
+            }
+        }
+        adapter.setItems(items)
     }
 
     private fun onItemClick(item: DocumentItem) {
         when (item) {
-            is DocumentItem.FolderItem -> openFolder(item.name)
-            is DocumentItem.PdfItem -> openPdf(item.title)
+            is DocumentItem.FolderItem -> viewModel.loadSubItems(item.id, item.name)
+            is DocumentItem.PdfItem -> openPdf(item.id, item.title)
         }
     }
 
-    private fun openFolder(folderName: String) {
-        folderStack.push(folderName)
-        // 해당 폴더의 아이템들을 로드하는 로직
-        currentItems.clear()
-        currentItems.addAll(listOf(
-            DocumentItem.PdfItem("$folderName - NOTAI 가이드 - 1", "2023-05-03 11:45", true),
-            DocumentItem.PdfItem("$folderName - NOTAI 템플릿 - 2", "2023-05-04 16:20", true)
-        ))
-        adapter.setItems(currentItems)
-        updateToolbarTitle(folderName)
-    }
-
-    private fun openPdf(pdfTitle: String) {
+    private fun openPdf(id: Long, title: String) {
         // PDF 열기 로직
     }
 
     private fun onBackPressed() {
-        if (folderStack.isNotEmpty()) {
-            folderStack.pop()
-            if (folderStack.isEmpty()) {
-                loadRootFolder()
-            } else {
-                openFolder(folderStack.peek())
-            }
-        } else {
-            // Fragment 종료 또는 이전 화면으로 이동
-        }
+        viewModel.navigateUp()
     }
 
     private fun updateToolbarTitle(title: String) {
         binding.tvTitle.text = title
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
 
