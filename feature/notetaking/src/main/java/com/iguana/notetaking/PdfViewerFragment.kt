@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.databinding.FragmentPdfViewerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +55,14 @@ class PdfViewerFragment : Fragment() {
             }
         }
     }
+
+    // 현재 표시된 PdfPageFragment를 가져오는 메서드
+    fun getCurrentPdfPageFragment(): PdfPageFragment? {
+        val currentItem = binding.pdfViewPager.currentItem
+        val fragment = childFragmentManager.findFragmentByTag("f$currentItem")
+        return if (fragment is PdfPageFragment) fragment else null
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
