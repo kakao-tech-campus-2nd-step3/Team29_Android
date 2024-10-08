@@ -189,10 +189,11 @@ class DocumentsFragment : Fragment() {
             .setView(dialogView)
             .setPositiveButton("확인") { _, _ ->
                 val newName = editText.text.toString()
-                when (item) {
-                    is DocumentItem.FolderItem -> viewModel.updateFolderName(item.id, newName)
-                    is DocumentItem.PdfItem -> { /* PDF 이름 변경 로직 */ }
+                val documentId = when (item) {
+                    is DocumentItem.FolderItem -> item.id
+                    is DocumentItem.PdfItem -> item.id
                 }
+                viewModel.updateDocumentName(documentId, newName)
             }
             .setNegativeButton("취소", null)
             .show()

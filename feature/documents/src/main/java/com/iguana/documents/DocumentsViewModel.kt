@@ -11,6 +11,7 @@ import com.iguana.domain.usecase.GetAllDocumentsUseCase
 import com.iguana.domain.usecase.GetSubItemsUseCase
 import com.iguana.domain.usecase.UpdateFolderNameUseCase
 import com.iguana.domain.usecase.DeleteFileUseCase
+import com.iguana.domain.usecase.UpdateDocumentNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ class DocumentsViewModel @Inject constructor(
     private val getAllDocumentsUseCase: GetAllDocumentsUseCase,
     private val getSubItemsUseCase: GetSubItemsUseCase,
     private val createFolderUsecase: CreateFolderUseCase,
+    private val updateDocumentNameUseCase: UpdateDocumentNameUseCase,
     private val updateFolderNameUseCase: UpdateFolderNameUseCase,
     private val deleteFolderUseCase: DeleteFolderUseCase,
     private val deleteFileUseCase: DeleteFileUseCase
@@ -145,6 +147,26 @@ class DocumentsViewModel @Inject constructor(
             }.onFailure {
                 // 에러 처리
                 Log.e("DocumentsViewModel", "폴더 이름 변경 실패", it)
+            }
+        }
+    }
+
+    fun updateDocumentName(documentId: Long, newName: String) {
+        viewModelScope.launch {
+            updateDocumentNameUseCase(documentId, newName).onSuccess { updatedDocument ->
+                _documents.value?.let { currentContent ->
+                    val updatedContent = currentContent.content.map { item ->
+                        if (item.id == documentId) {
+                            item.copy(name = newName)
+                        } else {
+                            item
+                        }
+                    }
+                    _documents.value = currentContent.copy(content = updatedContent)
+                }
+                Log.d("DocumentsViewModel", "문서 이름이 성공적으로 수정되었습니다.")
+            }.onFailure { error ->
+                Log.e("DocumentsViewModel", "문서 이름 수정 실패: ${error.message}", error)
             }
         }
     }
