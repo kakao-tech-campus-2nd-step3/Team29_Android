@@ -61,17 +61,19 @@ class PdfPageFragment : Fragment() {
 
         Log.d("PdfPageFragment", "onViewCreated called") // 로그 추가
 
-        val photoEditorView = binding.photoEditorView
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
             val bitmap = viewModel.renderPage(pdfUri, pageIndex)
             // binding.pdfImageView.setImageBitmap(bitmap)
-            photoEditorView.source?.setImageBitmap(bitmap) // 이미지 설정
+
+            // PhotoView에 이미지 설정 (확대/축소 기능)
+            binding.photoView.setImageBitmap(bitmap)
+
+            // PhotoEditor 초기화 (편집 기능)
+            photoEditor = PhotoEditor.Builder(requireContext(), binding.photoEditorView)
+                .setPinchTextScalable(true) // 텍스트 확대/축소 설정
+                .build()
         }
-        // PhotoEditor 초기화
-        photoEditor = PhotoEditor.Builder(requireContext(), photoEditorView)
-            .setPinchTextScalable(true) // 텍스트 확대/축소 설정
-            .build()
 
         // PhotoEditor의 리스너 설정
         photoEditor.setOnPhotoEditorListener(object : OnPhotoEditorListener {
@@ -136,6 +138,7 @@ class PdfPageFragment : Fragment() {
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
             .show()
     }
+
 //
 //    fun addEditableTextBox() {
 //        val editText = EditText(requireContext()).apply {
