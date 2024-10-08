@@ -1,5 +1,6 @@
 package com.iguana.documents
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ class DocumentsAdapter(private val onItemClick: (DocumentItem) -> Unit) :
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
+        Log.d("DocumentsAdapter", "Items updated: ${items.size} items")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -80,14 +82,14 @@ class DocumentsAdapter(private val onItemClick: (DocumentItem) -> Unit) :
 
 sealed class DocumentItem {
     data class FolderItem(
-        val id : Long,
+        val id: Long,
         val name: String,
         val fileCount: Int,
         val isBookmarked: Boolean
     ) : DocumentItem()
 
     data class PdfItem(
-        val id : Long,
+        val id: Long,
         val title: String,
         val timestamp: String,
         val isBookmarked: Boolean
