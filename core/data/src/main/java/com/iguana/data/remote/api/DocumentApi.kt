@@ -3,8 +3,10 @@ package com.iguana.data.remote.api
 import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.data.remote.model.CreateFolderResponseDto
 import com.iguana.data.remote.model.DocumentDto
+import com.iguana.data.remote.model.FolderContentItemDto
 import com.iguana.data.remote.model.FolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto
+import com.iguana.domain.model.FolderContentItem
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -19,10 +21,10 @@ interface DocumentApi {
     @GET("/api/folders/{folderId}")
     suspend fun getFolderContents(
         @Path("folderId") folderId: Long?,
-        @Query("page") page: Int = 1,
+        @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
         @Query("sortBy") sortBy: String = "updatedAt",
-        @Query("sortDirection") sortDirection: String = "desc"
+        @Query("sortDirection") sortDirection: String = "DESC"
     ): FolderContentResponseDto
 
     @GET("/api/documents")
@@ -51,4 +53,10 @@ interface DocumentApi {
 
     @POST("/api/folders/move")
     suspend fun moveItems(@Body request: MoveFolderRequestDto): MoveFolderRequestDto
+
+    @PUT("/api/folders/{folderId}/name")
+    suspend fun updateFolderName(
+        @Path("folderId") folderId: Long,
+        @Body name: Map<String, String>
+    ): FolderContentItemDto
 }

@@ -8,6 +8,7 @@ import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.domain.model.Document
 import com.iguana.domain.model.Folder
 import com.iguana.domain.model.FolderContent
+import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.model.MoveItemsRequest
 import com.iguana.domain.repository.DocumentsRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -16,10 +17,41 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
 import retrofit2.HttpException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
+    override fun getAllDocuments(): Flow<FolderContent> = flow {
+        try {
+            val response = api.getFolderContents(
+                folderId = null,
+                sortBy = "updatedAt",
+                sortDirection = "DESC"
+            )
+            val folderContent = response.toDomain()
+            emit(folderContent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
+        }
+    }
+
+    override fun getSubItems(folderId: Long): Flow<FolderContent> = flow {
+        try {
+            val response = api.getFolderContents(
+                folderId = folderId,
+                sortBy = "updatedAt",
+                sortDirection = "DESC"
+            )
+            val folderContent = response.toDomain()
+            emit(folderContent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
+        }
+    }
 
     override suspend fun uploadDocument(folderId: Long, file: File): Result<Document> = try {
         val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
@@ -101,6 +133,13 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.success(Unit)
     } catch (e: HttpException) {
         Result.failure(e)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    override suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem> = try {
+        val response = api.updateFolderName(folderId, mapOf("name" to newName))
+        Result.success(response.toDomain())
     } catch (e: Exception) {
         Result.failure(e)
     }
