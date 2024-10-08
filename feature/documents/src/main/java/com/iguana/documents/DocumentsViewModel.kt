@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.iguana.domain.model.FolderContent
 import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.usecase.CreateFolderUseCase
+import com.iguana.domain.usecase.DeleteFolderUseCase
 import com.iguana.domain.usecase.GetAllDocumentsUseCase
 import com.iguana.domain.usecase.GetSubItemsUseCase
 import com.iguana.domain.usecase.UpdateFolderNameUseCase
@@ -24,7 +25,8 @@ class DocumentsViewModel @Inject constructor(
     private val getAllDocumentsUseCase: GetAllDocumentsUseCase,
     private val getSubItemsUseCase: GetSubItemsUseCase,
     private val createFolderUsecase: CreateFolderUseCase,
-    private val updateFolderNameUseCase: UpdateFolderNameUseCase
+    private val updateFolderNameUseCase: UpdateFolderNameUseCase,
+    private val deleteFolderUseCase: DeleteFolderUseCase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<FolderContent?>(null)
@@ -141,6 +143,22 @@ class DocumentsViewModel @Inject constructor(
             }.onFailure {
                 // 에러 처리
                 Log.e("DocumentsViewModel", "폴더 이름 변경 실패", it)
+            }
+        }
+    }
+
+    fun deleteFolder(folderId: Long) {
+        viewModelScope.launch {
+            deleteFolderUseCase(folderId).onSuccess {
+                // 폴더 삭제 성공 처리
+                val updatedContent = _documents.value?.content?.filter { it.id != folderId }
+                _documents.value = _documents.value?.copy(content = updatedContent ?: emptyList())
+                
+                // 성공 로그
+                Log.d("DocumentsViewModel", "폴더가 성공적으로 삭제되었습니다.")
+            }.onFailure { error ->
+                // 에러 로그
+                Log.e("DocumentsViewModel", "폴더 삭제 실패: ${error.message}", error)
             }
         }
     }

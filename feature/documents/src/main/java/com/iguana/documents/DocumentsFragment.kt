@@ -17,7 +17,9 @@ import java.util.Stack
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.graphics.Rect
+import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.iguana.domain.model.FolderContent
 import kotlinx.coroutines.launch
@@ -68,12 +70,12 @@ class DocumentsFragment : Fragment() {
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.documents.collect { folderContent: FolderContent? ->
+            viewModel.documents.collect { folderContent ->
                 folderContent?.let { updateUI(it) }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentFolderName.collect { folderName: String ->
+            viewModel.currentFolderName.collect { folderName ->
                 updateToolbarTitle(folderName)
             }
         }
@@ -133,11 +135,35 @@ class DocumentsFragment : Fragment() {
     private fun showEditDeleteDialog(item: DocumentItem) {
         val options = arrayOf("수정", "삭제")
         AlertDialog.Builder(requireContext())
+            .setTitle("옵션 선택")
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> showEditNameDialog(item)
-                    1 -> { /* 삭제 로직 구현 */ }
+                    1 -> showDeleteConfirmationDialog(item)
                 }
+            }
+            .show()
+    }
+
+    private fun showDeleteConfirmationDialog(item: DocumentItem) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("삭제 확인")
+            .setMessage("정말로 이 ${if (item is DocumentItem.FolderItem) "폴더" else "파일"}를 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { _, _ ->
+                when (item) {
+                    is DocumentItem.FolderItem -> {
+                        viewModel.deleteFolder(item.id)
+                        Log.d("DocumentsFragment", "폴더 삭제 요청: ${item.id}")
+                    }
+                    is DocumentItem.PdfItem -> {
+                        // PDF 삭제 로직 (아직 구현되지 않음)
+                        // viewModel.deletePdf(item.id)
+                        Log.d("DocumentsFragment", "PDF 삭제 요청: ${item.id}")
+                    }
+                }
+            }
+            .setNegativeButton("취소") { _, _ ->
+                Log.d("DocumentsFragment", "삭제 취소됨")
             }
             .show()
     }
@@ -171,6 +197,7 @@ class DocumentsFragment : Fragment() {
             .setNegativeButton("취소", null)
             .show()
     }
+
 }
 
 class GridSpacingItemDecoration(
@@ -195,3 +222,4 @@ class GridSpacingItemDecoration(
         }
     }
 }
+
