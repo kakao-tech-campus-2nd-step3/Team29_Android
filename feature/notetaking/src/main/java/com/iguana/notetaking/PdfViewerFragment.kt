@@ -8,9 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.databinding.FragmentPdfViewerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +50,15 @@ class PdfViewerFragment : Fragment() {
             viewModel.getPdfPageCount(pdfUri) { pageCount ->
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
             }
+
+            // ViewPager2의 페이지 변경 리스너 설정
+            binding.pdfViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    viewModel.setCurrentPage(position)
+                    (activity as? NotetakingActivity)?.onPageChanged(position)
+                }
+            })
         }
     }
 
@@ -66,5 +72,9 @@ class PdfViewerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun getCurrentPage(): Int {
+        return viewModel.currentPageNumber.value ?: 0
     }
 }
