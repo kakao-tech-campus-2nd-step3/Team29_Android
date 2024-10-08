@@ -74,6 +74,7 @@ class DocumentsFragment : Fragment() {
                 folderContent?.let { updateUI(it) }
             }
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.currentFolderName.collect { folderName ->
                 updateToolbarTitle(folderName)
@@ -156,9 +157,8 @@ class DocumentsFragment : Fragment() {
                         Log.d("DocumentsFragment", "폴더 삭제 요청: ${item.id}")
                     }
                     is DocumentItem.PdfItem -> {
-                        // PDF 삭제 로직 (아직 구현되지 않음)
-                        // viewModel.deletePdf(item.id)
-                        Log.d("DocumentsFragment", "PDF 삭제 요청: ${item.id}")
+                        viewModel.deleteFile(item.id)
+                        Log.d("DocumentsFragment", "파일 삭제 요청: ${item.id}")
                     }
                 }
             }

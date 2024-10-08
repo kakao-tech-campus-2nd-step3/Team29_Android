@@ -10,6 +10,7 @@ import com.iguana.domain.usecase.DeleteFolderUseCase
 import com.iguana.domain.usecase.GetAllDocumentsUseCase
 import com.iguana.domain.usecase.GetSubItemsUseCase
 import com.iguana.domain.usecase.UpdateFolderNameUseCase
+import com.iguana.domain.usecase.DeleteFileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,8 @@ class DocumentsViewModel @Inject constructor(
     private val getSubItemsUseCase: GetSubItemsUseCase,
     private val createFolderUsecase: CreateFolderUseCase,
     private val updateFolderNameUseCase: UpdateFolderNameUseCase,
-    private val deleteFolderUseCase: DeleteFolderUseCase
+    private val deleteFolderUseCase: DeleteFolderUseCase,
+    private val deleteFileUseCase: DeleteFileUseCase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<FolderContent?>(null)
@@ -159,6 +161,22 @@ class DocumentsViewModel @Inject constructor(
             }.onFailure { error ->
                 // 에러 로그
                 Log.e("DocumentsViewModel", "폴더 삭제 실패: ${error.message}", error)
+            }
+        }
+    }
+
+    fun deleteFile(fileId: Long) {
+        viewModelScope.launch {
+            deleteFileUseCase(fileId).onSuccess {
+                // 파일 삭제 성공 처리
+                val updatedContent = _documents.value?.content?.filter { it.id != fileId }
+                _documents.value = _documents.value?.copy(content = updatedContent ?: emptyList())
+                
+                // 성공 로그
+                Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
+            }.onFailure { error ->
+                // 에러 로그
+                Log.e("DocumentsViewModel", "파일 삭제 실패: ${error.message}", error)
             }
         }
     }
