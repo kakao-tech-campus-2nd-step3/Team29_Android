@@ -8,6 +8,7 @@ import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.usecase.CreateFolderUseCase
 import com.iguana.domain.usecase.GetAllDocumentsUseCase
 import com.iguana.domain.usecase.GetSubItemsUseCase
+import com.iguana.domain.usecase.UpdateFolderNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class DocumentsViewModel @Inject constructor(
     private val getAllDocumentsUseCase: GetAllDocumentsUseCase,
     private val getSubItemsUseCase: GetSubItemsUseCase,
-    private val createFolderUsecase: CreateFolderUseCase
+    private val createFolderUsecase: CreateFolderUseCase,
+    private val updateFolderNameUseCase: UpdateFolderNameUseCase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<FolderContent?>(null)
@@ -40,7 +42,8 @@ class DocumentsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 getAllDocumentsUseCase().collect { rootContent ->
-                    _documents.value = rootContent
+                    val contentWithDummy = addDummyDataIfEmpty(rootContent)
+                    _documents.value = contentWithDummy
                     _currentFolderName.value = "문서"
                     currentFolder = FolderNode(-1L, "문서", null)
                 }
@@ -48,6 +51,35 @@ class DocumentsViewModel @Inject constructor(
                 Log.e("DocumentsViewModel", "Error loading documents", e)
             }
         }
+    }
+
+    private fun addDummyDataIfEmpty(content: FolderContent): FolderContent {
+        if (content.content.isEmpty()) {
+            val dummyFolder = createDummyFolder()
+            val dummyPdf = createDummyPdf()
+            return content.copy(content = listOf(dummyFolder, dummyPdf))
+        }
+        return content
+    }
+
+    private fun createDummyFolder(): FolderContentItem {
+        return FolderContentItem(
+            id = 9999L,
+            name = "테스트 폴더",
+            type = "FOLDER",
+            totalElements = 0,
+            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+        )
+    }
+
+    private fun createDummyPdf(): FolderContentItem {
+        return FolderContentItem(
+            id = 9998L,
+            name = "테스트 PDF.pdf",
+            type = "PDF",
+            totalElements = 1,
+            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+        )
     }
 
     fun loadSubItems(folderId: Long, folderName: String) {
@@ -94,6 +126,21 @@ class DocumentsViewModel @Inject constructor(
                 Log.d("DocumentsViewModel", "Documents updated: ${updatedContent.size} items")
             }.onFailure {
                 Log.e("DocumentsViewModel", "Error creating folder", it)
+            }
+        }
+    }
+
+    fun updateFolderName(folderId: Long, newName: String) {
+        viewModelScope.launch {
+            updateFolderNameUseCase(folderId, newName).onSuccess { updatedFolder ->
+                val currentContent = _documents.value?.content ?: emptyList()
+                val updatedContent = currentContent.map { item ->
+                    if (item.id == folderId) updatedFolder else item
+                }
+                _documents.value = _documents.value?.copy(content = updatedContent)
+            }.onFailure {
+                // 에러 처리
+                Log.e("DocumentsViewModel", "폴더 이름 변경 실패", it)
             }
         }
     }

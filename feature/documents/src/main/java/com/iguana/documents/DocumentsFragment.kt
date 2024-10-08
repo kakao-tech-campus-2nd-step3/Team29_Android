@@ -17,6 +17,7 @@ import java.util.Stack
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.graphics.Rect
+import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.iguana.domain.model.FolderContent
 import kotlinx.coroutines.launch
@@ -48,7 +49,10 @@ class DocumentsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = DocumentsAdapter(::onItemClick)
+        adapter = DocumentsAdapter(
+            onItemClick = { item -> onItemClick(item) },
+            onItemLongClick = { item -> showEditDeleteDialog(item) }
+        )
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             this.adapter = this@DocumentsFragment.adapter
@@ -65,25 +69,7 @@ class DocumentsFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.documents.collect { folderContent: FolderContent? ->
-                folderContent?.let {
-                    val items = it.content.map { item ->
-                        when (item.type) {
-                            "FOLDER" -> DocumentItem.FolderItem(
-                                id = item.id,
-                                name = item.name,
-                                fileCount = item.totalElements.toInt(),
-                                isBookmarked = false
-                            )
-                            else -> DocumentItem.PdfItem(
-                                id = item.id,
-                                title = item.name,
-                                timestamp = item.updatedAt,
-                                isBookmarked = false
-                            )
-                        }
-                    }
-                    adapter.setItems(items)
-                }
+                folderContent?.let { updateUI(it) }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -99,7 +85,7 @@ class DocumentsFragment : Fragment() {
                 "FOLDER" -> DocumentItem.FolderItem(
                     id = item.id,
                     name = item.name,
-                    fileCount = item.totalElements.toInt(),
+                    fileCount = item.totalElements,
                     isBookmarked = false
                 )
                 else -> DocumentItem.PdfItem(
@@ -143,7 +129,50 @@ class DocumentsFragment : Fragment() {
         }
         dialog.show(parentFragmentManager, "CreateFolderDialog")
     }
+
+    private fun showEditDeleteDialog(item: DocumentItem) {
+        val options = arrayOf("수정", "삭제")
+        AlertDialog.Builder(requireContext())
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showEditNameDialog(item)
+                    1 -> { /* 삭제 로직 구현 */ }
+                }
+            }
+            .show()
+    }
+
+    private fun showEditNameDialog(item: DocumentItem) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_folder, null)
+        val editText = dialogView.findViewById<EditText>(R.id.editTextFolderName)
+        val iconView = dialogView.findViewById<ImageView>(R.id.folderImg)
+
+        editText.setText(when (item) {
+            is DocumentItem.FolderItem -> item.name
+            is DocumentItem.PdfItem -> item.title
+        })
+
+        // 아이템 타입에 따라 아이콘 설정
+        iconView.setImageResource(when (item) {
+            is DocumentItem.FolderItem -> com.iguana.designsystem.R.drawable.folder_item_background
+            is DocumentItem.PdfItem -> com.iguana.designsystem.R.drawable.file_item_background
+        })
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("이름 변경")
+            .setView(dialogView)
+            .setPositiveButton("확인") { _, _ ->
+                val newName = editText.text.toString()
+                when (item) {
+                    is DocumentItem.FolderItem -> viewModel.updateFolderName(item.id, newName)
+                    is DocumentItem.PdfItem -> { /* PDF 이름 변경 로직 */ }
+                }
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
 }
+
 class GridSpacingItemDecoration(
     private val spanCount: Int,
     private val spacing: Int,

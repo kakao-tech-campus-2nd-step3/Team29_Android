@@ -137,6 +137,13 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
+    override suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem> = try {
+        val response = api.updateFolderName(folderId, mapOf("name" to newName))
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     companion object {
         private const val TAG = "DocumentsRepositoryImpl"
     }

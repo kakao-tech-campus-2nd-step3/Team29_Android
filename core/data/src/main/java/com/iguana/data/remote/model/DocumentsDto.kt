@@ -41,3 +41,11 @@ data class MoveFolderRequestDto(
     val folderIds: List<Long>,
     val destinationFolderId: Long
 )
+
+data class FolderContentItemDto(
+    val id: Long,
+    val name: String,
+    val type: String,
+    val totalElements: Int,
+    val updatedAt: String
+)
