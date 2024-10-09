@@ -55,4 +55,16 @@ class NotetakingActivity : AppCompatActivity() {
             Log.e("NotetakingActivity", "PDF URI is null in Activity") // URI가 null인 경우 로그
         }
     }
+    // 페이지 변경 시 호출되는 메서드
+    fun onPageChanged(pageNumber: Int) {
+        // 사이드바 프래그먼트 해당 페이지 내용으로 업데이트
+        val sideBarFragment = supportFragmentManager.findFragmentById(R.id.side_bar_container) as? SideBarFragment
+        sideBarFragment?.updatePageContent(pageNumber)
+    }
+
+    // 현재 페이지 번호 가져오는 메서드
+    fun getCurrentPage(): Int? {
+        val pdfViewerFragment = supportFragmentManager.findFragmentById(R.id.pdf_fragment_container) as? PdfViewerFragment
+        return pdfViewerFragment?.getCurrentPage()
+    }
 }

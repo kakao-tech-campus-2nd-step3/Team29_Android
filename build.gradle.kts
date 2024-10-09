@@ -5,6 +5,7 @@ buildscript {
         google()
         mavenCentral()
         maven("https://oss.sonatype.org/content/repositories/snapshots")
+        maven("https://www.jitpack.io")
     }
     dependencies {
         // gradlew generateProjectDependencyGraph
