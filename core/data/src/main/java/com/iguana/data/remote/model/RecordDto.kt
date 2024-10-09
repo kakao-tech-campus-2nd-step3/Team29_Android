@@ -23,21 +23,5 @@ data class RecordingUploadResponseDto(
     val createdAt: String // ISO 8601 format
 )
 
-data class SttResultsRequestDto(
-    val sttResults: List<SttResultSegment>,
-    val overallConfidence: Double
-)
 
-data class SttResultSegment(
-    val startTime: Double,
-    val endTime: Double,
-    val text: String,
-    val pageNumber: Int
-)
 
-data class SttResultsResponseDto(
-    val recordingId: String,
-    val documentId: Long,
-    val createdAt: String, // ISO 8601 format
-    val totalSegments: Int
-)
