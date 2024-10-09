@@ -6,6 +6,12 @@ plugins {
 dependencies {
     implementation(libs.android.gradlePlugin)
     implementation(libs.kotlin.gradlePlugin)
+    testImplementation(libs.junit4)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotest.runner)
+    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.kotlin.test)
 }
 
 gradlePlugin {
@@ -14,13 +20,13 @@ gradlePlugin {
             id = "iguana.android.hilt"
             implementationClass = "com.iguana.notai.HiltAndroidPlugin"
         }
-        register("kotlinHilt") {
-            id = "iguana.kotlin.hilt"
-            implementationClass = "com.iguana.notai.HiltKotlinPlugin"
-        }
         register("androidRoom") {
             id = "iguana.android.room"
             implementationClass = "com.iguana.notai.AndroidRoomPlugin"
+        }
+        register("kotlinHilt") {
+            id = "iguana.kotlin.hilt"
+            implementationClass = "com.iguana.notai.HiltKotlinPlugin"
         }
     }
 }

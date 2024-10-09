@@ -13,19 +13,51 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="16dp"
         tools:context=".LoginActivity">
 
-        <Button
-            android:id="@+id/btn_Kakao_Login"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="카카오 로그인 테스트"
-            android:visibility="visible"
-            android:onClick="@{() -> login.onLoginButtonClicked()}"
+            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                style="@style/SemiBold24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="환영합니다!"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/grey_30"/>
+
+            <TextView
+                style="@style/ExtraBold56"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:text="NOTAI에 로그인"
+                android:textColor="@color/black" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+            <ImageButton
+                android:id="@+id/btnKakaoLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/kakao_login_medium_wide"
+                android:onClick="@{() -> login.onLoginButtonClicked()}"
+                android:contentDescription="카카오 로그인 버튼" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

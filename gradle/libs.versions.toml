@@ -13,9 +13,12 @@ gradleDependencyGraphGeneratorPlugin = "0.8.0"
 room = "2.5.2"
 hilt = "2.46.1"
 hiltNavigationCompose = "1.0.0"
+pdfbox = "2.0.27.0"
+jp2 = "1.0.3"
 
 okhttp = "4.11.0"
 retrofit = "2.9.0"
+retrofitGsonConverter = "2.9.0"
 retrofitKotlinxSerializationJson = "1.0.0"
 kotlinxSerializationJson = "1.5.1"
 kotlinxDatetime = "0.2.1"
@@ -50,6 +53,10 @@ material = "1.9.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 appcompat = "1.7.0"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.8.6"
+lifecycleViewmodelKtx = "2.8.6"
+fragmentKtx = "1.5.6"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -89,6 +96,7 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationJson" }
+retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitGsonConverter" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxImmutable" }
@@ -114,8 +122,8 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutine" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine" }
-
 oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "ossLicenses" }
+
 
 # verify
 verify-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
@@ -123,7 +131,6 @@ verify-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatt
 # plugin
 verify-detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
-oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "ossLicensesPlugin" }
 androidx-glance = { group = "androidx.glance", name = "glance", version.ref = "androidxGlance" }
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "androidxGlance" }
 glance-tools-appwidget-host = { group = "com.google.android.glance.tools", name = "appwidget-host", version.ref = "glanceExperimentalTools"}
@@ -132,6 +139,12 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+pdfbox = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfbox"}
+jp2-android = { group = "com.gemalto.jp2", name = "jp2-android", version.ref = "jp2"}
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 
 [bundles]
 

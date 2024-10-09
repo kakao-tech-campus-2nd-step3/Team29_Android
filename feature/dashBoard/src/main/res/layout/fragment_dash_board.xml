@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 상단 여백 추가 -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+
+        <!-- 최근 파일 섹션 -->
+        <TextView
+            android:id="@+id/RecentstitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="최근 파일"
+            android:textColor="@android:color/black"
+            style="@style/Bold24" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="8dp" />
+
+        <FrameLayout
+            android:id="@+id/recent_files_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+        </FrameLayout>
+
+        <!-- AI 히스토리 섹션 -->
+        <TextView
+            android:id="@+id/AItitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI 히스토리"
+            android:textColor="@android:color/black"
+            style="@style/Bold24"
+            android:layout_marginTop="32dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="8dp" />
+
+        <FrameLayout
+            android:id="@+id/ai_history_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</layout>
