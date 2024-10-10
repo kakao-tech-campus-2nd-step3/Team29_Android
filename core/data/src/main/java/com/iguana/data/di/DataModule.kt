@@ -48,11 +48,5 @@ abstract class DataModule {
         fun provideRecentFileDao(appDatabase: AppDatabase): RecentFileDao {
             return appDatabase.recentFileDao()
         }
-
-        @Provides
-        @Singleton
-        fun provideContext(@ApplicationContext context: Context): Context {
-            return context
-        }
     }
 }
