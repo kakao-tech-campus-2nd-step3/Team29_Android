@@ -11,6 +11,7 @@ import com.iguana.data.remote.api.RecordApi
 import com.iguana.domain.model.record.PageTurnEvent
 import com.iguana.domain.model.record.RecordingFile
 import com.iguana.domain.repository.RecordRepository
+import com.iguana.domain.utils.AppError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -34,9 +35,9 @@ class RecordRepositoryImpl @Inject constructor(
                         // 서버 응답을 기존 RecordingFile에 덮어씌움
                         val updatedFile = recordingFile.updateWithResponse(it)
                         Result.success(updatedFile)
-                    } ?: Result.failure(Exception("녹음 파일 업로드 실패: 응답 본문 없음"))
+                    } ?: Result.failure(AppError.UploadFailed)
                 } else {
-                    Result.failure(Exception("녹음 파일 업로드 실패: ${response.code()}"))
+                    Result.failure(AppError.UploadFailed)
                 }
             } catch (e: Exception) {
                 Result.failure(e)
@@ -71,7 +72,7 @@ class RecordRepositoryImpl @Inject constructor(
                     file.delete()
                     Result.success(Unit)
                 } else {
-                    Result.failure(Exception("녹음 파일을 찾을 수 없습니다."))
+                    Result.failure(AppError.FileNotFound)
                 }
             } catch (e: Exception) {
                 Result.failure(e)

@@ -1,12 +1,12 @@
 package com.iguana.data.local.files
 
 import com.iguana.data.remote.model.PageTurnEventDto
+import com.iguana.domain.utils.AppError
 import java.io.File
 import javax.inject.Inject
 
 class RecordingFileStorage @Inject constructor(
     private val baseDir: File,  // 내부 저장소 경로 (context.filesDir 등을 사용할 수 있음)
-    private val fileHelper: FileHelperImpl  // 파일 복사 작업 등에서 활용
 ) {
 
     // 로컬 스토리지에 녹음 파일 저장
@@ -41,7 +41,7 @@ class RecordingFileStorage @Inject constructor(
                 file.delete()
                 Result.success(Unit)
             } else {
-                Result.failure(Exception("파일을 찾을 수 없습니다."))
+                Result.failure(AppError.FileNotFound)
             }
         } catch (e: Exception) {
             Result.failure(e)
