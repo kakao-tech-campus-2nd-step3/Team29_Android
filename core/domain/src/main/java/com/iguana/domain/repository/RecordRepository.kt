@@ -5,7 +5,7 @@ import com.iguana.domain.model.record.RecordingFile
 
 interface RecordRepository {
     // 서버에 녹음 파일 업로드
-    suspend fun uploadRecordingFile(recordingFile: RecordingFile): Result<Unit>
+    suspend fun uploadRecordingFile(recordingFile: RecordingFile): Result<RecordingFile>
 
     // 로컬 스토리지에 녹음 파일 저장
     suspend fun saveRecordingFile(recordingFile: RecordingFile): Result<Unit>

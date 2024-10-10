@@ -2,10 +2,10 @@ package com.iguana.data.remote.model
 
 data class PageTurnEventRequestDto(
     val recordingId: Long,
-    val events: List<PageTurnEvent>
+    val events: List<PageTurnEventDto>
 )
 
-data class PageTurnEvent(
+data class PageTurnEventDto(
     val prevPage: Int,
     val nextPage: Int,
     val timestamp: Double
