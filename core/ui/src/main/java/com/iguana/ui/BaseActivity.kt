@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.documents.DocumentsFragment
+import com.iguana.settings.SettingsFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +34,12 @@ class BaseActivity : AppCompatActivity() {
     fun showDocuments() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_frame, DocumentsFragment())
+            .commit()
+    }
+
+    fun showSettings() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_frame, SettingsFragment())
             .commit()
     }
 }

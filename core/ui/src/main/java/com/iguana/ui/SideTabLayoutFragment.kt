@@ -53,5 +53,6 @@ class SideTabLayoutFragment : Fragment() {
 
     fun onSettingsClick() {
         _selectedItem.value = 4
+        (activity as? BaseActivity)?.showSettings()
     }
 }
