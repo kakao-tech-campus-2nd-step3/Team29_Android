@@ -181,7 +181,7 @@ class DocumentsFragment : Fragment() {
         // 아이템 타입에 따라 아이콘 설정
         iconView.setImageResource(when (item) {
             is DocumentItem.FolderItem -> com.iguana.designsystem.R.drawable.folder_item_background
-            is DocumentItem.PdfItem -> com.iguana.designsystem.R.drawable.file_item_background
+            is DocumentItem.PdfItem -> com.iguana.designsystem.R.drawable.folder_item_background
         })
 
         AlertDialog.Builder(requireContext())

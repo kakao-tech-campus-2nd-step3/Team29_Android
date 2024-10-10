@@ -43,7 +43,6 @@ class RecentFileRepositoryImpl @Inject constructor(
     }
 
     override suspend fun cleanupOldFiles(daysToKeep: Int) {
-        val cutoffTime = System.currentTimeMillis() - (daysToKeep * 24 * 60 * 60 * 1000L)
-        recentFileDao.deleteOldFiles(cutoffTime)
+        recentFileDao.deleteOldFiles(daysToKeep)
     }
 }

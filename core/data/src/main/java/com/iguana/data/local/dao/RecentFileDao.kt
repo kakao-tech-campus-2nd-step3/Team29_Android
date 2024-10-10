@@ -24,6 +24,6 @@ interface RecentFileDao {
     @Delete
     fun deleteRecentFile(recentFile: RecentFileEntity)
 
-    @Query("DELETE FROM recent_files WHERE lastOpened < :cutoffTime")
-    fun deleteOldFiles(cutoffTime: Long): Int
+    @Query("DELETE FROM recent_files WHERE lastOpened < datetime('now', '-' || :daysToKeep || ' days')")
+    fun deleteOldFiles(daysToKeep: Int): Int
 }
