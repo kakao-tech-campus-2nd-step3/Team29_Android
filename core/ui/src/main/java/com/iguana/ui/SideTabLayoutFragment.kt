@@ -49,6 +49,7 @@ class SideTabLayoutFragment : Fragment() {
 
     fun onProfileClick() {
         _selectedItem.value = 3
+        (activity as BaseActivity)?.showUserInfo()
     }
 
     fun onSettingsClick() {
