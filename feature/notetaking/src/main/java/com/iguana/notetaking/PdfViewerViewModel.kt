@@ -2,6 +2,8 @@ package com.iguana.notetaking
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.notetaking.util.PdfRendererHelper
@@ -14,6 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(private val pdfRendererHelper: PdfRendererHelper) :
     ViewModel() {
+
+    private val _currentPageNumber = MutableLiveData<Int>() // 페이지 번호를 LiveData로 관리
+    val currentPageNumber: LiveData<Int> get() = _currentPageNumber
 
     // PDF 파일의 특정 페이지를 렌더링
     fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
@@ -28,6 +33,11 @@ class PdfViewerViewModel @Inject constructor(private val pdfRendererHelper: PdfR
             }
             callback(pageCount)
         }
+    }
+
+    // 현재 페이지 번호를 업데이트하는 메서드
+    fun setCurrentPage(page: Int) {
+        _currentPageNumber.value = page
     }
 
 }

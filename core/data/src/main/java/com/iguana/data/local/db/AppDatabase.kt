@@ -15,34 +15,11 @@ import kotlinx.coroutines.launch
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recentFileDao(): RecentFileDao
 
-    companion object {
-        private const val DATABASE_NAME = "app_database"
-
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-
-        fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    DATABASE_NAME
-                )
-                .addCallback(AppDatabaseCallback(scope))
-                .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
-
-    private class AppDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+    private class AppDatabaseCallback(private val database: AppDatabase, private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            INSTANCE?.let { database ->
-                scope.launch(Dispatchers.IO) {
-                    populateDatabase(database.recentFileDao())
-                }
+            scope.launch(Dispatchers.IO) {
+                populateDatabase(database.recentFileDao())
             }
         }
 

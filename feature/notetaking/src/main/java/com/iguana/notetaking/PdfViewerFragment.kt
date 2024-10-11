@@ -50,10 +50,31 @@ class PdfViewerFragment : Fragment() {
             viewModel.getPdfPageCount(pdfUri) { pageCount ->
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
             }
+
+            // ViewPager2의 페이지 변경 리스너 설정
+            binding.pdfViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    viewModel.setCurrentPage(position)
+                    (activity as? NotetakingActivity)?.onPageChanged(position)
+                }
+            })
         }
     }
+
+    // 현재 표시된 PdfPageFragment를 가져오는 메서드
+    fun getCurrentPdfPageFragment(): PdfPageFragment? {
+        val currentItem = binding.pdfViewPager.currentItem
+        val fragment = childFragmentManager.findFragmentByTag("f$currentItem")
+        return if (fragment is PdfPageFragment) fragment else null
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun getCurrentPage(): Int {
+        return viewModel.currentPageNumber.value ?: 0
     }
 }
