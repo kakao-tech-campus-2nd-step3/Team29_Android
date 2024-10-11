@@ -22,6 +22,8 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(projects.feature.dashBoard)
     implementation(projects.feature.documents)
+    implementation(projects.feature.settings)
+    implementation(projects.feature.userInfo)
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)

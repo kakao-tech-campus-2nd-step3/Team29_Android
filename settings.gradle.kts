@@ -6,6 +6,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven("https://www.jitpack.io")
     }
 }
 
@@ -15,6 +16,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(uri("https://devrepo.kakao.com/nexus/content/groups/public/"))
+        maven("https://www.jitpack.io")
     }
 }
 

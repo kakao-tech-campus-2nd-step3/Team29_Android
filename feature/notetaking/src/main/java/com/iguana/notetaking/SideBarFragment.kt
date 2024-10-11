@@ -48,6 +48,18 @@ class SideBarFragment : Fragment() {
         }.attach()
     }
 
+    // 사이드바 내용 업데이트 메서드
+    fun updatePageContent(pageNumber: Int) {
+        // 어댑터를 통해 각 탭의 프래그먼트 접근
+        val adapter = binding.sideBarViewPager.adapter as SidebarAdapter
+        val recordFragment = adapter.getFragment(0) as? RecordFragment
+        val aiFragment = adapter.getFragment(1) as? AiFragment
+
+        // 각 프래그먼트에 페이지 번호 업데이트
+        recordFragment?.updateContentForPage(pageNumber)
+        aiFragment?.updateContentForPage(pageNumber)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
