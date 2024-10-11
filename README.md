@@ -1,8 +1,14 @@
 # Team29_Android
 29조 안드로이드
 
-## 리뷰 요규 사항
-- 로그인 기능 구현 시 API 서버가 완성되지 않은 상태에서 현재 수준으로 구현해둬도 괜찮나요? 아니면 모킹같은 작업이 필요할까요?
-(feature/login/src/main/java/com/iguana/login/LoginApi.kt)
-- 로그인 기능 구현 시 뷰모델에서 레포지토리에 context 를 넘기고 있습니다.(SharedPref 사용을 위함) 이렇게 컨텍스트를 직접 넘겨도 되나요? (feature/login/src/main/java/com/iguana/login/LoginRepository.kt)
-- 찾아보니 멀티 모듈이 협업하기에 좋은 것 같아 채택하기로 하였습니다. app 모듈, core:data 모듈, core:domain 모듈, feature:login 모듈, feature:notetaking 모듈 .. 기타 피쳐별 모듈.. 라이브러리 버전 관리를 위한 build-logic 모듈로 구성을 했는데 다중 모듈을 사용하는 팀들이 없는 것 같아 이런식으로 구현해도 될 지 모르겠습니다. 이런 구성으로 가도 괜찮을까요?
+## 리뷰 요구 사항
+
+1. BE 와 같이 진행한 회의에서 페이지 위에 추가할 수 있는 텍스트 주석도 안드로이드 내부에 DB 를 만들어서 PDF 파일을 열면 해당하는 페이지와 위치에 주석이 위치할 수 있도록 불러오자는 의견으로 통합했습니다.
+ 텍스트를 페이지에 원하는 위치에 넣고 사이즈도 원하는 대로 조정 및 텍스트 수정을 런타임에 하는 것이 구현이 어렵다는 생각이 들어서 외부라이브러리를 사용하도록 했는데 이미지 첨부의 주석 관련 영상을 보시면 보이다 싶이 제약이 존재한다고 생각이 들었습니다. 
+해당 영상에서는 텍스트를 어느정도 길게 누르면 텍스트 수정 dialog 가 뜨고 거기서 수정 후 '확인'을 눌러야 수정이 되는 형태입니다. 그런데 이건 저희의 구상과 방향성이 다르다고 생각이 들어서 커스텀 주석을 만들어야하나 고민됩니다. 
+원하는 방향은 텍스트를 클릭하면 해당 화면 자체에서 편집할 수 있도록 텍스트 박스 내부에 텍스트 편집 커서가 되는 형식으로 되어서 수정할 수 있으며 텍스트 외의 화면을 다시 한번 클릭하면 이 텍스트를 '수정했다'고 생각하고 DB 에 수정된 내용으로 업데이트 및 서버에 업데이트 내용 전송하는 방식으로요. 이 작업에 대해 어떻게 생각하시는지 궁금합니다! (ex) 어려울 것 같다, 시간이 부족할 것 같다, 다른 방식을 추천한다 등 자유로운 의견이 궁금합니다ㅠ)
+
+2. 녹음 관련 기능에서 서버에서 보내거나 받을 데이터 모델을 data layer 의 remote/model 에 정의하고 이를 활용할 때는 mapper 을 통해 domain layer 의 model 로 변경하여 repository 에서 변환하여 넘기는 작업을 하고 있습니다.  domain layer 의 model (VO라고 해야하나요..?) 의 속성에 어떤 값이 들어올 지는 보통 무엇을 기준으로 해야하는 지 헷갈립니다. 화면에 띄워질 데이터를 기반으로 작성을 하나요? 아니면 data layer 의 요청 및 응답을 포괄하는 하나의 모델을 작성하는 형식인가요? (+해당 도메인 계층의 모델은 보통 어떤 시점에 작성을 하나요? 뷰모델이나 액티비티같은 작업을 할 때 제작을 하는 지 미리 제작을 하고 그 후에 presentation 레이어를 제작하는 건지 궁금합니다!)
+> 관련 PR ) [Merge pull request](https://github.com/kakao-tech-campus-2nd-step3/Team29_Android/pull/69/commits/949a146ff99ff62896161303fe7777af51894edb) https://github.com/kakao-tech-campus-2nd-step3/Team29_Android/pull/65 [from aengzu/feature/record](https://github.com/kakao-tech-campus-2nd-step3/Team29_Android/pull/69/commits/949a146ff99ff62896161303fe7777af51894edb)
+
+3. 현재 recycler View에 폴더나, 파일들을 등록할 예정입니다. 그냥 그대로 등록하게 되면 파일들 간 간격이 너무 벌어지는데, 이것들을 xml상에서 수정할 방안이 있는지 궁금합니다!
