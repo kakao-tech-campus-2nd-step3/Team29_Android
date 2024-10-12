@@ -2,7 +2,6 @@ package com.iguana.dashBoard
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,11 @@ class RecentFilesFragment : Fragment() {
 
     private lateinit var openPdfLauncher: ActivityResultLauncher<Array<String>>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentRecentFilesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -47,7 +50,9 @@ class RecentFilesFragment : Fragment() {
     }
 
     private fun setupRecentFilesRecyclerView() {
-        recentFilesAdapter = RecentFilesAdapter(emptyList())
+        recentFilesAdapter = RecentFilesAdapter(emptyList()) { recentFile ->
+            viewModel.openFile(recentFile, requireContext())
+        }
         binding.recentFilesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = recentFilesAdapter
@@ -65,13 +70,14 @@ class RecentFilesFragment : Fragment() {
     }
 
     private fun setupFilePicker() {
-        openPdfLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-            uri?.let {
-                viewModel.uploadPdf(it, requireContext())
-            } ?: run {
-                Toast.makeText(requireContext(), "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
+        openPdfLauncher =
+            registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+                uri?.let {
+                    viewModel.uploadPdf(it, requireContext())
+                } ?: run {
+                    Toast.makeText(requireContext(), "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
     }
 
     override fun onDestroyView() {
