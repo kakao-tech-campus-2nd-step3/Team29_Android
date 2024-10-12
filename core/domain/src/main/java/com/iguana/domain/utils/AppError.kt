@@ -13,7 +13,6 @@ sealed class AppError : Exception() {
             get() = "업로드에 실패했습니다."
     }
 
-    // 필요시 추가할 수 있는 다양한 에러들
     data class NetworkError(val errorCode: Int) : AppError() {
         override val message: String
             get() = "네트워크 에러가 발생했습니다. 에러 코드: $errorCode"
@@ -23,4 +22,11 @@ sealed class AppError : Exception() {
         override val message: String
             get() = "알 수 없는 에러가 발생했습니다: $errorMessage"
     }
+
+
+    data class NullResponseError(val errorMessage: String) : AppError() {
+        override val message: String
+            get() = "응답이 비어 있습니다: $errorMessage"
+    }
+
 }
