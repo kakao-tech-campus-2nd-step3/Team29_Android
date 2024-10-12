@@ -1,4 +1,4 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.sidebar
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -6,10 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentSideBarBinding
+import com.iguana.notetaking.recording.RecordFragment
 
 class SideBarFragment : Fragment() {
 
