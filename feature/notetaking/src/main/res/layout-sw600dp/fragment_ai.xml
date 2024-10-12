@@ -23,7 +23,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"> <!-- 상단 마진 추가 -->
+            android:layout_marginTop="20dp"
+            > <!-- 상단 마진 추가 -->
             <!-- 박스 안에 텍스트를 표시하는 TextView -->
             <TextView
                 android:id="@+id/aiPageTextView"
@@ -41,38 +42,44 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_gravity="center"
             app:layout_constraintTop_toBottomOf="@id/boxView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="20dp">
 
             <TextView
                 android:id="@+id/aiStatusTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="12dp"
                 android:text="@string/ai_empty_message"/>
             <!-- 박스 안에 텍스트를 표시하는 TextView -->
             <TextView
                 android:id="@+id/aiContentTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(viewModel.pageNumber) + ` 페이지`}"
-                android:textSize="18sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="AI 요약 내용이 담긴다."
+                android:visibility="gone"
+                android:textSize="16sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center" />
-
+            
             <LinearLayout
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="200dp"
+                android:id="@+id/aiButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button4_background"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingHorizontal="12dp"
+                android:paddingHorizontal="44dp"
                 android:paddingVertical="8dp"
                 android:layout_margin="8dp"
                 tools:ignore="MissingDefaultResource">
@@ -80,8 +87,8 @@
                 <!-- 아이콘 (좌측) -->
                 <ImageView
                     android:id="@+id/buttonIcon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:src="@drawable/ic_ai_active" />
 
                 <!-- 텍스트 (AI 요약하기) -->
@@ -91,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="AI 요약하기"
-                    style="@style/Regular9" />
+                    style="@style/Regular8" />
             </LinearLayout>
         </LinearLayout>
 
