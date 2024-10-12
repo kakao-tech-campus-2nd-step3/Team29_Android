@@ -46,10 +46,15 @@ class RecentFilesViewModel @Inject constructor(
         }
     }
 
-    fun openFile(id: Long, fileName: String, fileUri: String) {
+    fun openFile(recentFile: RecentFile, context: Context) {
         viewModelScope.launch {
-            recentFileRepository.insertRecentFile(id, fileName, fileUri)
+            recentFileRepository.insertRecentFile(recentFile.id, recentFile.fileName, recentFile.fileUri)
         }
+        val intent = Intent(context, NotetakingActivity::class.java).apply {
+            putExtra("PDF_URI", recentFile.fileUri)
+            putExtra("PDF_TITLE", recentFile.fileName)
+        }
+        context.startActivity(intent)
     }
 
     fun updateBookmark(fileId: Long, bookmarkedPage: Int) {

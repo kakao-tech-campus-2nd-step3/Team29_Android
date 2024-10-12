@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
+import com.iguana.notetaking.sidebar.SideBarFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 

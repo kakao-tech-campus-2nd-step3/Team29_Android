@@ -6,5 +6,5 @@ data class Annotation(
     val x: Int, // x 좌표
     val y: Int, // y 좌표
     val width: Int, // 너비
-    val height: Int, // 높이
+    val height: Int // 높이
 )

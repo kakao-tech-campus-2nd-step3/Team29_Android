@@ -1,4 +1,4 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.sidebar
 
 import androidx.lifecycle.ViewModel
 

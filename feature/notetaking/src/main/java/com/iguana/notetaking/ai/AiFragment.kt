@@ -1,30 +1,31 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.ai
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.iguana.notetaking.databinding.FragmentAiBinding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import com.iguana.notetaking.databinding.FragmentRecordBinding
+import com.iguana.notetaking.NotetakingActivity
 
-class RecordFragment : Fragment() {
+
+class AiFragment : Fragment() {
 
     companion object {
-        fun newInstance() = RecordFragment()
+        fun newInstance() = AiFragment()
     }
 
-    private var _binding: FragmentRecordBinding? = null
+    private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: RecordViewModel by viewModels()
+    private val viewModel: AiViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecordBinding.inflate(inflater, container, false)
+        _binding = FragmentAiBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -33,16 +34,15 @@ class RecordFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         // 현재 페이지가 Fragment가 생성될 때 설정되도록 함
         val currentPage = (activity as? NotetakingActivity)?.getCurrentPage() ?: 1
         updateContentForPage(currentPage)
 
+        super.onViewCreated(view, savedInstanceState)
         viewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
-            binding.recordPageTextView.text = (pageNumber?.toString() + " 페이지")
+            binding.aiPageTextView.text = pageNumber?.toString()+" 페이지"
         }
     }
-
 
     // 페이지 번호 업데이트 메서드
     fun updateContentForPage(pageNumber: Int) {

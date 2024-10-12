@@ -1,7 +1,9 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.sidebar
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.iguana.notetaking.ai.AiFragment
+import com.iguana.notetaking.recording.RecordFragment
 
 class SidebarAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
