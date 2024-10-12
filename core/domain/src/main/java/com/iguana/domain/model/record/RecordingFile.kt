@@ -8,5 +8,5 @@ data class RecordingFile(
     val duration: Long,        // 녹음 길이 (밀리초)
     val documentName: String,   // 연관된 문서 이름
     var recordingId: Long? = null,    // 서버에서 반환된 녹음 ID
-    var documentId: Long? = null,     // 서버에서 반환된 문서 ID
+    var documentId: Long? = null     // 서버에서 반환된 문서 ID
 )
