@@ -33,6 +33,7 @@ class NotetakingActivity : AppCompatActivity() {
             finish()
         }
 
+        // PDF URI가 있는 경우 프래그먼트 추가
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
             val pdfViewerFragment = PdfViewerFragment.newInstance(pdfUri)
@@ -45,8 +46,25 @@ class NotetakingActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.side_bar_container, sideBarFragment)
                 .commit()
+
+            // 툴바의 텍스트 버튼 클릭 리스너 설정
+            binding.toolbar.btnText.setOnClickListener {
+                pdfViewerFragment.getCurrentPdfPageFragment()?.addTextBox()
+            }
         } else {
             Log.e("NotetakingActivity", "PDF URI is null in Activity") // URI가 null인 경우 로그
         }
+    }
+    // 페이지 변경 시 호출되는 메서드
+    fun onPageChanged(pageNumber: Int) {
+        // 사이드바 프래그먼트 해당 페이지 내용으로 업데이트
+        val sideBarFragment = supportFragmentManager.findFragmentById(R.id.side_bar_container) as? SideBarFragment
+        sideBarFragment?.updatePageContent(pageNumber)
+    }
+
+    // 현재 페이지 번호 가져오는 메서드
+    fun getCurrentPage(): Int? {
+        val pdfViewerFragment = supportFragmentManager.findFragmentById(R.id.pdf_fragment_container) as? PdfViewerFragment
+        return pdfViewerFragment?.getCurrentPage()
     }
 }

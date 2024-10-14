@@ -28,19 +28,6 @@ class SideTabLayoutFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupClickListeners()
-    }
-
-    private fun setupClickListeners() {
-        binding.dashboard.setOnClickListener { onDashboardClick() }
-        binding.documents.setOnClickListener { onDocumentsClick() }
-        binding.favorites.setOnClickListener { onFavoritesClick() }
-        binding.profile.setOnClickListener { onProfileClick() }
-        binding.settings.setOnClickListener { onSettingsClick() }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -62,9 +49,11 @@ class SideTabLayoutFragment : Fragment() {
 
     fun onProfileClick() {
         _selectedItem.value = 3
+        (activity as BaseActivity)?.showUserInfo()
     }
 
     fun onSettingsClick() {
         _selectedItem.value = 4
+        (activity as? BaseActivity)?.showSettings()
     }
 }
