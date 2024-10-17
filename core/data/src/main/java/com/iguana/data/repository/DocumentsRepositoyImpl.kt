@@ -22,34 +22,28 @@ import kotlinx.coroutines.flow.flow
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
-    override fun getAllDocuments(): Flow<FolderContent> = flow {
-        try {
-            val response = api.getFolderContents(
-                folderId = null,
-                sortBy = "updatedAt",
-                sortDirection = "DESC"
-            )
-            val folderContent = response.toDomain()
-            emit(folderContent)
-        } catch (e: Exception) {
-            Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
-            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
-        }
+    override suspend fun getAllDocuments(): Result<FolderContent> = try {
+        val response = api.getFolderContents(
+            folderId = null,
+            sortBy = "updatedAt",
+            sortDirection = "DESC"
+        )
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
     }
 
-    override fun getSubItems(folderId: Long): Flow<FolderContent> = flow {
-        try {
-            val response = api.getFolderContents(
-                folderId = folderId,
-                sortBy = "updatedAt",
-                sortDirection = "DESC"
-            )
-            val folderContent = response.toDomain()
-            emit(folderContent)
-        } catch (e: Exception) {
-            Logger.e(TAG, "하위 항목 가져오기 중 예외 발생: ${e.message}", e)
-            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
-        }
+    override suspend fun getSubItems(folderId: Long): Result<FolderContent> = try {
+        val response = api.getFolderContents(
+            folderId = folderId,
+            sortBy = "updatedAt",
+            sortDirection = "DESC"
+        )
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "하위 항목 가져오기 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
     }
 
     override suspend fun uploadDocument(folderId: Long, file: File): Result<Document> = try {
@@ -62,7 +56,13 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun getFolderContents(folderId: Long?, page: Int, size: Int, sortBy: String, sortDirection: String): Result<FolderContent> = try {
+    override suspend fun getFolderContents(
+        folderId: Long?, 
+        page: Int, 
+        size: Int, 
+        sortBy: String, 
+        sortDirection: String
+    ): Result<FolderContent> = try {
         val response = api.getFolderContents(folderId, page, size, sortBy, sortDirection)
         Result.success(response.toDomain())
     } catch (e: Exception) {
