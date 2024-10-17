@@ -40,6 +40,5 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.feature.login)
     implementation(projects.feature.dashBoard)
-    implementation(projects.feature.notetaking)
     implementation("com.kakao.sdk:v2-user:2.20.6")
 }
