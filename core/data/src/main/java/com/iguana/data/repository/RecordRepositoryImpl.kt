@@ -23,7 +23,6 @@ class RecordRepositoryImpl @Inject constructor(
 ) : RecordRepository {
 
     // 서버에 녹음 파일 업로드
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun uploadRecordingFile(recordingFile: RecordingFile): Result<RecordingFile> {
         return withContext(Dispatchers.IO) {
             try {

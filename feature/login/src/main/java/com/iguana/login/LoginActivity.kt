@@ -27,13 +27,12 @@ class LoginActivity : AppCompatActivity() {
         viewModel.setContext(this)
 
         setupObservers()
-        
-        // 해당 부분은 화면 넘김을 위해 무조건 넘어가도록 설정했습니다.
-//        if (viewModel.isUserLoggedIn()) {
-//            navigateToMainScreen()
-//        }
 
-        navigateToMainScreen()
+        if (viewModel.isUserLoggedIn()) {
+            navigateToMainScreen()
+        }
+
+//        navigateToMainScreen()
     }
 
     fun onLoginButtonClicked() {
