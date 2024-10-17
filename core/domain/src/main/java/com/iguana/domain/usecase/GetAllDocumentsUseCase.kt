@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetAllDocumentsUseCase @Inject constructor(
     private val documentsRepository: DocumentsRepository
 ) {
-    operator fun invoke(): Flow<FolderContent> {
+    suspend operator fun invoke(): Result<FolderContent> {
         return documentsRepository.getAllDocuments()
     }
 }
