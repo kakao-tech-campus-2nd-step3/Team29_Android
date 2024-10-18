@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme -->
-    <style name="Theme.Notai.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary colors -->
         <item name="notaiColorPrimary">@color/blue_90</item> <!-- 메인 포인트 컬러 (일부 버튼)-->
         <item name="notaiColorPrimaryVariant">@color/blue_10</item> <!-- 연하늘색 컴포넌트 배경  -->
