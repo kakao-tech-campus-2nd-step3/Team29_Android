@@ -70,13 +70,41 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun login(token: String) {
+    private fun login(oauthAccessToken: String) {
         viewModelScope.launch {
-            val result = loginRepository.sendKakaoToken(token)
+            val result = loginRepository.sendKakaoToken(oauthAccessToken)
             if (result) {
                 _loginState.value = LoginState.LoggedIn
+                fetchUserProfile()
             } else {
                 _loginState.value = LoginState.Error("로그인에 실패했습니다.")
+            }
+        }
+    }
+
+    private fun fetchUserProfile() {
+        viewModelScope.launch {
+            val profile = loginRepository.getUserProfile()
+            if (profile != null) {
+                Log.d(TAG, "사용자 프로필: ID=${profile.id}, 닉네임=${profile.nickname}")
+            } else {
+                Log.e(TAG, "사용자 프로필을 가져오지 못했습니다.")
+            }
+        }
+    }
+
+    fun refreshAccessToken() {
+        viewModelScope.launch {
+            val refreshToken = loginRepository.getRefreshToken()
+            if (refreshToken != null) {
+                val result = loginRepository.refreshToken(refreshToken)
+                if (result) {
+                    Log.d(TAG, "토큰 리프레쉬 성공")
+                } else {
+                    Log.e(TAG, "토큰 리프레쉬 실패")
+                }
+            } else {
+                Log.e(TAG, "리프레시 토큰이 존재하지 않습니다.")
             }
         }
     }

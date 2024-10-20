@@ -75,8 +75,8 @@
                     android:id="@+id/mail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chungnam@naver.com"
-                    android:textSize="14sp"
+                    android:text="사용자 정보를 불러올 수 없습니다."
+                    android:textSize="13sp"
                     android:layout_gravity="center_vertical"/>
 
             </LinearLayout>
