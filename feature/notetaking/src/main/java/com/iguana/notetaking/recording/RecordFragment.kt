@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.databinding.FragmentRecordBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class RecordFragment : Fragment() {
+class RecordFragment(private val documentId: Long) : Fragment() {
 
     companion object {
-        fun newInstance() = RecordFragment()
+        fun newInstance(documentId: Long) = RecordFragment(documentId)
     }
 
     private var _binding: FragmentRecordBinding? = null

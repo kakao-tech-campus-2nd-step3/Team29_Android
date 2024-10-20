@@ -1,9 +1,11 @@
 package com.iguana.data.di
 
+import com.iguana.data.repository.AIRepositoryImpl
 import com.iguana.data.repository.AnnotationRepositoryImpl
 import com.iguana.data.repository.DocumentsRepositoryImpl
 import com.iguana.data.repository.LoginRepositoryImpl
 import com.iguana.data.repository.RecentFileRepositoryImpl
+import com.iguana.domain.repository.AIRepository
 import com.iguana.domain.repository.AnnotationRepository
 import com.iguana.domain.repository.DocumentsRepository
 import com.iguana.domain.repository.LoginRepository
@@ -40,4 +42,10 @@ abstract class RepositoryModule {
     abstract fun bindLoginRepository(
         loginRepositoryImpl: LoginRepositoryImpl
     ): LoginRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAIRepository(
+        aiRepositoryImpl: AIRepositoryImpl
+    ): AIRepository
 }
