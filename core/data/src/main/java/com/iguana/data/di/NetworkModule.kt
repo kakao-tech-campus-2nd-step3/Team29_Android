@@ -1,5 +1,6 @@
 package com.iguana.data.di
 
+import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
 import dagger.Module
@@ -18,7 +19,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://example.com/") // 실제 API URL로 변경 필요
+            .baseUrl(BuildConfig.API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
