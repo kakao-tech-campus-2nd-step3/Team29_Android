@@ -17,4 +17,7 @@ interface AIRepository {
     // 요약 결과 조회
     suspend fun getSummarization(documentId: Long): Result<List<AIResult>>
 
+    // 요약 결과 조회 (페이지별)
+    suspend fun getSummarizationByPage(documentId: Long, pageNumber: Int): Result<AIResult>
+
 }

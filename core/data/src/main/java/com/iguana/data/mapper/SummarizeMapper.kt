@@ -43,3 +43,13 @@ fun StatusCheckByPageResponseDto.toDomain(): AIStatusResultByPage {
         }
     )
 }
+
+// 요약 결과 (페이지별) 매퍼
+fun SummarizeResultsByPageResponseDto.toDomain(documentId:Long, pageNumber: Int): AIResult {
+    return AIResult(
+        documentId = documentId,
+        pageNumber = pageNumber,
+        summary = this.summary,
+        problem = this.problem
+    )
+}

@@ -27,6 +27,11 @@ data class SummarizeResultsResponseDto(
     val results: List<PageResultDto>
 )
 
+data class SummarizeResultsByPageResponseDto(
+    val summary: String,
+    val problem: String
+)
+
 data class PageResultDto(
     val pageNumber: Int,
     val content: PageContentDto

@@ -84,4 +84,24 @@ class AIRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getSummarizationByPage(
+        documentId: Long,
+        pageNumber: Int
+    ): Result<AIResult> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = summarizeApi.getSummarizationByPage(documentId, pageNumber)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        return@withContext Result.success(it.toDomain(documentId, pageNumber))
+                    }
+                    return@withContext Result.failure(AppError.NullResponseError("Response body is null"))
+                }
+                return@withContext Result.failure(AppError.UnknownError(response.message()))
+            } catch (e: Exception) {
+                return@withContext Result.failure(AppError.NetworkError(e.hashCode()))
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.iguana.data.remote.model.StatusCheckByPageResponseDto
 import com.iguana.data.remote.model.StatusCheckResponseDto
 import com.iguana.data.remote.model.SummarizeRequestDto
 import com.iguana.data.remote.model.SummarizeResponseDto
+import com.iguana.data.remote.model.SummarizeResultsByPageResponseDto
 import com.iguana.data.remote.model.SummarizeResultsResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -36,4 +37,11 @@ interface SummarizeApi {
         @Path("documentId") documentId: Long,
         @Path("pageNumber") pageNumber: Int
     ): Response<StatusCheckByPageResponseDto>
+
+    // 요약 결과 조회 (페이지별)
+    @GET("/api/ai/llm/results/{documentId}/{pageNumber}")
+    suspend fun getSummarizationByPage(
+        @Path("documentId") documentId: Long,
+        @Path("pageNumber") pageNumber: Int
+    ): Response<SummarizeResultsByPageResponseDto>
 }

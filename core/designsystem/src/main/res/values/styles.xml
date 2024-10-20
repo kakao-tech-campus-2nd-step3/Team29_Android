@@ -69,6 +69,24 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Bold20">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Bold16">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Bold14">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- Medium typography -->
     <style name="Medium24">
         <item name="android:fontFamily">@font/pretendard_medium</item>

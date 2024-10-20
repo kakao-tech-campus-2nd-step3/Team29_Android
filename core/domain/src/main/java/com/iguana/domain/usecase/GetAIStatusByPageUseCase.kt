@@ -16,7 +16,7 @@ class GetAIStatusByPageUseCase @Inject constructor(
         // 임시 결과 반환
         return Result.success(
             AIStatusResultByPage(
-                status = SummarizationStatus.IN_PROGRESS
+                status = SummarizationStatus.COMPLETED
             )
         )
     }

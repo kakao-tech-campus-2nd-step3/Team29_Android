@@ -3,6 +3,7 @@
     <dimen name="text_size_56">72sp</dimen>
     <dimen name="text_size_36">48sp</dimen>
     <dimen name="text_size_24">32sp</dimen>
+    <dimen name="text_size_20">26sp</dimen>
     <dimen name="text_size_16">20sp</dimen>
     <dimen name="text_size_14">18sp</dimen>
     <dimen name="text_size_12">16sp</dimen>
