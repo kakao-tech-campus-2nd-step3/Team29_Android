@@ -11,10 +11,10 @@ import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentSideBarBinding
 import com.iguana.notetaking.recording.RecordFragment
 
-class SideBarFragment : Fragment() {
+class SideBarFragment(private val documentId: Long) : Fragment() {
 
     companion object {
-        fun newInstance() = SideBarFragment()
+        fun newInstance(documentId: Long) = SideBarFragment(documentId)
     }
 
     private val viewModel: SideBarViewModel by viewModels()
@@ -36,7 +36,7 @@ class SideBarFragment : Fragment() {
         val viewPager = binding.sideBarViewPager
         val tabLayout = binding.sideBarTabLayout
 
-        viewPager.adapter = SidebarAdapter(this)
+        viewPager.adapter = SidebarAdapter(this, documentId)
 
         // 탭 레이아웃과 뷰페이저 연결
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

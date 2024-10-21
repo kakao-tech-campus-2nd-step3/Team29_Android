@@ -5,14 +5,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.recording.RecordFragment
 
-class SidebarAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class SidebarAdapter(fragment: Fragment, private val documentId: Long) : FragmentStateAdapter(fragment) {
 
     private val fragments: MutableList<Fragment> = mutableListOf()
 
     init {
         // 초기화할 때 프래그먼트를 추가
-        fragments.add(RecordFragment.newInstance())
-        fragments.add(AiFragment.newInstance())
+        fragments.add(RecordFragment.newInstance(documentId))
+        fragments.add(AiFragment.newInstance(documentId))
     }
 
     // 보여줄 탭의 개수: 녹음, AI

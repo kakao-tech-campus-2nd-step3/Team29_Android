@@ -53,6 +53,7 @@ class RecentFilesViewModel @Inject constructor(
         val intent = Intent(context, NotetakingActivity::class.java).apply {
             putExtra("PDF_URI", recentFile.fileUri)
             putExtra("PDF_TITLE", recentFile.fileName)
+            putExtra("DOCUMENT_ID", recentFile.id.toString())
         }
         context.startActivity(intent)
     }
@@ -114,6 +115,7 @@ class RecentFilesViewModel @Inject constructor(
                         val intent = Intent(context, NotetakingActivity::class.java).apply {
                             putExtra("PDF_URI", internalUri.toString())
                             putExtra("PDF_TITLE", fileName)
+                            putExtra("DOCUMENT_ID", dummyDocumentId)
                         }
                         context.startActivity(intent)
 

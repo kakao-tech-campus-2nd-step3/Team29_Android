@@ -3,6 +3,7 @@ package com.iguana.data.mapper
 import com.iguana.data.remote.model.*
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResult
+import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.domain.model.ai.SummarizationStatus
 
 // 요약 결과 매퍼
@@ -28,5 +29,27 @@ fun StatusCheckResponseDto.toDomain(): AIStatusResult {
         },
         totalPages = this.totalPages,
         completedPages = this.completedPages
+    )
+}
+
+// 상태 체크 응답 (페이지별) 매퍼
+fun StatusCheckByPageResponseDto.toDomain(): AIStatusResultByPage {
+    return AIStatusResultByPage(
+        status = when (this.status) {
+            "IN_PROGRESS" -> SummarizationStatus.IN_PROGRESS
+            "COMPLETED" -> SummarizationStatus.COMPLETED
+            "NOT_REQUESTED" -> SummarizationStatus.NOT_REQUESTED
+            else -> SummarizationStatus.FAILED
+        }
+    )
+}
+
+// 요약 결과 (페이지별) 매퍼
+fun SummarizeResultsByPageResponseDto.toDomain(documentId:Long, pageNumber: Int): AIResult {
+    return AIResult(
+        documentId = documentId,
+        pageNumber = pageNumber,
+        summary = this.summary,
+        problem = this.problem
     )
 }

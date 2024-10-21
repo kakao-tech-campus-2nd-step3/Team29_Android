@@ -5,6 +5,7 @@ import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.data.remote.model.SummarizeRequestDto
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResult
+import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.domain.repository.AIRepository
 import com.iguana.domain.utils.AppError
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +45,27 @@ class AIRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun checkStatusByPage(
+        documentId: Long,
+        pageNumber: Int
+    ): Result<AIStatusResultByPage> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = summarizeApi.checkStatusByPage(documentId, pageNumber)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        return@withContext Result.success(it.toDomain())
+                    }
+                    return@withContext Result.failure(AppError.NullResponseError("Response body is null"))
+                }
+                return@withContext Result.failure(AppError.UnknownError(response.message()))
+            } catch (e: Exception) {
+                return@withContext Result.failure(AppError.NetworkError(e.hashCode()))
+            }
+        }
+    }
+
+
     override suspend fun getSummarization(documentId: Long): Result<List<AIResult>> {
         return withContext(Dispatchers.IO) {
             try {
@@ -58,6 +80,26 @@ class AIRepositoryImpl @Inject constructor(
 
             }
             catch (e: Exception) {
+                return@withContext Result.failure(AppError.NetworkError(e.hashCode()))
+            }
+        }
+    }
+
+    override suspend fun getSummarizationByPage(
+        documentId: Long,
+        pageNumber: Int
+    ): Result<AIResult> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = summarizeApi.getSummarizationByPage(documentId, pageNumber)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        return@withContext Result.success(it.toDomain(documentId, pageNumber))
+                    }
+                    return@withContext Result.failure(AppError.NullResponseError("Response body is null"))
+                }
+                return@withContext Result.failure(AppError.UnknownError(response.message()))
+            } catch (e: Exception) {
                 return@withContext Result.failure(AppError.NetworkError(e.hashCode()))
             }
         }

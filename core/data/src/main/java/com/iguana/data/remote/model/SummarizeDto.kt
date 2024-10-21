@@ -17,10 +17,19 @@ data class StatusCheckResponseDto(
     val completedPages: Int
 )
 
+data class StatusCheckByPageResponseDto(
+    val status: String // "IN_PROGRESS", "COMPLETED", etc.
+)
+
 data class SummarizeResultsResponseDto(
     val documentId: Long,
     val totalPages: Int,
     val results: List<PageResultDto>
+)
+
+data class SummarizeResultsByPageResponseDto(
+    val summary: String,
+    val problem: String
 )
 
 data class PageResultDto(

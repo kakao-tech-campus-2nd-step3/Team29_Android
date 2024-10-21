@@ -3,6 +3,7 @@ package com.iguana.data.di
 import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
+import com.iguana.data.remote.api.SummarizeApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,5 +41,11 @@ object NetworkModule {
     @Singleton
     fun provideAnnotationApi(retrofit: Retrofit): AnnotationApi {
         return retrofit.create(AnnotationApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSummarizeApi(retrofit: Retrofit): SummarizeApi {
+        return retrofit.create(SummarizeApi::class.java)
     }
 }

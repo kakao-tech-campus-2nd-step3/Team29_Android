@@ -27,6 +27,7 @@ class NotetakingActivity : AppCompatActivity() {
         // Intent에서 PDF URI 받기
         val pdfUriString = intent.getStringExtra("PDF_URI")
         val pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "무제"
+        val documentId = intent.getLongExtra("DOCUMENT_ID", -1)
 
         binding.titleBar.titleBar.text = pdfTitle
         // 뒤로가기 버튼 클릭 리스너 설정
@@ -43,7 +44,7 @@ class NotetakingActivity : AppCompatActivity() {
                 .replace(R.id.pdf_fragment_container, pdfViewerFragment)
                 .commit()
 
-            val sideBarFragment = SideBarFragment()
+            val sideBarFragment = SideBarFragment.newInstance(documentId)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.side_bar_container, sideBarFragment)
                 .commit()
