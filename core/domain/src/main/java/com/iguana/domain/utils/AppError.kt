@@ -29,4 +29,9 @@ sealed class AppError : Exception() {
             get() = "응답이 비어 있습니다: $errorMessage"
     }
 
+    data class PageTurnEventUploadFailed(val errorCode: Int) : AppError() {
+        override val message: String
+            get() = "페이지 이동 이벤트 업로드 실패: 에러 코드 $errorCode"
+    }
+
 }
