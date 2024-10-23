@@ -27,7 +27,7 @@ class NotetakingActivity : AppCompatActivity() {
         // Intent에서 PDF URI 받기
         val pdfUriString = intent.getStringExtra("PDF_URI")
         val pdfTitle = intent.getStringExtra("PDF_TITLE") ?: "무제"
-        val documentId = intent.getLongExtra("DOCUMENT_ID", -1)
+        viewModel.documentId = intent.getLongExtra("DOCUMENT_ID", -1)
 
         binding.titleBar.titleBar.text = pdfTitle
         // 뒤로가기 버튼 클릭 리스너 설정
@@ -44,7 +44,7 @@ class NotetakingActivity : AppCompatActivity() {
                 .replace(R.id.pdf_fragment_container, pdfViewerFragment)
                 .commit()
 
-            val sideBarFragment = SideBarFragment.newInstance(documentId)
+            val sideBarFragment = SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.side_bar_container, sideBarFragment)
                 .commit()
@@ -59,14 +59,9 @@ class NotetakingActivity : AppCompatActivity() {
     }
     // 페이지 변경 시 호출되는 메서드
     fun onPageChanged(pageNumber: Int) {
+        viewModel.setPageNumber(pageNumber)
         // 사이드바 프래그먼트 해당 페이지 내용으로 업데이트
         val sideBarFragment = supportFragmentManager.findFragmentById(R.id.side_bar_container) as? SideBarFragment
-        sideBarFragment?.updatePageContent(pageNumber)
-    }
-
-    // 현재 페이지 번호 가져오는 메서드
-    fun getCurrentPage(): Int? {
-        val pdfViewerFragment = supportFragmentManager.findFragmentById(R.id.pdf_fragment_container) as? PdfViewerFragment
-        return pdfViewerFragment?.getCurrentPage()
+        sideBarFragment?.updatePageNumber(pageNumber)
     }
 }

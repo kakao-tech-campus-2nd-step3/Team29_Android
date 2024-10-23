@@ -3,12 +3,14 @@ package com.iguana.notetaking.ai
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.domain.usecase.GetAIResultByPageUseCase
 import com.iguana.domain.usecase.GetAIStatusByPageUseCase
+import com.iguana.notetaking.recording.RecordFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,8 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AiViewModel @Inject constructor(
     private val getAIStatusByPageUseCase: GetAIStatusByPageUseCase,
-    private val getAIResultByPageUseCase: GetAIResultByPageUseCase
+    private val getAIResultByPageUseCase: GetAIResultByPageUseCase,
+    handle: SavedStateHandle
 )  : ViewModel() {
+
+    var documentId = handle.get<Long>(AiFragment.DOCUMENT_ID) ?: -1
 
     private val _pageNumber = MutableLiveData<Int>()
     val pageNumber: LiveData<Int> get() = _pageNumber
@@ -29,17 +34,10 @@ class AiViewModel @Inject constructor(
     val aiResult: LiveData<AIResult?> get() = _aiResult
 
 
-    // documentId 변수
-    private var documentId: Long = -1
-
     fun setPageNumber(pageNumber: Int) {
         _pageNumber.value = pageNumber
         fetchAiStatus(pageNumber)
         Log.d("testt", "fetchAiStatus: $pageNumber")
-    }
-    // documentId 설정 메서드
-    fun setDocumentId(id: Long) {
-        documentId = id
     }
 
 

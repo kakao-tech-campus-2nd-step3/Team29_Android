@@ -4,16 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentRecordBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-class RecordFragment(private val documentId: Long) : Fragment() {
+@AndroidEntryPoint
+class RecordFragment() : Fragment() {
 
     companion object {
-        fun newInstance(documentId: Long) = RecordFragment(documentId)
+        private const val DOCUMENT_ID = "documentId"
+        private const val CURRENT_PAGE = "currentPage"
+        fun newInstance(documentId: Long, currentPage: Int) = RecordFragment().apply {
+            arguments = bundleOf(
+                DOCUMENT_ID to documentId,
+                CURRENT_PAGE to currentPage
+            )
+        }
     }
 
     private var _binding: FragmentRecordBinding? = null
@@ -26,21 +37,19 @@ class RecordFragment(private val documentId: Long) : Fragment() {
     ): View {
         _binding = FragmentRecordBinding.inflate(inflater, container, false)
 
+        arguments?.let {
+            viewModel.documentId = it.getLong(AiFragment.DOCUMENT_ID)
+            viewModel.setPageNumber(it.getInt(AiFragment.CURRENT_PAGE))
+        }
+
         binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 현재 페이지가 Fragment가 생성될 때 설정되도록 함
-        val currentPage = (activity as? NotetakingActivity)?.getCurrentPage() ?: 1
-        updateContentForPage(currentPage)
-
-        viewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
-            binding.recordPageTextView.text = (pageNumber?.toString() + " 페이지")
-        }
     }
 
 

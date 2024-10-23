@@ -8,24 +8,21 @@ data class AIResult(
     val summary: String?,
     val problem: String?
 ) {
-    fun hasSummary(): Boolean {
-        return !summary.isNullOrEmpty()
-    }
+    // 요약이 있는지 확인하는 프로퍼티
+    val hasSummary: Boolean
+        get() = !summary.isNullOrEmpty()
 
-    fun hasProblem(): Boolean {
-        return !problem.isNullOrEmpty()
-    }
+    // 문제가 있는지 확인하는 프로퍼티
+    val hasProblem: Boolean
+        get() = !problem.isNullOrEmpty()
 
     // HTML 포맷을 처리한 요약 반환
-    fun getFormattedSummary(): CharSequence {
-        val formattedSummary = summary?.takeIf { it.isNotEmpty() } ?: "요약 이용 불가"
-        return Html.fromHtml(formattedSummary)
-    }
+    val formattedSummary: CharSequence
+        get() = Html.fromHtml(summary?.takeIf { it.isNotEmpty() } ?: "요약 이용 불가")
 
     // HTML 포맷을 처리한 문제 반환
-    fun getFormattedProblem(): CharSequence {
-        val formattedProblem = problem?.takeIf { it.isNotEmpty() } ?: "문제 이용 불가"
-        return Html.fromHtml(formattedProblem)
-    }
+    val formattedProblem: CharSequence
+        get() = Html.fromHtml(problem?.takeIf { it.isNotEmpty() } ?: "문제 이용 불가")
+
 }
 
