@@ -48,7 +48,11 @@ class RecentFilesViewModel @Inject constructor(
 
     fun openFile(recentFile: RecentFile, context: Context) {
         viewModelScope.launch {
-            recentFileRepository.insertRecentFile(recentFile.id, recentFile.fileName, recentFile.fileUri)
+            recentFileRepository.insertRecentFile(
+                recentFile.id,
+                recentFile.fileName,
+                recentFile.fileUri
+            )
         }
         val intent = Intent(context, NotetakingActivity::class.java).apply {
             putExtra("PDF_URI", recentFile.fileUri)
@@ -84,44 +88,41 @@ class RecentFilesViewModel @Inject constructor(
                     // 1. 로컬에 파일 저장 -> 내부 URI 리턴
                     val internalUri = saveFileInLocalUseCase.execute(uri, fileName)
 
-                    if (internalUri != null) {
-                        // TODO 메인대시보드에서 파일 upload 를 수행할땐 folderId 어떻게 해야하는 지 논의 필요
-                        // NOTE 서버 구현 전이라 파일 업로드 부분을 주석 처리하고 로컬 저장만 수행
+                    // TODO: 서버 구현이 되면 아래 주석 해제
+//                    if (internalUri != null) {
+//                        // 2. 서버에 파일 업로드 - 서버 구현이 되면 주석 해제
+//                        val result = saveFileInRemoteUseCase.execute(-1, internalUri, fileName)
+//                        result.onSuccess { document ->
+//                            // 3. Room 데이터베이스에 저장 (내부 URI 사용)
+//                            document.url?.let {
+//                                saveRecentFileUsecase.invoke(
+//                                    document.id,
+//                                    fileName,
+//                                    it
+//                                )
+//                            }
+//                            // 4. 선택된 파일을 NotetakingActivity로 전달
+//                            val intent = Intent(context, NotetakingActivity::class.java).apply {
+//                                putExtra("PDF_URI", document.url)
+//                                putExtra("PDF_TITLE", fileName)
+//                                putExtra("DOCUMENT_ID", document.id)
+//                            }
+//                            context.startActivity(intent)
+//                        }.onFailure {
+//                            Toast.makeText(context, "파일 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                        }
+//                    else {
+//                        Toast.makeText(context, "파일 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+//                    }
 
-                        // 2. 서버에 파일 업로드 - 서버 구현이 되면 주석 해제
-                        /*
-                        val result = saveFileInRemoteUseCase.execute(0, internalUri, fileName)
-                        result.onSuccess { document ->
-                            // 3. Room 데이터베이스에 저장 (내부 URI 사용)
-                            saveFileInRecentFile.execute(
-                                document.id,
-                                internalUri,
-                                fileName
-                            )
-                        }.onFailure {
-                            Toast.makeText(context, "파일 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        */
-
-                        // 임시로 로컬에 저장하는 로직
-                        val dummyDocumentId = System.currentTimeMillis() // 임시 ID 생성
-                        saveRecentFileUsecase.invoke(
-                            dummyDocumentId,
-                            fileName,
-                            internalUri.toString()
-                        )
-
-                        // 4. 선택된 파일을 NotetakingActivity로 전달
-                        val intent = Intent(context, NotetakingActivity::class.java).apply {
-                            putExtra("PDF_URI", internalUri.toString())
-                            putExtra("PDF_TITLE", fileName)
-                            putExtra("DOCUMENT_ID", dummyDocumentId)
-                        }
-                        context.startActivity(intent)
-
-                    } else {
-                        Toast.makeText(context, "파일 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    // TODO: 서버완료되면 아래 코드 삭제 후 위 코드 주석해제
+                    val intent = Intent(context, NotetakingActivity::class.java).apply {
+                        putExtra("PDF_URI", internalUri)
+                        putExtra("PDF_TITLE", fileName)
+                        // 시간으로 더미값 생성해서 넣기
+                        putExtra("DOCUMENT_ID", System.currentTimeMillis().toString())
                     }
+                    context.startActivity(intent)
                 } catch (e: Exception) {
                     Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
