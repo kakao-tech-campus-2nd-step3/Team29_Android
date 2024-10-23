@@ -3,6 +3,7 @@ package com.iguana.notetaking.sidebar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.adapter.FragmentViewHolder
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.recording.RecordFragment
 
@@ -27,4 +28,6 @@ class SidebarAdapter(fragment: Fragment, private val documentId: Long, private v
     fun getFragment(position: Int): Fragment {
         return fragments[position]
     }
+
+
 }
