@@ -18,6 +18,7 @@ import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
@@ -46,10 +47,19 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun uploadDocument(folderId: Long, file: File): Result<Document> = try {
+    override suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Result<Document> = try {
+        // 1. 파일을 RequestBody로 변환
         val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-        val response = api.uploadDocument(folderId, body)
+        val fileBody = MultipartBody.Part.createFormData("pdfFile", file.name, requestFile)
+
+        // 2. JSON 데이터를 RequestBody로 변환
+        val documentSaveRequestJson = "{\"name\":\"$documentName\"}"
+        val requestBodyJson = documentSaveRequestJson.toRequestBody("application/json".toMediaTypeOrNull())
+
+        // 3. Retrofit API 호출
+        val response = api.uploadDocument(folderId, fileBody, requestBodyJson)
+
+        // 4. 성공 시 도메인 모델로 변환
         Result.success(response.toDomain())
     } catch (e: Exception) {
         Logger.e(TAG, "문서 업로드 중 예외 발생: ${e.message}", e)

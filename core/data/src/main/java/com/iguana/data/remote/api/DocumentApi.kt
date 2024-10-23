@@ -8,14 +8,16 @@ import com.iguana.data.remote.model.FolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto
 import com.iguana.domain.model.FolderContentItem
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface DocumentApi {
     @Multipart
-    @POST("/api/folders/{folderId}/document")
+    @POST("/api/folders/{folderId}/documents")
     suspend fun uploadDocument(
         @Path("folderId") folderId: Long,
-        @Part file: MultipartBody.Part
+        @Part pdfFile: MultipartBody.Part,
+        @Part("documentSaveRequest") documentSaveRequest: RequestBody
     ): DocumentDto
 
     @GET("/api/folders/{folderId}")

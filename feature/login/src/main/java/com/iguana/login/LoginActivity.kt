@@ -28,11 +28,9 @@ class LoginActivity : AppCompatActivity() {
 
         setupObservers()
 
-//        if (viewModel.isUserLoggedIn()) {
-//            navigateToMainScreen()
-//        }
-
-        navigateToMainScreen()
+        if (viewModel.isUserLoggedIn()) {
+            navigateToMainScreen()
+        }
     }
 
     fun onLoginButtonClicked() {
