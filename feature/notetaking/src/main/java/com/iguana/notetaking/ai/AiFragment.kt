@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.iguana.notetaking.databinding.FragmentAiBinding
 import androidx.fragment.app.viewModels
@@ -12,14 +13,22 @@ import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.R
+import com.iguana.notetaking.recording.RecordFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AiFragment(private val documentId: Long) : Fragment() {
+class AiFragment : Fragment() {
 
     companion object {
-        fun newInstance(documentId: Long) = AiFragment(documentId)
+        const val DOCUMENT_ID = "documentId"
+        const val CURRENT_PAGE = "currentPage"
+        fun newInstance(documentId: Long, currentPage: Int) = AiFragment().apply {
+            arguments = Bundle().apply {
+                putLong(DOCUMENT_ID, documentId)
+                putInt(CURRENT_PAGE, currentPage)
+            }
+        }
     }
 
     private var _binding: FragmentAiBinding? = null
@@ -31,25 +40,21 @@ class AiFragment(private val documentId: Long) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        arguments?.let {
+            viewModel.documentId = it.getLong(DOCUMENT_ID)
+            viewModel.setPageNumber(it.getInt(CURRENT_PAGE))
+        }
+
         _binding = FragmentAiBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("testt", "AiFragment onViewCreated")
-        viewModel.setDocumentId(documentId)
-        // 현재 페이지가 Fragment가 생성될 때 설정되도록 함
-        val currentPage = (activity as? NotetakingActivity)?.getCurrentPage() ?: 1
-        updateContentForPage(currentPage)
 
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
-            binding.aiPageTextView.text = getString(R.string.page_number, pageNumber)
-        }
         // AI 상태가 변경될 때 상태에 따른 UI 업데이트
         viewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
             aiStatus?.let { status ->
@@ -71,7 +76,7 @@ class AiFragment(private val documentId: Long) : Fragment() {
     // 페이지 번호 업데이트 메서드
     fun updateContentForPage(pageNumber: Int) {
         if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
-            viewModel.setPageNumber(pageNumber+1)
+            viewModel.setPageNumber(pageNumber + 1)
         }
     }
 
@@ -82,15 +87,19 @@ class AiFragment(private val documentId: Long) : Fragment() {
             status.isInProgress() -> {
                 binding.aiStatusTextView.text = getString(R.string.ai_in_progress)
             }
+
             status.isCompleted() -> {
                 binding.aiStatusTextView.text = getString(R.string.ai_completed)
             }
+
             status.isNotRequested() -> {
                 binding.aiStatusTextView.text = getString(R.string.ai_not_requested)
             }
+
             status.isFailed() -> {
                 binding.aiStatusTextView.text = getString(R.string.ai_failed)
             }
+
             else -> {
                 binding.aiStatusTextView.text = getString(R.string.status_unavailable)
             }

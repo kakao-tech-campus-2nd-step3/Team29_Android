@@ -44,7 +44,7 @@ class NotetakingActivity : AppCompatActivity() {
                 .replace(R.id.pdf_fragment_container, pdfViewerFragment)
                 .commit()
 
-            val sideBarFragment = SideBarFragment.newInstance(documentId)
+            val sideBarFragment = SideBarFragment.newInstance(documentId, 0)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.side_bar_container, sideBarFragment)
                 .commit()
@@ -61,7 +61,7 @@ class NotetakingActivity : AppCompatActivity() {
     fun onPageChanged(pageNumber: Int) {
         // 사이드바 프래그먼트 해당 페이지 내용으로 업데이트
         val sideBarFragment = supportFragmentManager.findFragmentById(R.id.side_bar_container) as? SideBarFragment
-        sideBarFragment?.updatePageContent(pageNumber)
+        sideBarFragment?.updatePageNumber(pageNumber)
     }
 
     // 현재 페이지 번호 가져오는 메서드
