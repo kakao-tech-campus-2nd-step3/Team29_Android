@@ -14,6 +14,9 @@ import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.R
 import com.iguana.notetaking.recording.RecordFragment
+import com.iguana.notetaking.util.hide
+import com.iguana.notetaking.util.isVisible
+import com.iguana.notetaking.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -61,8 +64,8 @@ class AiFragment : Fragment() {
                 updateUiForStatus(status)
             } ?: run {
                 binding.aiStatusTextView.text = getString(R.string.status_unavailable)
-                binding.aiStatusTextView.visibility = View.VISIBLE
-                binding.aiContentTextView.visibility = View.GONE
+                binding.aiStatusTextView.show()
+                binding.aiContentTextView.hide()
             }
         }
         // AI 결과가 있으면 해당 결과를 반영
@@ -82,54 +85,34 @@ class AiFragment : Fragment() {
 
     // AI 상태에 따라 UI 업데이트
     private fun updateUiForStatus(status: AIStatusResultByPage) {
-        // 상태 메서드를 활용하여 UI를 업데이트
-        when {
-            status.isInProgress() -> {
-                binding.aiStatusTextView.text = getString(R.string.ai_in_progress)
-            }
-
-            status.isCompleted() -> {
-                binding.aiStatusTextView.text = getString(R.string.ai_completed)
-            }
-
-            status.isNotRequested() -> {
-                binding.aiStatusTextView.text = getString(R.string.ai_not_requested)
-            }
-
-            status.isFailed() -> {
-                binding.aiStatusTextView.text = getString(R.string.ai_failed)
-            }
-
-            else -> {
-                binding.aiStatusTextView.text = getString(R.string.status_unavailable)
-            }
+        binding.aiStatusTextView.text = when {
+            status.isInProgress() -> getString(R.string.ai_in_progress)
+            status.isCompleted() -> getString(R.string.ai_completed)
+            status.isNotRequested() -> getString(R.string.ai_not_requested)
+            status.isFailed() -> getString(R.string.ai_failed)
+            else -> getString(R.string.status_unavailable)
         }
     }
 
     // AI 결과에 따라 UI 업데이트
     private fun updateUiForResult(result: AIResult) {
-        // 요약 결과와 문제 결과에 대한 처리
-        val formattedSummary = result.getFormattedSummary()
-        val formattedProblem = result.getFormattedProblem()
+        // 요약 텍스트 업데이트
+        binding.aiContentTextView.text = result.formattedSummary.takeIf { result.hasSummary }
+            ?: getString(R.string.no_summary_available)
 
-        // 요약
-        if (result.hasSummary()) {
-            binding.aiContentTextView.text = formattedSummary
-        } else {
-            binding.aiContentTextView.text = getString(R.string.no_summary_available)
-        }
+        // 문제 텍스트 업데이트
+        binding.aiProblemTextView.text = result.formattedProblem.takeIf { result.hasProblem }
+            ?: getString(R.string.no_summary_available)
 
-        // 문제
-        if (result.hasProblem()) {
-            binding.aiProblemTextView.text = formattedProblem
-            binding.aiProblemTextView.visibility = View.VISIBLE
-        } else {
-            binding.aiProblemTextView.visibility = View.GONE
-        }
+        showAIContent()
+    }
 
-        // AI 상태 텍스트는 숨김
-        binding.aiStatusTextView.visibility = View.GONE
-        binding.aiContentTextView.visibility = View.VISIBLE
+    private fun showAIContent() {
+        binding.aiStatusTextView.hide()
+        binding.problemTitleTextView.show()
+        binding.aiContentTextView.show()
+        binding.aiProblemTextView.show()
+        binding.summaryTitleTextView.show()
     }
 
 
