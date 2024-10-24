@@ -35,6 +35,7 @@ class NotetakingActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initializeView()
+        observeToolbar()
     }
 
     // 뷰 초기화 메서드
@@ -60,6 +61,12 @@ class NotetakingActivity : AppCompatActivity() {
             val pdfViewerFragment = getPdfViewerFragment()
             pdfViewerFragment?.getCurrentPdfPageFragment()?.addTextBox()
         }
+        binding.toolbar.btnRecord.setOnClickListener {
+            viewModel.toggleRecordTabActive()
+        }
+        binding.toolbar.btnAI.setOnClickListener {
+            viewModel.toggleAITabActive()
+        }
     }
 
     // 타이틀바 설정
@@ -72,12 +79,12 @@ class NotetakingActivity : AppCompatActivity() {
 
     // PDF 및 사이드바 초기화 메서드
     private fun setupPdfViewerAndSidebar() {
-            val pdfUri = Uri.parse(viewModel.pdfUri)
-            replaceFragment(R.id.pdf_fragment_container, PdfViewerFragment.newInstance(pdfUri))
-            replaceFragment(
-                R.id.side_bar_container,
-                SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0)
-            )
+        val pdfUri = Uri.parse(viewModel.pdfUri)
+        replaceFragment(R.id.pdf_fragment_container, PdfViewerFragment.newInstance(pdfUri))
+        replaceFragment(
+            R.id.side_bar_container,
+            SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0)
+        )
     }
 
     // 프래그먼트 교체 메서드
@@ -107,5 +114,23 @@ class NotetakingActivity : AppCompatActivity() {
     private fun updateSidebarWithPage(pageNumber: Int) {
         val sideBarFragment = getSideBarFragment()
         sideBarFragment?.updatePageNumber(pageNumber)
+    }
+
+    // 뷰모델의 상태를 관찰하여 UI 업데이트
+    private fun observeToolbar() {
+        // Record 탭의 활성화 상태 관찰
+        viewModel.isRecordActive.observe(this) { isActive ->
+            binding.toolbar.btnRecord.isSelected = isActive // 선택된 상태로 업데이트
+            if (isActive) {
+                Toast.makeText(this, "녹음이 시작되었습니다.", Toast.LENGTH_SHORT).show()
+            } else if (viewModel.isRecordingStopped()) {
+                Toast.makeText(this, "녹음이 종료되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // AI 탭의 활성화 상태 관찰
+        viewModel.isAIActive.observe(this) { isActive ->
+            binding.toolbar.btnAI.isSelected = isActive // 선택된 상태로 업데이트
+        }
     }
 }
