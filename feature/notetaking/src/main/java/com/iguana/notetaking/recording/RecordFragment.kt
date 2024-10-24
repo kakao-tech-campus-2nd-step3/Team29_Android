@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentRecordBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,8 @@ class RecordFragment() : Fragment() {
 
     private var _binding: FragmentRecordBinding? = null
     private val binding get() = _binding!!
+
+    private val notetakingViewModel: NotetakingViewModel by activityViewModels()
     private val viewModel: RecordViewModel by viewModels()
 
     override fun onCreateView(

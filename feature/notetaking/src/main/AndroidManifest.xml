@@ -5,15 +5,6 @@
         <activity
             android:name=".NotetakingActivity"
             android:exported="false" />
-        <activity
-            android:name=".PDFBoxActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SampleFilePickerViewModel"
-            android:exported="false" />
-        <activity
-            android:name=".SampleFilePickerActivity"
-            android:exported="true" />
     </application>
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 </manifest>
