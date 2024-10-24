@@ -1,6 +1,8 @@
 package com.iguana.notetaking.recording
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +33,6 @@ class RecordFragment() : Fragment() {
 
     private var _binding: FragmentRecordBinding? = null
     private val binding get() = _binding!!
-
-    private val notetakingViewModel: NotetakingViewModel by activityViewModels()
     private val viewModel: RecordViewModel by viewModels()
 
     override fun onCreateView(
@@ -54,7 +54,7 @@ class RecordFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        observeRecordingState()
     }
 
 
@@ -69,5 +69,27 @@ class RecordFragment() : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun startRecording(context: Context) {
+        Log.d("RecordFragment", "녹음이 시작되기 바로 직전입니다.")
+        viewModel.startRecording(context)
+        Log.d("RecordFragment", "녹음이 시작되었습니다.")
+    }
+
+    fun stopRecording(context: Context) {
+        viewModel.stopRecording(context)
+    }
+
+    private fun observeRecordingState() {
+        viewModel.recordingStatus.observe(viewLifecycleOwner) { isRecording ->
+            if (isRecording) {
+                binding.recordStatusTextView.text = "녹음 중"
+            } else {
+                binding.recordStatusTextView.text = "녹음 종료"
+            }
+        }
+    }
+
+
 
 }

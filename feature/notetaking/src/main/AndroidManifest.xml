@@ -5,6 +5,15 @@
         <activity
             android:name=".NotetakingActivity"
             android:exported="false" />
+        <service
+            android:name=".recording.RecordingService"
+            android:foregroundServiceType="microphone"
+            android:enabled="true"
+            android:exported="false" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 </manifest>

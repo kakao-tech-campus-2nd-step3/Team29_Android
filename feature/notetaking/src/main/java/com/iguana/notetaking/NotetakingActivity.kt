@@ -1,15 +1,20 @@
 package com.iguana.notetaking
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowInsets.Side
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
+import com.iguana.notetaking.recording.RecordFragment
 import com.iguana.notetaking.sidebar.SideBarFragment
 import dagger.hilt.android.AndroidEntryPoint
+
 
 
 @AndroidEntryPoint
@@ -62,6 +67,7 @@ class NotetakingActivity : AppCompatActivity() {
             pdfViewerFragment?.getCurrentPdfPageFragment()?.addTextBox()
         }
         binding.toolbar.btnRecord.setOnClickListener {
+            requestAudioPermissions()
             viewModel.toggleRecordTabActive()
         }
         binding.toolbar.btnAI.setOnClickListener {
@@ -122,8 +128,10 @@ class NotetakingActivity : AppCompatActivity() {
         viewModel.isRecordActive.observe(this) { isActive ->
             binding.toolbar.btnRecord.isSelected = isActive // 선택된 상태로 업데이트
             if (isActive) {
+                startRecordingInFragment()
                 Toast.makeText(this, "녹음이 시작되었습니다.", Toast.LENGTH_SHORT).show()
             } else if (viewModel.isRecordingStopped()) {
+                stopRecordingInFragment()
                 Toast.makeText(this, "녹음이 종료되었습니다.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -132,5 +140,40 @@ class NotetakingActivity : AppCompatActivity() {
         viewModel.isAIActive.observe(this) { isActive ->
             binding.toolbar.btnAI.isSelected = isActive // 선택된 상태로 업데이트
         }
+    }
+
+    private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 1001
+
+    // 권한 요청 메서드
+    private fun requestAudioPermissions() {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_REQUEST_CODE)
+        } else {
+            // 이미 권한이 있는 경우
+            Log.d("NotetakingActivity", "이미 녹음 권한이 있습니다.")
+        }
+    }
+
+    // 권한 요청 결과 처리
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Toast.makeText(this, "녹음 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    // 녹음 시작 메서드
+    private fun startRecordingInFragment() {
+        val sideBarFragment = getSideBarFragment() // SidebarFragment 가져오기
+        sideBarFragment?.startRecordingInRecordFragment() // SidebarFragment에 녹음 시작 요청
+    }
+
+    // 녹음 중지 메서드
+    private fun stopRecordingInFragment() {
+        val sideBarFragment = getSideBarFragment() // SidebarFragment 가져오기
+        sideBarFragment?.stopRecordingInRecordFragment() // SidebarFragment에 녹음 중지 요청
     }
 }
