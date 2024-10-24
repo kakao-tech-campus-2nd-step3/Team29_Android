@@ -4,19 +4,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.iguana.notetaking.NotetakingActivity.Companion.DEFAULT_TITLE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class NotetakingViewModel @Inject constructor(
-    handle: SavedStateHandle
-) : ViewModel() {
-    private val _isSideBarVisible = MutableLiveData(true) // 초기값은 true로 설정
-    val isSideBarVisible: LiveData<Boolean> get() = _isSideBarVisible
+class NotetakingViewModel @Inject constructor() : ViewModel() {
 
     var documentId: Long = -1L
+        set(value) = run { field = value }
+    var pdfUri: String = ""
+        set(value) = run { field = value }
+
+    var pdfTitle: String? = "무제"
+        set(value) = run { field = value }
+
+
     private val _pageNumber = MutableLiveData<Int>()
     val pageNumber: LiveData<Int> get() = _pageNumber
+
+    private val _isSideBarVisible = MutableLiveData(true) // 초기값은 true로 설정
+    val isSideBarVisible: LiveData<Boolean> get() = _isSideBarVisible
 
     fun setPageNumber(pageNumber: Int) {
         _pageNumber.value = pageNumber
