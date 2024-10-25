@@ -19,7 +19,6 @@ data class RecordingUploadRequestDto(
 data class RecordingUploadResponseDto(
     val recordingId: Long,
     val documentId: Long,
-    val url: String,
     val createdAt: String // ISO 8601 format
 )
 

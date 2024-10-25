@@ -24,7 +24,7 @@ class RecordRepositoryImpl @Inject constructor(
     override suspend fun uploadRecordingFile(recordingFile: RecordingFile): RecordingFile {
         return withContext(Dispatchers.IO) {
             val uploadRequest = recordingFile.toUploadRequestDto()
-            val response = recordApi.uploadRecording(recordingFile.documentName.toLong(), uploadRequest)
+            val response = recordApi.uploadRecording(recordingFile.documentId ?: throw AppError.NullResponseError("Document ID가 없습니다."), uploadRequest)
 
             if (response.isSuccessful) {
                 val body = response.body() ?: throw AppError.NullResponseError("녹음 파일 업로드 응답이 비어 있습니다.")
