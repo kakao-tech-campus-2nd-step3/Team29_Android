@@ -4,4 +4,11 @@
     <string name="ai_empty_message">현재 AI 기록이 없습니다.</string>
     <!-- STT 기록 메시지 -->
     <string name="stt_empty_message">현재 페이지에 음성 기록이 없습니다.</string>
+    <string name="page_number">%1$d 페이지</string>
+    <string name="ai_in_progress">AI 요약이 진행 중입니다.</string>
+    <string name="ai_completed">AI 요약이 완료되었습니다.</string>
+    <string name="ai_not_requested">AI 요약이 요청되지 않았습니다.</string>
+    <string name="ai_failed">AI 요약이 실패했습니다.</string>
+    <string name="status_unavailable">상태를 확인할 수 없습니다.</string>
+    <string name="no_summary_available">요약 데이터가 없습니다.</string>
 </resources>

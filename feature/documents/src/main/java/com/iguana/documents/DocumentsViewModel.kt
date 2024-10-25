@@ -47,14 +47,17 @@ class DocumentsViewModel @Inject constructor(
     fun loadAllDocuments() {
         viewModelScope.launch {
             try {
-                getAllDocumentsUseCase().collect { rootContent ->
+                val result = getAllDocumentsUseCase()
+                result.onSuccess { rootContent ->
                     val contentWithDummy = addDummyDataIfEmpty(rootContent)
                     _documents.value = contentWithDummy
                     _currentFolderName.value = "문서"
                     currentFolder = FolderNode(-1L, "문서", null)
+                }.onFailure { e ->
+                    Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
                 }
             } catch (e: Exception) {
-                Log.e("DocumentsViewModel", "Error loading documents", e)
+                Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
             }
         }
     }
@@ -92,13 +95,17 @@ class DocumentsViewModel @Inject constructor(
         currentFolderId = folderId
         viewModelScope.launch {
             try {
-                getSubItemsUseCase(folderId).collect { subItems ->
-                    _documents.value = subItems
+                val result = getSubItemsUseCase(folderId)
+                result.onSuccess { subItems ->
+                    val contentWithDummy = addDummyDataIfEmpty(subItems)
+                    _documents.value = contentWithDummy
                     _currentFolderName.value = folderName
                     currentFolder = FolderNode(folderId, folderName, currentFolder)
+                }.onFailure { e ->
+                    Log.e("DocumentsViewModel", "하위 항목 로딩 중 오류 발생", e)
                 }
             } catch (e: Exception) {
-                Log.e("DocumentsViewModel", "Error loading sub-items", e)
+                Log.e("DocumentsViewModel", "하위 항목 로딩 중 예외 발생", e)
             }
         }
     }

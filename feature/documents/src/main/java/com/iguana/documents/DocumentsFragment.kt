@@ -56,9 +56,7 @@ class DocumentsFragment : Fragment() {
             onItemLongClick = { item -> showEditDeleteDialog(item) }
         )
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
             this.adapter = this@DocumentsFragment.adapter
-            addItemDecoration(GridSpacingItemDecoration(2, 16, true)) // 간격 추가
         }
     }
 
@@ -199,28 +197,5 @@ class DocumentsFragment : Fragment() {
             .show()
     }
 
-}
-
-class GridSpacingItemDecoration(
-    private val spanCount: Int,
-    private val spacing: Int,
-    private val includeEdge: Boolean
-) : RecyclerView.ItemDecoration() {
-
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-        val position = parent.getChildAdapterPosition(view)
-        val column = position % spanCount
-
-        outRect.left = column * spacing / spanCount
-        outRect.right = spacing - (column + 1) * spacing / spanCount
-        if (position >= spanCount) {
-            outRect.top = spacing
-        }
-    }
 }
 

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetSubItemsUseCase @Inject constructor(
     private val documentsRepository: DocumentsRepository
 ) {
-    operator fun invoke(folderId: Long): Flow<FolderContent> {
+    suspend operator fun invoke(folderId: Long): Result<FolderContent> {
         return documentsRepository.getSubItems(folderId)
     }
 }
