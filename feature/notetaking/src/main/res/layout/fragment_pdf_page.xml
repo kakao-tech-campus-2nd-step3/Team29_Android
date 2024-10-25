@@ -11,26 +11,9 @@
         android:scaleType="fitCenter"
         tools:ignore="MissingClass" />
 
-    <!-- PhotoEditorX 라이브러리의 PhotoEditorView를 추가 (편집 기능) -->
-    <com.binish.photoeditorx.photoeditor.PhotoEditorView
-        android:id="@+id/photoEditorView"
+    <FrameLayout
+        android:id="@+id/pdfEditorView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
-
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent">-->
-    <!--    <ImageView-->
-    <!--        android:id="@+id/pdfImageView"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:scaleType="fitCenter" />-->
-    <!--    &lt;!&ndash; 텍스트 박스를 추가할 컨테이너 &ndash;&gt;-->
-    <!--    <FrameLayout-->
-    <!--        android:id="@+id/pdfPageContainer"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
-    <!--</FrameLayout>-->

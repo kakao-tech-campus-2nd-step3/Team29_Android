@@ -21,7 +21,6 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
-    implementation("io.github.binishmanandhar23.photoeditorx:photoeditorx:1.0.5")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     implementation(libs.pdfbox)
     implementation(libs.androidx.appcompat)

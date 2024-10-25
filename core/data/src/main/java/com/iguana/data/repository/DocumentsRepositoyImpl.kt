@@ -1,7 +1,6 @@
 package com.iguana.data.repository
 
-import android.content.Context
-import android.util.Log
+import com.iguana.data.utils.Logger
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toDto
 import com.iguana.data.remote.api.DocumentApi
@@ -17,58 +16,67 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
-import retrofit2.HttpException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
-    override fun getAllDocuments(): Flow<FolderContent> = flow {
-        try {
-            val response = api.getFolderContents(
-                folderId = null,
-                sortBy = "updatedAt",
-                sortDirection = "DESC"
-            )
-            val folderContent = response.toDomain()
-            emit(folderContent)
-        } catch (e: Exception) {
-            Log.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
-            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
-        }
-    }
-
-    override fun getSubItems(folderId: Long): Flow<FolderContent> = flow {
-        try {
-            val response = api.getFolderContents(
-                folderId = folderId,
-                sortBy = "updatedAt",
-                sortDirection = "DESC"
-            )
-            val folderContent = response.toDomain()
-            emit(folderContent)
-        } catch (e: Exception) {
-            Log.e(TAG, "하위 항목 가져오기 중 예외 발생: ${e.message}", e)
-            emit(FolderContent(emptyList(), 0, 0, 0, "", ""))
-        }
-    }
-
-    override suspend fun uploadDocument(folderId: Long, file: File): Result<Document> = try {
-        val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-        val response = api.uploadDocument(folderId, body)
+    override suspend fun getAllDocuments(): Result<FolderContent> = try {
+        val response = api.getFolderContents(
+            folderId = null,
+            sortBy = "updatedAt",
+            sortDirection = "DESC"
+        )
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "문서 업로드 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
-    override suspend fun getFolderContents(folderId: Long?, page: Int, size: Int, sortBy: String, sortDirection: String): Result<FolderContent> = try {
+    override suspend fun getSubItems(folderId: Long): Result<FolderContent> = try {
+        val response = api.getFolderContents(
+            folderId = folderId,
+            sortBy = "updatedAt",
+            sortDirection = "DESC"
+        )
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "하위 항목 가져오기 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
+    }
+
+    override suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Result<Document> = try {
+        // 1. 파일을 RequestBody로 변환
+        val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
+        val fileBody = MultipartBody.Part.createFormData("pdfFile", file.name, requestFile)
+
+        // 2. JSON 데이터를 RequestBody로 변환
+        val documentSaveRequestJson = "{\"name\":\"$documentName\"}"
+        val requestBodyJson = documentSaveRequestJson.toRequestBody("application/json".toMediaTypeOrNull())
+
+        // 3. Retrofit API 호출
+        val response = api.uploadDocument(folderId, fileBody, requestBodyJson)
+
+        // 4. 성공 시 도메인 모델로 변환
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "문서 업로드 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
+    }
+
+    override suspend fun getFolderContents(
+        folderId: Long?, 
+        page: Int, 
+        size: Int, 
+        sortBy: String, 
+        sortDirection: String
+    ): Result<FolderContent> = try {
         val response = api.getFolderContents(folderId, page, size, sortBy, sortDirection)
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -76,7 +84,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         val response = api.getDocuments(documentIds)
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
-        Log.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -84,7 +92,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         val response = api.getDocumentDetails(documentId)
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "문서 상세 정보 가져오기 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "문서 상세 정보 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -92,7 +100,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         val response = api.updateDocumentName(documentId, mapOf("name" to name))
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "문서 이름 업데이트 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "문서 이름 업데이트 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -100,7 +108,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         api.deleteDocument(documentId)
         Result.success(Unit)
     } catch (e: Exception) {
-        Log.e(TAG, "문서 삭제 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "문서 삭제 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -109,7 +117,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         val response = api.createFolder(parentFolderId, request)
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "폴더 생성 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "폴더 생성 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -117,7 +125,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         api.deleteFolder(folderId)
         Result.success(Unit)
     } catch (e: Exception) {
-        Log.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -125,7 +133,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         api.moveItems(request.toDto())
         Result.success(Unit)
     } catch (e: Exception) {
-        Log.e(TAG, "항목 이동 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "항목 이동 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -133,7 +141,7 @@ class DocumentsRepositoryImpl @Inject constructor(
         val response = api.updateFolderName(folderId, mapOf("name" to newName))
         Result.success(response.toDomain())
     } catch (e: Exception) {
-        Log.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)
+        Logger.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 

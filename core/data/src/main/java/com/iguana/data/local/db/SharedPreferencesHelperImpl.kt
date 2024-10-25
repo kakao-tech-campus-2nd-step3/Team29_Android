@@ -33,6 +33,10 @@ class SharedPreferencesHelperImpl @Inject constructor(
         return sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
     }
 
+    override fun getRefreshToken(): String? {
+        return sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
+    }
+
     override fun isLoggedIn(): Boolean {
         return getAccessToken() != null
     }
