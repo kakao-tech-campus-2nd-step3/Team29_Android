@@ -6,7 +6,7 @@ import java.io.File
 import javax.inject.Inject
 
 class RecordingFileStorage @Inject constructor(
-    private val baseDir: File,  // 내부 저장소 경로 (context.filesDir 등을 사용할 수 있음)
+    private val baseDir: File
 ) {
 
     // 로컬 스토리지에 녹음 파일 저장
