@@ -1,5 +1,6 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.local.files.RecordingFileStorage
 import com.iguana.data.mapper.toPageTurnEventDtoList
 import com.iguana.data.mapper.toPageTurnEventRequestDto
@@ -71,11 +72,11 @@ class RecordRepositoryImpl @Inject constructor(
     }
 
     // 로컬 스토리지에 페이지 이동 이벤트 저장
-    override suspend fun savePageTurnEvents(recordingId: Long, events: List<PageTurnEvent>) {
+    override suspend fun savePageTurnEvents(recordingId: Long, event: PageTurnEvent) {
         withContext(Dispatchers.IO) {
             localStorage.savePageTurnEvents(
                 recordingId,
-                events.toPageTurnEventDtoList()
+                listOf(event).toPageTurnEventDtoList()
             )  // 페이지 이동 이벤트 로컬에 저장
         }
     }

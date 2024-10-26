@@ -17,7 +17,7 @@ interface RecordRepository {
     suspend fun uploadPageTurnEvents(recordingId: Long, events: List<PageTurnEvent>)
 
     // 로컬 스토리지에 페이지 이동 이벤트 저장
-    suspend fun savePageTurnEvents(recordingId: Long, events: List<PageTurnEvent>)
+    suspend fun savePageTurnEvents(recordingId: Long, event: PageTurnEvent)
 
     // 로컬에 저장된 페이지 이동 이벤트 삭제
     suspend fun deletePageTurnEvents(recordingId: Long)

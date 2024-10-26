@@ -3,9 +3,7 @@ package com.iguana.data.di
 import android.content.Context
 import androidx.room.Room
 import com.iguana.data.local.dao.RecentFileDao
-import com.iguana.data.local.dao.RecordingDao
 import com.iguana.data.local.db.AppDatabase
-import com.iguana.data.local.db.RecordingDatabase
 import com.iguana.domain.repository.SharedPreferencesHelper
 import com.iguana.data.local.db.SharedPreferencesHelperImpl
 import com.iguana.data.local.files.FileHelperImpl
@@ -50,21 +48,6 @@ abstract class DataModule {
         @Provides
         fun provideRecentFileDao(appDatabase: AppDatabase): RecentFileDao {
             return appDatabase.recentFileDao()
-        }
-
-        @Provides
-        @Singleton
-        fun provideRecordingDatabase(@ApplicationContext context: Context): RecordingDatabase {
-            return Room.databaseBuilder(
-                context,
-                RecordingDatabase::class.java,
-                "recording_database"
-            ).build()
-        }
-
-        @Provides
-        fun provideRecordingDao(recordingDatabase: RecordingDatabase): RecordingDao {
-            return recordingDatabase.recordingDao()
         }
 
         @Provides

@@ -1,16 +1,20 @@
 package com.iguana.notetaking.recording
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import java.io.IOException
+
 
 class RecordingService : Service() {
 
@@ -38,29 +42,50 @@ class RecordingService : Service() {
 
     private fun startRecording() {
         Log.d("RecordingService", "녹음이 시작되기 바로 직전입니다.")
+
         if (isRecording) {
             Log.w("RecordingService", "녹음이 이미 진행 중입니다.")
             return
         }
-        // 파일 경로 생성
+
+        // 권한 확인
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("RecordingService", "녹음 권한이 없습니다.")
+            return
+        }
+
         val outputFilePath = getRecordingFilePath(this)
+        if (outputFilePath == null) {
+            Log.e("RecordingService", "녹음 파일 경로를 생성할 수 없습니다.")
+            return
+        }
 
         recorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-            setOutputFile(outputFilePath)
-
             try {
+                setAudioSource(MediaRecorder.AudioSource.MIC)
+                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                setOutputFile(outputFilePath)
+
                 prepare()
                 start()
                 isRecording = true
                 startForeground(notificationId, createRecordingNotification("녹음 중..."))
                 Log.d("RecordingService", "녹음이 시작되었습니다.")
+            } catch (e: IllegalStateException) {
+                Log.e("RecordingService", "설정 오류: ${e.message}")
+                releaseRecorder()
             } catch (e: IOException) {
-                Log.e("RecordingService", "prepare() failed: ${e.message}")
+                Log.e("RecordingService", "prepare() 실패: ${e.message}")
+                releaseRecorder()
             }
         }
+    }
+
+    private fun releaseRecorder() {
+        recorder?.release()
+        recorder = null
+        isRecording = false
     }
 
     private fun stopRecording() {
@@ -104,9 +129,10 @@ class RecordingService : Service() {
         return null
     }
 
-    fun getRecordingFilePath(context: Context): String {
+    private fun getRecordingFilePath(context: Context): String {
         // 외부 저장소의 앱 전용 디렉토리
         val directory = context.getExternalFilesDir(null)
+        Log.d("RecordingService", "녹음 파일 경로: ${directory?.absolutePath}")
         return "${directory?.absolutePath}/recording_${System.currentTimeMillis()}.3gp"
     }
 }

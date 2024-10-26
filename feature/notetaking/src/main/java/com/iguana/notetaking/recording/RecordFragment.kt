@@ -58,7 +58,7 @@ class RecordFragment() : Fragment() {
     }
 
 
-    // 페이지 번호 업데이트 메서드
+    // 페이지 번호 업데이트 메서드  -> 페이지 이동 이벤트 발생시 상위 프래그먼트에서 호출되는 함수
     fun updateContentForPage(pageNumber: Int) {
         if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
             viewModel.setPageNumber(pageNumber+1)

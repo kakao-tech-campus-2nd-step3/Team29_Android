@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.coroutines.android)
+    kapt(libs.room.compiler)
     implementation(projects.core.domain)
     implementation(libs.okhttp.logging)
 }

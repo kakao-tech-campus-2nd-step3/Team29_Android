@@ -15,20 +15,27 @@ import java.util.Base64
 fun List<PageTurnEvent>.toPageTurnEventRequestDto(recordingId: Long): PageTurnEventRequestDto {
     return PageTurnEventRequestDto(
         recordingId = recordingId,
-        events = this.toPageTurnEventDtoList()
+        events = this.map { event ->
+            PageTurnEventDto(
+                prevPage = event.prevPage,
+                nextPage = event.nextPage,
+                timestamp = event.timestamp
+            )
+        }
     )
 }
 
+
+// 확장 함수 정의
 fun List<PageTurnEvent>.toPageTurnEventDtoList(): List<PageTurnEventDto> {
     return this.map { event ->
         PageTurnEventDto(
-            prevPage = event.pageNumber - 1,
-            nextPage = event.pageNumber,
+            prevPage = event.prevPage,
+            nextPage = event.nextPage,
             timestamp = event.timestamp.toDouble()
         )
     }
 }
-
 
 // RecordingFile을 RecordingUploadRequestDto로 변환하는 함수 (녹음 파일 업로드)
 
