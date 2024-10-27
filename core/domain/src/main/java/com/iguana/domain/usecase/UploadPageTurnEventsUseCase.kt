@@ -7,7 +7,8 @@ import javax.inject.Inject
 class UploadPageTurnEventsUseCase @Inject constructor(
     private val recordRepository: RecordRepository
 ) {
-    suspend operator fun invoke(documentId: Long, recordingId: Long, events: List<PageTurnEvent>) {
+    suspend operator fun invoke(documentId: Long, recordingId: Long) {
+        val events = recordRepository.loadPageTurnEvents(documentId)
         recordRepository.uploadPageTurnEvents(recordingId, events)
     }
 }

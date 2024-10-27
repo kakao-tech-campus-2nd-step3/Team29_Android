@@ -22,6 +22,7 @@ class RecordingService : Service() {
     private var isRecording = false
     private val channelId = "RecordingServiceChannel"
     private val notificationId = 1
+    private var outputFilePath: String? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -49,12 +50,15 @@ class RecordingService : Service() {
         }
 
         // 권한 확인
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             Log.e("RecordingService", "녹음 권한이 없습니다.")
             return
         }
 
-        val outputFilePath = getRecordingFilePath(this)
+        outputFilePath = getRecordingFilePath(this)
         if (outputFilePath == null) {
             Log.e("RecordingService", "녹음 파일 경로를 생성할 수 없습니다.")
             return
@@ -71,7 +75,6 @@ class RecordingService : Service() {
                 start()
                 isRecording = true
                 startForeground(notificationId, createRecordingNotification("녹음 중..."))
-                Log.d("RecordingService", "녹음이 시작되었습니다.")
             } catch (e: IllegalStateException) {
                 Log.e("RecordingService", "설정 오류: ${e.message}")
                 releaseRecorder()
@@ -101,24 +104,20 @@ class RecordingService : Service() {
         recorder = null
         isRecording = false
         stopForeground(true)
+        sendRecordingFinishedBroadcast()
         stopSelf()
-        Log.d("RecordingService", "녹음이 종료되었습니다.")
     }
 
     private fun createRecordingNotification(contentText: String): Notification {
-        return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("녹음 서비스")
+        return NotificationCompat.Builder(this, channelId).setContentTitle("녹음 서비스")
             .setContentText(contentText)
             .setSmallIcon(com.iguana.designsystem.R.drawable.ic_record_active)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
+            .setPriority(NotificationCompat.PRIORITY_LOW).build()
     }
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            channelId,
-            "녹음 서비스 채널",
-            NotificationManager.IMPORTANCE_LOW
+            channelId, "녹음 서비스 채널", NotificationManager.IMPORTANCE_LOW
         )
 
         val notificationManager = getSystemService(NotificationManager::class.java)
@@ -135,4 +134,15 @@ class RecordingService : Service() {
         Log.d("RecordingService", "녹음 파일 경로: ${directory?.absolutePath}")
         return "${directory?.absolutePath}/recording_${System.currentTimeMillis()}.3gp"
     }
+
+    private fun sendRecordingFinishedBroadcast() {
+        outputFilePath?.let { path ->
+            val intent = Intent("com.iguana.notetaking.RECORDING_FINISHED").apply {
+                putExtra("filePath", path)
+                putExtra("fileName", path.substringAfterLast("/"))
+            }
+            sendBroadcast(intent)
+        }
+    }
+
 }

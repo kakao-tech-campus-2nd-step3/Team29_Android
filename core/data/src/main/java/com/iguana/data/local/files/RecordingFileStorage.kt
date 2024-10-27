@@ -1,6 +1,5 @@
 package com.iguana.data.local.files
 
-import android.util.Log
 import com.iguana.data.remote.model.PageTurnEventDto
 import com.iguana.domain.utils.AppError
 import java.io.File
@@ -41,4 +40,20 @@ class RecordingFileStorage @Inject constructor(
         val file = File(filePath)
         return file.exists()
     }
+
+    // 페이지 이동 이벤트 로드
+    fun loadPageTurnEvents(documentId: Long): List<PageTurnEventDto> {
+        val file = File(baseDir, "page_turn_events_$documentId.txt")
+        if (!file.exists()) throw AppError.FileNotFound
+
+        return file.readLines().map { line ->
+            val (prevPage, nextPage, timestamp) = line.split(",")
+            PageTurnEventDto(
+                prevPage = prevPage.toInt(),
+                nextPage = nextPage.toInt(),
+                timestamp = timestamp.toDouble()
+            )
+        }
+    }
+
 }

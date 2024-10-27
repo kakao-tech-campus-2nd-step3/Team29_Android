@@ -1,5 +1,6 @@
 package com.iguana.domain.usecase
 
+import android.util.Log
 import com.iguana.domain.model.record.RecordingFile
 import com.iguana.domain.repository.RecordRepository
 import java.io.File
@@ -12,9 +13,11 @@ class UploadRecordingUseCase @Inject constructor(
         documentId: Long,
         filePath: String,
         fileName: String
-    ): RecordingFile {
+    ): Long {
         val recordingFile = createRecordingFile(documentId, filePath, fileName)
-        return recordRepository.uploadRecordingFile(recordingFile)
+        val uploadedRecording = recordRepository.uploadRecordingFile(recordingFile)
+
+        return uploadedRecording.recordingId ?: throw Exception("recordingId가 없습니다")
     }
 
     // RecordingFile 객체 생성 메서드
