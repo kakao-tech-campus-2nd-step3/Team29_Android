@@ -1,14 +1,18 @@
 package com.iguana.notetaking.recording
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentRecordBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,10 +54,11 @@ class RecordFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeRecordingState()
     }
 
 
-    // 페이지 번호 업데이트 메서드
+    // 페이지 번호 업데이트 메서드  -> 페이지 이동 이벤트 발생시 상위 프래그먼트에서 호출되는 함수
     fun updateContentForPage(pageNumber: Int) {
         if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
             viewModel.setPageNumber(pageNumber+1)
@@ -64,5 +69,27 @@ class RecordFragment() : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun startRecording(context: Context) {
+        Log.d("RecordFragment", "녹음이 시작되기 바로 직전입니다.")
+        viewModel.startRecording(context)
+        Log.d("RecordFragment", "녹음이 시작되었습니다.")
+    }
+
+    fun stopRecording(context: Context) {
+        viewModel.stopRecording(context)
+    }
+
+    private fun observeRecordingState() {
+        viewModel.recordingStatus.observe(viewLifecycleOwner) { isRecording ->
+            if (isRecording) {
+                binding.recordStatusTextView.text = "녹음 중"
+            } else {
+                binding.recordStatusTextView.text = "녹음 종료"
+            }
+        }
+    }
+
+
 
 }

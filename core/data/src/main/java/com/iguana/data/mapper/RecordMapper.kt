@@ -1,7 +1,5 @@
 package com.iguana.data.mapper
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.iguana.data.remote.model.PageTurnEventDto
 import com.iguana.data.remote.model.PageTurnEventRequestDto
 import com.iguana.data.remote.model.RecordingUploadRequestDto
@@ -15,24 +13,41 @@ import java.util.Base64
 fun List<PageTurnEvent>.toPageTurnEventRequestDto(recordingId: Long): PageTurnEventRequestDto {
     return PageTurnEventRequestDto(
         recordingId = recordingId,
-        events = this.toPageTurnEventDtoList()
+        events = this.map { event ->
+            PageTurnEventDto(
+                prevPage = event.prevPage,
+                nextPage = event.nextPage,
+                timestamp = event.timestamp
+            )
+        }
     )
 }
 
+// PageTurnEvent(DTO List) -> PageTurnEvent(Domain List)
+
+fun List<PageTurnEventDto>.toPageTurnEventDomainList(documentId: Long): List<PageTurnEvent> {
+    return this.map { dto ->
+        PageTurnEvent(
+            documentId = documentId,
+            prevPage = dto.prevPage,
+            nextPage = dto.nextPage,
+            timestamp = dto.timestamp
+        )
+    }
+}
+
+// PageTurnEvents(Domain List) -> PageTurnEvents(DTO List)
 fun List<PageTurnEvent>.toPageTurnEventDtoList(): List<PageTurnEventDto> {
     return this.map { event ->
         PageTurnEventDto(
-            prevPage = event.pageNumber - 1,
-            nextPage = event.pageNumber,
+            prevPage = event.prevPage,
+            nextPage = event.nextPage,
             timestamp = event.timestamp.toDouble()
         )
     }
 }
 
-
 // RecordingFile을 RecordingUploadRequestDto로 변환하는 함수 (녹음 파일 업로드)
-
-@RequiresApi(Build.VERSION_CODES.O)
 fun RecordingFile.toUploadRequestDto(): RecordingUploadRequestDto {
     // 파일을 Base64로 인코딩
     val fileContent = File(this.filePath).readBytes()

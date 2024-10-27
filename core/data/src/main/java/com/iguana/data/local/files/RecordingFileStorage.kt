@@ -6,7 +6,7 @@ import java.io.File
 import javax.inject.Inject
 
 class RecordingFileStorage @Inject constructor(
-    private val baseDir: File,  // 내부 저장소 경로 (context.filesDir 등을 사용할 수 있음)
+    private val baseDir: File
 ) {
 
     // 로컬 스토리지에 녹음 파일 저장
@@ -16,16 +16,17 @@ class RecordingFileStorage @Inject constructor(
     }
 
     // 페이지 이동 이벤트 저장
-    fun savePageTurnEvents(recordingId: Long, events: List<PageTurnEventDto>) {
-        val file = File(baseDir, "page_turn_events_$recordingId.txt")
-        file.writeText(events.joinToString(separator = "\n") { event ->
+    fun savePageTurnEvents(documentId: Long, events: List<PageTurnEventDto>) {
+        val file = File(baseDir, "page_turn_events_$documentId.txt")
+        // 기존 파일 내용에 이어서 새 이벤트를 추가
+        file.appendText(events.joinToString(separator = "\n") { event ->
             "${event.prevPage},${event.nextPage},${event.timestamp}"
-        })
+        } + "\n")
     }
 
     // 로컬 스토리지에서 페이지 이동 이벤트 삭제
-    fun deletePageTurnEvents(recordingId: Long) {
-        val file = File(baseDir, "page_turn_events_$recordingId.txt")
+    fun deletePageTurnEvents(documentId: Long) {
+        val file = File(baseDir, "page_turn_events_$documentId.txt")
         if (file.exists()) {
             file.delete()
             Result.success(Unit)
@@ -39,4 +40,20 @@ class RecordingFileStorage @Inject constructor(
         val file = File(filePath)
         return file.exists()
     }
+
+    // 페이지 이동 이벤트 로드
+    fun loadPageTurnEvents(documentId: Long): List<PageTurnEventDto> {
+        val file = File(baseDir, "page_turn_events_$documentId.txt")
+        if (!file.exists()) throw AppError.FileNotFound
+
+        return file.readLines().map { line ->
+            val (prevPage, nextPage, timestamp) = line.split(",")
+            PageTurnEventDto(
+                prevPage = prevPage.toInt(),
+                nextPage = nextPage.toInt(),
+                timestamp = timestamp.toDouble()
+            )
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.local.files.RecordingFileStorage
+import com.iguana.data.mapper.toPageTurnEventDomainList
 import com.iguana.data.mapper.toPageTurnEventDtoList
 import com.iguana.data.mapper.toPageTurnEventRequestDto
 import com.iguana.data.mapper.toUploadRequestDto
@@ -24,12 +26,20 @@ class RecordRepositoryImpl @Inject constructor(
     override suspend fun uploadRecordingFile(recordingFile: RecordingFile): RecordingFile {
         return withContext(Dispatchers.IO) {
             val uploadRequest = recordingFile.toUploadRequestDto()
-            val response = recordApi.uploadRecording(recordingFile.documentName.toLong(), uploadRequest)
+            Log.d("RecordRepositoryImpl", "Upload request 생성 완료: $uploadRequest")
+            val response = recordApi.uploadRecording(
+                recordingFile.documentId ?: throw AppError.NullResponseError("Document ID가 없습니다."),
+                uploadRequest
+            )
+            Log.d("RecordRepositoryImpl", "API 응답 상태: ${response.isSuccessful}")
 
             if (response.isSuccessful) {
-                val body = response.body() ?: throw AppError.NullResponseError("녹음 파일 업로드 응답이 비어 있습니다.")
+                Log.d("RecordRepositoryImpl", "API 응답 상태: ${response.isSuccessful}")
+                val body =
+                    response.body() ?: throw AppError.NullResponseError("녹음 파일 업로드 응답이 비어 있습니다.")
                 return@withContext recordingFile.updateWithResponse(body)
             } else {
+                Log.e("RecordRepositoryImpl", "API 요청 실패: 코드 ${response.code()}, 메시지 ${response.message()}")
                 throw AppError.UploadFailed
             }
         }
@@ -47,10 +57,10 @@ class RecordRepositoryImpl @Inject constructor(
     }
 
     // 로컬에 있는 녹음 파일 삭제
-    override suspend fun deleteRecordingFile(recordingFile: RecordingFile) {
+    override suspend fun deleteRecordingFile(filePath: String) {
         return withContext(Dispatchers.IO) {
-            if (localStorage.isFileExists(recordingFile.filePath)) {
-                val file = File(recordingFile.filePath)
+            if (localStorage.isFileExists(filePath)) {
+                val file = File(filePath)
                 file.delete()
             } else {
                 throw AppError.FileNotFound
@@ -71,11 +81,11 @@ class RecordRepositoryImpl @Inject constructor(
     }
 
     // 로컬 스토리지에 페이지 이동 이벤트 저장
-    override suspend fun savePageTurnEvents(recordingId: Long, events: List<PageTurnEvent>) {
+    override suspend fun savePageTurnEvents(recordingId: Long, event: PageTurnEvent) {
         withContext(Dispatchers.IO) {
             localStorage.savePageTurnEvents(
                 recordingId,
-                events.toPageTurnEventDtoList()
+                listOf(event).toPageTurnEventDtoList()
             )  // 페이지 이동 이벤트 로컬에 저장
         }
     }
@@ -84,6 +94,14 @@ class RecordRepositoryImpl @Inject constructor(
     override suspend fun deletePageTurnEvents(recordingId: Long) {
         withContext(Dispatchers.IO) {
             localStorage.deletePageTurnEvents(recordingId)  // 페이지 이동 이벤트 삭제
+        }
+    }
+
+    // 로컬에서 모든 페이지 이동 이벤트를 로드
+    override suspend fun loadPageTurnEvents(documentId: Long): List<PageTurnEvent> {
+        return withContext(Dispatchers.IO) {
+            localStorage.loadPageTurnEvents(documentId)
+                .toPageTurnEventDomainList(documentId)  // 로컬에 저장된 페이지 이동 이벤트 로드
         }
     }
 }

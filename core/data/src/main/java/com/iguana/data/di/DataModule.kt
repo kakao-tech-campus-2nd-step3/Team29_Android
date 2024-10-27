@@ -14,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -47,6 +48,13 @@ abstract class DataModule {
         @Provides
         fun provideRecentFileDao(appDatabase: AppDatabase): RecentFileDao {
             return appDatabase.recentFileDao()
+        }
+
+        @Provides
+        @Singleton
+        fun provideBaseDir(@ApplicationContext context: Context): File {
+            // 앱의 내부 파일 디렉토리를 기본 디렉토리로 사용
+            return context.filesDir
         }
     }
 }
