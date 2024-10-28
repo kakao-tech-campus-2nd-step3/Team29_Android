@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.documents.DocumentsFragment
+import com.iguana.favorites.FavoritesFragment
 import com.iguana.settings.SettingsFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
 import com.iguana.userinfo.UserInfoFragment
@@ -47,6 +48,12 @@ class BaseActivity : AppCompatActivity() {
     fun showUserInfo() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_frame, UserInfoFragment())
+            .commit()
+    }
+
+    fun showFavorites() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_frame, FavoritesFragment())
             .commit()
     }
 }
