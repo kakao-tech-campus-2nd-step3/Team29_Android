@@ -68,7 +68,7 @@
             android:layout_margin="0dp"
             android:layout_marginTop="72dp"
             android:background="?attr/selectableItemBackground"
-            android:onClick="@{() -> viewModel.toggleSideBarVisibility()}"
+            android:onClick="@{() -> viewModel.toggleSideBar()}"
             android:src="@drawable/slider_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"

@@ -119,9 +119,9 @@ class RecordViewModel @Inject constructor(
                 // 2. 페이지 이동 이벤트 업로드
              //   uploadPageTurnEventsUseCase(documentId, recordingId)
                 // 3. 로컬에 저장된 페이지 이동 이벤트 파일 삭제
-//                deletePageTurnEventsUseCase(documentId)
+                deletePageTurnEventsUseCase(documentId)
                 // 4. 로컬에 저장된 녹음 파일 삭제
-//                deleteRecordingUseCase(filePath!!)
+                deleteRecordingUseCase(filePath!!)
             } catch (e: Exception) {
                 Log.e("RecordViewModel", "업로드 중 오류 발생: ${e.message}")
             }

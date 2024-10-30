@@ -25,11 +25,13 @@ class NotetakingActivity : AppCompatActivity() {
         const val PDF_TITLE_KEY = "PDF_TITLE"
         const val DEFAULT_TITLE = "무제"
         const val DOCUMENT_ID_KEY = "DOCUMENT_ID"
+        const val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 1001
     }
 
 
     private lateinit var binding: ActivityNotetakingBinding
     private val viewModel: NotetakingViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,14 +42,17 @@ class NotetakingActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         initializeView()
-        observeToolbar()
+        observeViewModel()
     }
 
     // 뷰 초기화 메서드
     private fun initializeView() {
-        viewModel.pdfUri = intent.getStringExtra(PDF_URI_KEY).toString()
-        viewModel.pdfTitle = intent.getStringExtra(PDF_TITLE_KEY) ?: DEFAULT_TITLE
-        viewModel.documentId = intent.getLongExtra(DOCUMENT_ID_KEY, -1)
+        viewModel.apply {
+            // PDF URI, 제목, 문서 ID 설정
+            pdfUri = intent.getStringExtra(PDF_URI_KEY).toString()
+            pdfTitle = intent.getStringExtra(PDF_TITLE_KEY) ?: DEFAULT_TITLE
+            documentId = intent.getLongExtra(DOCUMENT_ID_KEY, -1)
+        }
 
         setupTitleBar()
         setupToolbar()
@@ -62,35 +67,29 @@ class NotetakingActivity : AppCompatActivity() {
 
     // 툴바 설정
     private fun setupToolbar() {
-        binding.toolbar.btnText.setOnClickListener {
-            val pdfViewerFragment = getPdfViewerFragment()
-            pdfViewerFragment?.getCurrentPdfPageFragment()?.addTextBox()
+        binding.toolbar.apply {
+            btnText.setOnClickListener { getPdfViewerFragment()?.getCurrentPdfPageFragment()?.addTextBox() }
+            btnRecord.setOnClickListener { handleRecordingPermissionAndToggle() }
+            btnAI.setOnClickListener { viewModel.toggleAI() }
+            }
         }
-        binding.toolbar.btnRecord.setOnClickListener {
-            requestAudioPermissions()
-            viewModel.toggleRecordTabActive()
-        }
-        binding.toolbar.btnAI.setOnClickListener {
-            viewModel.toggleAITabActive()
-        }
-    }
 
     // 타이틀바 설정
     private fun setupTitleBar() {
-        binding.titleBar.backButton.setOnClickListener {
-            finish()
+        binding.titleBar.apply {
+            // 뒤로가기 버튼 클릭 시 액티비티 종료
+            backButton.setOnClickListener {
+                finish()
+            }
+            // PDF 제목 설정
+            titleBar.text = viewModel.pdfTitle
         }
-        binding.titleBar.titleBar.text = viewModel.pdfTitle
     }
 
     // PDF 및 사이드바 초기화 메서드
     private fun setupPdfViewerAndSidebar() {
-        val pdfUri = Uri.parse(viewModel.pdfUri)
-        replaceFragment(R.id.pdf_fragment_container, PdfViewerFragment.newInstance(pdfUri))
-        replaceFragment(
-            R.id.side_bar_container,
-            SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0)
-        )
+        replaceFragment(R.id.pdf_fragment_container, PdfViewerFragment.newInstance(Uri.parse(viewModel.pdfUri)))
+        replaceFragment(R.id.side_bar_container, SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0))
     }
 
     // 프래그먼트 교체 메서드
@@ -100,11 +99,6 @@ class NotetakingActivity : AppCompatActivity() {
             .commit()
     }
 
-    // PDF 에러 처리 메서드
-    private fun handlePdfError(message: String) {
-        Log.e("NotetakingActivity", message)
-        Toast.makeText(this, "PDF 파일을 열 수 없습니다.", Toast.LENGTH_SHORT).show()
-    }
 
     // PDF 뷰어 프래그먼트 가져오기 메서드
     private fun getPdfViewerFragment(): PdfViewerFragment? {
@@ -123,57 +117,48 @@ class NotetakingActivity : AppCompatActivity() {
     }
 
     // 뷰모델의 상태를 관찰하여 UI 업데이트
-    private fun observeToolbar() {
-        // Record 탭의 활성화 상태 관찰
-        viewModel.isRecordActive.observe(this) { isActive ->
-            binding.toolbar.btnRecord.isSelected = isActive // 선택된 상태로 업데이트
-            if (isActive) {
-                startRecordingInFragment()
-                Toast.makeText(this, "녹음이 시작되었습니다.", Toast.LENGTH_SHORT).show()
-            } else if (viewModel.isRecordingStopped()) {
-                stopRecordingInFragment()
-                Toast.makeText(this, "녹음이 종료되었습니다.", Toast.LENGTH_SHORT).show()
-            }
+    private fun observeViewModel() {
+        viewModel.isRecordingActive.observe(this) { isActive ->
+            binding.toolbar.btnRecord.isSelected = isActive
+            toastRecordingStatus(isActive)
         }
 
-        // AI 탭의 활성화 상태 관찰
         viewModel.isAIActive.observe(this) { isActive ->
-            binding.toolbar.btnAI.isSelected = isActive // 선택된 상태로 업데이트
+            binding.toolbar.btnAI.isSelected = isActive
         }
     }
 
-    private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 1001
+    private fun handleRecordingPermissionAndToggle() {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            viewModel.toggleRecording()
+        } else {
+            requestAudioPermissions()
+        }
+    }
+
+    private fun toastRecordingStatus(isActive: Boolean) {
+        val message = if (isActive) {
+            "녹음이 시작되었습니다."
+        } else if (viewModel.isRecordingStopped()) {
+            "녹음이 종료되었습니다."
+        } else {
+            null
+        }
+        message?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
+    }
 
     // 권한 요청 메서드
     private fun requestAudioPermissions() {
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_REQUEST_CODE)
-        } else {
-            // 이미 권한이 있는 경우
-            Log.d("NotetakingActivity", "이미 녹음 권한이 있습니다.")
-        }
+        requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_REQUEST_CODE)
     }
 
     // 권한 요청 결과 처리
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            } else {
-                Toast.makeText(this, "녹음 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
+        if (requestCode == RECORD_AUDIO_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            viewModel.toggleRecording()
+        } else {
+            Toast.makeText(this, "녹음 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
-    }
-    // 녹음 시작 메서드
-    private fun startRecordingInFragment() {
-        val sideBarFragment = getSideBarFragment() // SidebarFragment 가져오기
-        sideBarFragment?.startRecordingInRecordFragment() // SidebarFragment에 녹음 시작 요청
-    }
-
-    // 녹음 중지 메서드
-    private fun stopRecordingInFragment() {
-        val sideBarFragment = getSideBarFragment() // SidebarFragment 가져오기
-        sideBarFragment?.stopRecordingInRecordFragment() // SidebarFragment에 녹음 중지 요청
     }
 }

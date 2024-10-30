@@ -74,19 +74,6 @@
                 }
             }
         }
-        // RecordFragment에서 녹음 시작
-        fun startRecordingInRecordFragment() {
-            (binding.sideBarViewPager.adapter as SidebarAdapter).getFragment(0)?.let {
-                (it as RecordFragment).startRecording(requireContext())
-            }
-        }
-
-        // RecordFragment에서 녹음 중지
-        fun stopRecordingInRecordFragment() {
-            (binding.sideBarViewPager.adapter as SidebarAdapter).getFragment(0)?.let {
-                (it as RecordFragment).stopRecording(requireContext())
-            }
-        }
 
         // 사이드바 내용 업데이트 메서드
         fun updatePageNumber(pageNumber: Int) {

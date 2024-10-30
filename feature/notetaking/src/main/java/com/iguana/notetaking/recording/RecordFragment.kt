@@ -34,6 +34,7 @@ class RecordFragment() : Fragment() {
     private var _binding: FragmentRecordBinding? = null
     private val binding get() = _binding!!
     private val viewModel: RecordViewModel by viewModels()
+    private val sharedViewModel: NotetakingViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,12 +82,8 @@ class RecordFragment() : Fragment() {
     }
 
     private fun observeRecordingState() {
-        viewModel.recordingStatus.observe(viewLifecycleOwner) { isRecording ->
-            if (isRecording) {
-                binding.recordStatusTextView.text = "녹음 중"
-            } else {
-                binding.recordStatusTextView.text = "녹음 종료"
-            }
+        sharedViewModel.isRecordingActive.observe(viewLifecycleOwner) { isActive ->
+            if (isActive) startRecording(requireContext()) else stopRecording(requireContext())
         }
     }
 
