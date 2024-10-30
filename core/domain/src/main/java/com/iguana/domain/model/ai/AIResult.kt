@@ -1,6 +1,8 @@
 package com.iguana.domain.model.ai
 
 import android.text.Html
+import android.text.Spanned
+import androidx.core.text.parseAsHtml
 
 data class AIResult(
     val documentId: Long,
@@ -17,12 +19,12 @@ data class AIResult(
         get() = !problem.isNullOrEmpty()
 
     // HTML 포맷을 처리한 요약 반환
-    val formattedSummary: CharSequence
-        get() = Html.fromHtml(summary?.takeIf { it.isNotEmpty() } ?: "요약 이용 불가")
+    val formattedSummary: Spanned
+        get() = (summary?.takeIf { it.isNotEmpty() } ?: "요약 이용 불가").parseAsHtml()
 
     // HTML 포맷을 처리한 문제 반환
-    val formattedProblem: CharSequence
-        get() = Html.fromHtml(problem?.takeIf { it.isNotEmpty() } ?: "문제 이용 불가")
+    val formattedProblem: Spanned
+        get() = (problem?.takeIf { it.isNotEmpty() } ?: "문제 이용 불가").parseAsHtml()
 
 }
 
