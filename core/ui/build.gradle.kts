@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.feature.documents)
     implementation(projects.feature.settings)
     implementation(projects.feature.userInfo)
+    implementation(projects.feature.favorites)
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)

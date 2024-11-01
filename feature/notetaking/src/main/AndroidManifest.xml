@@ -5,15 +5,14 @@
         <activity
             android:name=".NotetakingActivity"
             android:exported="false" />
-        <activity
-            android:name=".PDFBoxActivity"
+        <service
+            android:name=".recording.RecordingService"
+            android:foregroundServiceType="microphone"
+            android:enabled="true"
             android:exported="false" />
-        <activity
-            android:name=".SampleFilePickerViewModel"
-            android:exported="false" />
-        <activity
-            android:name=".SampleFilePickerActivity"
-            android:exported="true" />
     </application>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.iguana.data.di
 import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
+import com.iguana.data.remote.api.RecordApi
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.domain.repository.SharedPreferencesHelper
 import dagger.Module
@@ -22,7 +23,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor { sharedPreferencesHelper.getAccessToken() ?: "" })
+            .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
             .build()
     }
 
@@ -58,5 +59,11 @@ object NetworkModule {
     @Singleton
     fun provideSummarizeApi(retrofit: Retrofit): SummarizeApi {
         return retrofit.create(SummarizeApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecordApi(retrofit: Retrofit): RecordApi {
+        return retrofit.create(RecordApi::class.java)
     }
 }
