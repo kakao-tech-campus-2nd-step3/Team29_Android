@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.iguana.notetaking.NotetakingViewModel" />
@@ -30,9 +32,9 @@
             layout="@layout/toolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/pdf_fragment_container"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleBar" />
 
         <!-- PDF Viewer Fragment Container (동적으로 프래그먼트 추가) -->
         <FrameLayout
@@ -40,12 +42,23 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/grey_90"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- 사이드바 프라그먼트 (Default: Closed) TODO : visibility 변수화-->
+        <!-- 텍스트 편집 바 -->
+        <include
+            android:id="@+id/text_edit_bar"
+            layout="@layout/text_edit_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/pdf_fragment_container"
+            app:layout_constraintEnd_toStartOf="@id/side_bar_container"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- 사이드바 프라그먼트 (Default: Closed)-->
         <FrameLayout
             android:id="@+id/side_bar_container"
             android:layout_width="0dp"
@@ -56,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@id/titleBar"
             app:layout_constraintWidth_percent="0.25" />
 
-        <!-- 사이드바 슬라이더 Button TODO: 이벤트 정의하기-->
+        <!-- 사이드바 슬라이더 Button -->
         <ImageButton
             android:id="@+id/slider_button"
             android:layout_width="15dp"

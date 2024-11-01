@@ -1,7 +1,7 @@
 package com.iguana.data.repository
 
 import android.util.Log
-import com.iguana.data.local.entity.PageTurnEventDao
+import com.iguana.data.local.dao.PageTurnEventDao
 import com.iguana.data.local.files.RecordingFileStorage
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toEntity

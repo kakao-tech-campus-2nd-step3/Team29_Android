@@ -71,7 +71,7 @@ fun RecordingFile.toUploadRequestDto(): RecordingUploadRequestDto {
 // 서버 응답을 기존의 RecordingFile에 덮어씌우는 매퍼
 fun RecordingFile.updateWithResponse(response: RecordingUploadResponseDto): RecordingFile {
     return this.copy(
-        recordingId = response.recordingId ?: this.recordingId,
-        documentId = response.documentId ?: this.documentId,
+        recordingId = response.recordingId,
+        documentId = response.documentId
     )
 }

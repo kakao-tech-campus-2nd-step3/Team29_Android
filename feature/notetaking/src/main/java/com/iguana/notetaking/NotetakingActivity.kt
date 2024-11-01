@@ -5,13 +5,15 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowInsets.Side
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
-import com.iguana.notetaking.recording.RecordFragment
+import com.iguana.notetaking.pdf.PdfPageFragment
+import com.iguana.notetaking.pdf.PdfViewerFragment
 import com.iguana.notetaking.sidebar.SideBarFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,7 +70,12 @@ class NotetakingActivity : AppCompatActivity() {
     // 툴바 설정
     private fun setupToolbar() {
         binding.toolbar.apply {
-            btnText.setOnClickListener { getPdfViewerFragment()?.getCurrentPdfPageFragment()?.addTextBox() }
+            btnText.setOnClickListener {
+                viewModel.toggleTextMode()
+                if (viewModel.isTextMode.value == true) {
+                    addTextToCurrentPage()
+                }
+            }
             btnRecord.setOnClickListener { handleRecordingPermissionAndToggle() }
             btnAI.setOnClickListener { viewModel.toggleAI() }
             }
@@ -100,9 +107,15 @@ class NotetakingActivity : AppCompatActivity() {
     }
 
 
-    // PDF 뷰어 프래그먼트 가져오기 메서드
     private fun getPdfViewerFragment(): PdfViewerFragment? {
         return supportFragmentManager.findFragmentById(R.id.pdf_fragment_container) as? PdfViewerFragment
+    }
+
+    // 현재 페이지에 텍스트 추가 요청을 전달하기 위한 메서드
+    private fun addTextToCurrentPage() {
+        val pdfViewerFragment = getPdfViewerFragment()
+        val currentPageFragment = pdfViewerFragment?.getCurrentPdfPageFragment()
+        currentPageFragment?.addNewTextBox(viewModel.pageNumber.value ?: 0)
     }
 
     // 사이드바 프래그먼트 가져오기 메서드
@@ -125,6 +138,11 @@ class NotetakingActivity : AppCompatActivity() {
 
         viewModel.isAIActive.observe(this) { isActive ->
             binding.toolbar.btnAI.isSelected = isActive
+        }
+
+        viewModel.isTextMode.observe(this) { isTextMode ->
+            val textEditBar = binding.root.findViewById<View>(R.id.text_edit_bar)
+            textEditBar.visibility = if (isTextMode) View.VISIBLE else View.GONE
         }
     }
 
