@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets.Side
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -68,7 +69,10 @@ class NotetakingActivity : AppCompatActivity() {
     // 툴바 설정
     private fun setupToolbar() {
         binding.toolbar.apply {
-            btnText.setOnClickListener { getPdfViewerFragment()?.getCurrentPdfPageFragment()?.addTextBox() }
+            btnText.setOnClickListener {
+                viewModel.toggleTextMode()
+                // TODO 주석이 pdf 뷰어에 표시되도록 하는 로직
+            }
             btnRecord.setOnClickListener { handleRecordingPermissionAndToggle() }
             btnAI.setOnClickListener { viewModel.toggleAI() }
             }
@@ -125,6 +129,11 @@ class NotetakingActivity : AppCompatActivity() {
 
         viewModel.isAIActive.observe(this) { isActive ->
             binding.toolbar.btnAI.isSelected = isActive
+        }
+
+        viewModel.isTextMode.observe(this) { isTextMode ->
+            val textEditBar = binding.root.findViewById<View>(R.id.text_edit_bar)
+            textEditBar.visibility = if (isTextMode) View.VISIBLE else View.GONE
         }
     }
 
