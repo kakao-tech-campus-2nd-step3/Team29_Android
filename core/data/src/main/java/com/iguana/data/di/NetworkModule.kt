@@ -23,7 +23,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor { sharedPreferencesHelper.getAccessToken() ?: "" })
+            .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
             .build()
     }
 

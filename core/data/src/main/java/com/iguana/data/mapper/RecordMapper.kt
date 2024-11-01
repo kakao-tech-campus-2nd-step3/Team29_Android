@@ -1,5 +1,6 @@
 package com.iguana.data.mapper
 
+import com.iguana.data.local.entity.PageTurnEventEntity
 import com.iguana.data.remote.model.PageTurnEventDto
 import com.iguana.data.remote.model.PageTurnEventRequestDto
 import com.iguana.data.remote.model.RecordingUploadRequestDto
@@ -36,15 +37,22 @@ fun List<PageTurnEventDto>.toPageTurnEventDomainList(documentId: Long): List<Pag
     }
 }
 
-// PageTurnEvents(Domain List) -> PageTurnEvents(DTO List)
-fun List<PageTurnEvent>.toPageTurnEventDtoList(): List<PageTurnEventDto> {
-    return this.map { event ->
-        PageTurnEventDto(
-            prevPage = event.prevPage,
-            nextPage = event.nextPage,
-            timestamp = event.timestamp.toDouble()
-        )
-    }
+fun PageTurnEvent.toEntity(documentId: Long): PageTurnEventEntity {
+    return PageTurnEventEntity(
+        documentId = documentId,
+        prevPage = prevPage,
+        nextPage = nextPage,
+        timestamp = timestamp
+    )
+}
+
+fun PageTurnEventEntity.toDomain(): PageTurnEvent {
+    return PageTurnEvent(
+        documentId = this.documentId,
+        prevPage = this.prevPage,
+        nextPage = this.nextPage,
+        timestamp = this.timestamp
+    )
 }
 
 // RecordingFile을 RecordingUploadRequestDto로 변환하는 함수 (녹음 파일 업로드)

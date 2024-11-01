@@ -12,12 +12,8 @@ import javax.inject.Inject
 class NotetakingViewModel @Inject constructor() : ViewModel() {
 
     var documentId: Long = -1L
-        set(value) = run { field = value }
     var pdfUri: String = ""
-        set(value) = run { field = value }
-
-    var pdfTitle: String? = "무제"
-        set(value) = run { field = value }
+    var pdfTitle: String? = DEFAULT_TITLE
 
 
     private val _pageNumber = MutableLiveData<Int>()
@@ -27,8 +23,8 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
     val isSideBarVisible: LiveData<Boolean> get() = _isSideBarVisible
 
     // record 버튼 활성화되어있는지
-    private val _isRecordActive = MutableLiveData(false)
-    val isRecordActive: LiveData<Boolean> get() = _isRecordActive
+    private val _isRecordingActive = MutableLiveData(false)
+    val isRecordingActive: LiveData<Boolean> get() = _isRecordingActive
 
 
     // AI 버튼 활성화되어있는지
@@ -43,34 +39,34 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
     }
 
     // 사이드바의 가시성 상태를 토글하는 함수
-    fun toggleSideBarVisibility() {
+    fun toggleSideBar() {
         _isSideBarVisible.value = _isSideBarVisible.value?.not()
     }
 
-    // 사이드바 보이게 하는 함수
-    fun showSideBar() {
-        _isSideBarVisible.value = true
-    }
-    // 사이드바 숨기기
-    fun hideSideBar() {
-        _isSideBarVisible.value = false
-    }
-
-
-    // 액티브 상태를 토글
-    fun toggleRecordTabActive() {
-        _isRecordActive.value = _isRecordActive.value?.not()
-        // 상태가 변경될 때 이전 녹음 상태를 저장
-        wasRecording = _isRecordActive.value == true
+    // 녹음 시작 및 종료 상태 변경 함수
+    fun toggleRecording() {
+        wasRecording = _isRecordingActive.value == true
+        _isRecordingActive.value = !_isRecordingActive.value!!
         showSideBar()
     }
-    fun toggleAITabActive() {
+
+
+    fun toggleAI() {
         _isAIActive.value = _isAIActive.value?.not()
         showSideBar()
     }
 
     // 녹음이 종료되었는지 확인하는 함수 (이전에 녹음 중 -> 녹음 종료)
     fun isRecordingStopped(): Boolean {
-        return wasRecording && !_isRecordActive.value!!
+        return wasRecording && !_isRecordingActive.value!!
+    }
+    // 사이드바 보이기
+    private fun showSideBar() {
+        _isSideBarVisible.value = true
+    }
+
+    // 사이드바 숨기기
+    fun hideSideBar() {
+        _isSideBarVisible.value = false
     }
 }

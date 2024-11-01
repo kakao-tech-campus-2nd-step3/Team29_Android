@@ -1,9 +1,10 @@
 package com.iguana.data.repository
 
 import android.util.Log
+import com.iguana.data.local.entity.PageTurnEventDao
 import com.iguana.data.local.files.RecordingFileStorage
-import com.iguana.data.mapper.toPageTurnEventDomainList
-import com.iguana.data.mapper.toPageTurnEventDtoList
+import com.iguana.data.mapper.toDomain
+import com.iguana.data.mapper.toEntity
 import com.iguana.data.mapper.toPageTurnEventRequestDto
 import com.iguana.data.mapper.toUploadRequestDto
 import com.iguana.data.mapper.updateWithResponse
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(
     private val recordApi: RecordApi,  // 서버 통신을 위한 API 인터페이스
-    private val localStorage: RecordingFileStorage  // 로컬 스토리지 처리 클래스
+    private val localStorage: RecordingFileStorage,  // 로컬 스토리지 처리 클래스
+    private val pageTurnEventDao: PageTurnEventDao
 ) : RecordRepository {
 
     // 서버에 녹음 파일 업로드
@@ -69,39 +71,41 @@ class RecordRepositoryImpl @Inject constructor(
     }
 
     // 서버에 페이지 이동 이벤트 업로드
-    override suspend fun uploadPageTurnEvents(recordingId: Long, events: List<PageTurnEvent>) {
+    override suspend fun uploadPageTurnEvents(recordingId: Long, documentId: Long, events: List<PageTurnEvent>) {
         return withContext(Dispatchers.IO) {
             val requestDto = events.toPageTurnEventRequestDto(recordingId)  // 도메인 모델을 DTO로 변환
             val response = recordApi.recordPageTurnEvent(recordingId, requestDto)
 
             if (!response.isSuccessful) {
                 throw AppError.PageTurnEventUploadFailed(response.code())
+            } else {
+                deletePageTurnEvents(documentId) // 업로드 후 삭제
             }
         }
     }
 
     // 로컬 스토리지에 페이지 이동 이벤트 저장
-    override suspend fun savePageTurnEvents(recordingId: Long, event: PageTurnEvent) {
+    override suspend fun savePageTurnEvents(documentId: Long, event: PageTurnEvent) {
         withContext(Dispatchers.IO) {
-            localStorage.savePageTurnEvents(
-                recordingId,
-                listOf(event).toPageTurnEventDtoList()
-            )  // 페이지 이동 이벤트 로컬에 저장
+            withContext(Dispatchers.IO) {
+                pageTurnEventDao.insert(event.toEntity(documentId))
+            }
         }
     }
 
     // 로컬에 저장된 페이지 이동 이벤트 삭제
-    override suspend fun deletePageTurnEvents(recordingId: Long) {
+    override suspend fun deletePageTurnEvents(documentId: Long) {
         withContext(Dispatchers.IO) {
-            localStorage.deletePageTurnEvents(recordingId)  // 페이지 이동 이벤트 삭제
+            pageTurnEventDao.deleteEventsByDocumentId(documentId)  // 페이지 이동 이벤트 삭제
         }
     }
 
     // 로컬에서 모든 페이지 이동 이벤트를 로드
     override suspend fun loadPageTurnEvents(documentId: Long): List<PageTurnEvent> {
         return withContext(Dispatchers.IO) {
-            localStorage.loadPageTurnEvents(documentId)
-                .toPageTurnEventDomainList(documentId)  // 로컬에 저장된 페이지 이동 이벤트 로드
+            pageTurnEventDao.getEventsByDocumentId(documentId).map {
+                it.toDomain()
+            }
         }
     }
 }

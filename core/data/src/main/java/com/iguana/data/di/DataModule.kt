@@ -6,6 +6,7 @@ import com.iguana.data.local.dao.RecentFileDao
 import com.iguana.data.local.db.AppDatabase
 import com.iguana.domain.repository.SharedPreferencesHelper
 import com.iguana.data.local.db.SharedPreferencesHelperImpl
+import com.iguana.data.local.entity.PageTurnEventDao
 import com.iguana.data.local.files.FileHelperImpl
 import com.iguana.domain.utils.FileHelper
 import dagger.Binds
@@ -48,6 +49,11 @@ abstract class DataModule {
         @Provides
         fun provideRecentFileDao(appDatabase: AppDatabase): RecentFileDao {
             return appDatabase.recentFileDao()
+        }
+
+        @Provides
+        fun providePageTurnEventDao(appDatabase: AppDatabase): PageTurnEventDao {
+            return appDatabase.pageTurnEventDao()
         }
 
         @Provides

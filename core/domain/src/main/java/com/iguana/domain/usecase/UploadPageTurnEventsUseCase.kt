@@ -9,6 +9,6 @@ class UploadPageTurnEventsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(documentId: Long, recordingId: Long) {
         val events = recordRepository.loadPageTurnEvents(documentId)
-        recordRepository.uploadPageTurnEvents(recordingId, events)
+        recordRepository.uploadPageTurnEvents(documentId, recordingId, events)
     }
 }
