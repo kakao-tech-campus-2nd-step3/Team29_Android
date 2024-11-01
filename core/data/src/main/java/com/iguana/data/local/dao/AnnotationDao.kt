@@ -4,22 +4,25 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.iguana.data.local.entity.AnnotationEntity
 
 @Dao
 interface AnnotationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAnnotation(annotation: Annotation)
+    fun insertAnnotation(annotation: AnnotationEntity)
 
     @Query("SELECT * FROM annotations WHERE documentId = :documentId AND pageNumber = :pageNumber")
-    suspend fun getAnnotationsByPage(documentId: Long, pageNumber: Int): List<Annotation>
+    fun getAnnotationsByPage(documentId: Long, pageNumber: Int): List<AnnotationEntity>
 
     @Query("DELETE FROM annotations WHERE id = :id")
-    suspend fun deleteAnnotation(id: Long)
-
-    @Query("UPDATE annotations SET text = :text, xPosition = :xPosition, yPosition = :yPosition WHERE id = :id")
-    suspend fun updateAnnotation(id: Long, text: String, xPosition: Float, yPosition: Float)
+    fun deleteAnnotation(id: Long)
+    @Query("UPDATE annotations SET content = :content, xPosition = :xPosition, yPosition = :yPosition WHERE id = :id")
+    fun updateAnnotation(id: Long, content: String, xPosition: Float, yPosition: Float)
 
     @Query("DELETE FROM annotations WHERE documentId = :documentId")
-    suspend fun deleteAnnotationsByDocument(documentId: Long)
+    fun deleteAnnotationsByDocument(documentId: Long)
+
+    @Query("DELETE FROM annotations")
+    fun clearAnnotations()
 }

@@ -51,6 +51,9 @@ class PdfViewerFragment : Fragment() {
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
             }
 
+            // 캐시되어있던 다른 document의 주석들 삭제
+            viewModel.clearAnnotations()
+
             // ViewPager2의 페이지 변경 리스너 설정
             binding.pdfViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -59,6 +62,7 @@ class PdfViewerFragment : Fragment() {
                     (activity as? NotetakingActivity)?.onPageChanged(position)
                 }
             })
+
         }
     }
 
@@ -74,7 +78,8 @@ class PdfViewerFragment : Fragment() {
         _binding = null
     }
 
-    fun getCurrentPage(): Int {
-        return viewModel.currentPageNumber.value ?: 0
+
+    fun setPagingEnabled(enabled: Boolean) {
+        binding.pdfViewPager.isUserInputEnabled = enabled
     }
 }

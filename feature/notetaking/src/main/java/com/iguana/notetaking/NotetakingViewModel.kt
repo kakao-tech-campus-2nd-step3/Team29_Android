@@ -34,8 +34,12 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
     // 이전 녹음 상태 추적 변수
     private var wasRecording = false
 
+    // 텍스트 모드 활성화되어있는지
+
    private val _isTextMode =  MutableLiveData(false)
     val isTextMode: LiveData<Boolean> get() = _isTextMode
+
+
 
     // 텍스트 모드 토글 함수
     fun toggleTextMode() {

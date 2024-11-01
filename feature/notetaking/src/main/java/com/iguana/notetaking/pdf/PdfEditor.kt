@@ -3,21 +3,17 @@ package com.iguana.notetaking.pdf
 import android.content.Context
 import android.graphics.Color
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlin.math.roundToInt
 
 class PdfEditor(private val context: Context) {
 
-    private val _isEditMode = MutableLiveData<Boolean>(false)
-    val isEditMode: LiveData<Boolean> get() = _isEditMode
+    private val _isDragging = MutableLiveData(false)
+    val isDragging: LiveData<Boolean> get() = _isDragging
 
-    // 편집 모드를 활성화 또는 비활성화
-    fun toggleEditMode() {
-        _isEditMode.value = !(_isEditMode.value ?: false)
-    }
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup): EditText {
@@ -33,44 +29,43 @@ class PdfEditor(private val context: Context) {
             setTextColor(Color.BLACK)
             textSize = 16f
 
-            // 중앙 위치로 초기화
+            // 중앙 위치로 초기화 (Int 단위)
             post {
-                x = (parentView.width / 2 - width / 2).toFloat()
-                y = (parentView.height / 2 - height / 2).toFloat()
+                x = ((parentView.width / 2 - width / 2)).toFloat()
+                y = ((parentView.height / 2 - height / 2)).toFloat()
             }
 
             // 터치 이벤트로 위치 이동 가능하게 설정
             setDraggable()
         }
 
-        // 부모 뷰에 추가
         parentView.addView(editText)
         return editText
     }
 
-    // 텍스트 상자를 터치로 이동할 수 있도록 설정
+    // 텍스트 상자를 터치로 이동할 수 있도록 설정 (Int 단위)
     private fun EditText.setDraggable() {
-        var dX = 0f
-        var dY = 0f
-        var isDragging = false
+        var dX = 0
+        var dY = 0
 
         setOnTouchListener { view, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    dX = view.x - event.rawX
-                    dY = view.y - event.rawY
-                    isDragging = false
+                    dX = (view.x - event.rawX).roundToInt()
+                    dY = (view.y - event.rawY).roundToInt()
+                    _isDragging.value = false // 드래그가 시작되지 않음
                 }
                 MotionEvent.ACTION_MOVE -> {
                     view.animate()
-                        .x(event.rawX + dX)
-                        .y(event.rawY + dY)
+                        .x((event.rawX + dX).roundToInt().toFloat())
+                        .y((event.rawY + dY).roundToInt().toFloat())
                         .setDuration(0)
                         .start()
-                    isDragging = true
+                    _isDragging.value = true // 드래그가 시작됨
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (!isDragging) {
+                    _isDragging.value = false // 드래그 종료
+                    if (!_isDragging.value!!) {
                         view.performClick()
                     }
                 }

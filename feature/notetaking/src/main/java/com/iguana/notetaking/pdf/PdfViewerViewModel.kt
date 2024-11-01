@@ -1,4 +1,5 @@
 package com.iguana.notetaking.pdf
+
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -6,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iguana.domain.usecase.ClearAnnotationsUseCase
 import com.iguana.notetaking.util.PdfRendererHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,18 +16,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class PdfViewerViewModel @Inject constructor(private val pdfRendererHelper: PdfRendererHelper) :
+class PdfViewerViewModel @Inject constructor(
+    private val pdfRendererHelper: PdfRendererHelper,
+    private val clearAnnotationsUseCase: ClearAnnotationsUseCase
+) :
     ViewModel() {
 
     private val _currentPageNumber = MutableLiveData<Int>() // 페이지 번호를 LiveData로 관리
     val currentPageNumber: LiveData<Int> get() = _currentPageNumber
 
-    private val _isEditMode = MutableLiveData<Boolean>(false) // 텍스트 편집 모드 여부
-    val isEditMode: LiveData<Boolean> get() = _isEditMode
-
-    fun toggleEditMode() {
-        _isEditMode.value = !(_isEditMode.value ?: false)
-    }
 
     // PDF 파일의 특정 페이지를 렌더링
     fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
@@ -45,6 +44,13 @@ class PdfViewerViewModel @Inject constructor(private val pdfRendererHelper: PdfR
     // 현재 페이지 번호를 업데이트하는 메서드
     fun setCurrentPage(page: Int) {
         _currentPageNumber.value = page
+    }
+
+    // 캐시되어있던 다른 주석을 모두 삭제하는 메서드
+    fun clearAnnotations() {
+        viewModelScope.launch(Dispatchers.IO) { // IO 디스패처로 실행
+            clearAnnotationsUseCase()
+        }
     }
 
 }

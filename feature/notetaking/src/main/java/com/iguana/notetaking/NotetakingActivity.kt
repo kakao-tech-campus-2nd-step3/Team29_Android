@@ -4,12 +4,15 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
+import com.iguana.notetaking.pdf.PdfPageFragment
 import com.iguana.notetaking.pdf.PdfViewerFragment
 import com.iguana.notetaking.sidebar.SideBarFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,7 +72,9 @@ class NotetakingActivity : AppCompatActivity() {
         binding.toolbar.apply {
             btnText.setOnClickListener {
                 viewModel.toggleTextMode()
-                // TODO 주석이 pdf 뷰어에 표시되도록 하는 로직
+                if (viewModel.isTextMode.value == true) {
+                    addTextToCurrentPage()
+                }
             }
             btnRecord.setOnClickListener { handleRecordingPermissionAndToggle() }
             btnAI.setOnClickListener { viewModel.toggleAI() }
@@ -102,9 +107,15 @@ class NotetakingActivity : AppCompatActivity() {
     }
 
 
-    // PDF 뷰어 프래그먼트 가져오기 메서드
     private fun getPdfViewerFragment(): PdfViewerFragment? {
         return supportFragmentManager.findFragmentById(R.id.pdf_fragment_container) as? PdfViewerFragment
+    }
+
+    // 현재 페이지에 텍스트 추가 요청을 전달하기 위한 메서드
+    private fun addTextToCurrentPage() {
+        val pdfViewerFragment = getPdfViewerFragment()
+        val currentPageFragment = pdfViewerFragment?.getCurrentPdfPageFragment()
+        currentPageFragment?.addNewTextBox(viewModel.pageNumber.value ?: 0)
     }
 
     // 사이드바 프래그먼트 가져오기 메서드
