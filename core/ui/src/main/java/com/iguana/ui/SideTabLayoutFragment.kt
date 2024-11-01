@@ -45,6 +45,7 @@ class SideTabLayoutFragment : Fragment() {
 
     fun onFavoritesClick() {
         _selectedItem.value = 2
+        (activity as? BaseActivity)?.showFavorites()
     }
 
     fun onProfileClick() {

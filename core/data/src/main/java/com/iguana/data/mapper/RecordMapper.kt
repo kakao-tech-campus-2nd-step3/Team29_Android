@@ -1,7 +1,6 @@
 package com.iguana.data.mapper
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import com.iguana.data.local.entity.PageTurnEventEntity
 import com.iguana.data.remote.model.PageTurnEventDto
 import com.iguana.data.remote.model.PageTurnEventRequestDto
 import com.iguana.data.remote.model.RecordingUploadRequestDto
@@ -15,24 +14,48 @@ import java.util.Base64
 fun List<PageTurnEvent>.toPageTurnEventRequestDto(recordingId: Long): PageTurnEventRequestDto {
     return PageTurnEventRequestDto(
         recordingId = recordingId,
-        events = this.toPageTurnEventDtoList()
+        events = this.map { event ->
+            PageTurnEventDto(
+                prevPage = event.prevPage,
+                nextPage = event.nextPage,
+                timestamp = event.timestamp
+            )
+        }
     )
 }
 
-fun List<PageTurnEvent>.toPageTurnEventDtoList(): List<PageTurnEventDto> {
-    return this.map { event ->
-        PageTurnEventDto(
-            prevPage = event.pageNumber - 1,
-            nextPage = event.pageNumber,
-            timestamp = event.timestamp.toDouble()
+// PageTurnEvent(DTO List) -> PageTurnEvent(Domain List)
+
+fun List<PageTurnEventDto>.toPageTurnEventDomainList(documentId: Long): List<PageTurnEvent> {
+    return this.map { dto ->
+        PageTurnEvent(
+            documentId = documentId,
+            prevPage = dto.prevPage,
+            nextPage = dto.nextPage,
+            timestamp = dto.timestamp
         )
     }
 }
 
+fun PageTurnEvent.toEntity(documentId: Long): PageTurnEventEntity {
+    return PageTurnEventEntity(
+        documentId = documentId,
+        prevPage = prevPage,
+        nextPage = nextPage,
+        timestamp = timestamp
+    )
+}
+
+fun PageTurnEventEntity.toDomain(): PageTurnEvent {
+    return PageTurnEvent(
+        documentId = this.documentId,
+        prevPage = this.prevPage,
+        nextPage = this.nextPage,
+        timestamp = this.timestamp
+    )
+}
 
 // RecordingFile을 RecordingUploadRequestDto로 변환하는 함수 (녹음 파일 업로드)
-
-@RequiresApi(Build.VERSION_CODES.O)
 fun RecordingFile.toUploadRequestDto(): RecordingUploadRequestDto {
     // 파일을 Base64로 인코딩
     val fileContent = File(this.filePath).readBytes()
@@ -48,7 +71,7 @@ fun RecordingFile.toUploadRequestDto(): RecordingUploadRequestDto {
 // 서버 응답을 기존의 RecordingFile에 덮어씌우는 매퍼
 fun RecordingFile.updateWithResponse(response: RecordingUploadResponseDto): RecordingFile {
     return this.copy(
-        recordingId = response.recordingId ?: this.recordingId,
-        documentId = response.documentId ?: this.documentId,
+        recordingId = response.recordingId,
+        documentId = response.documentId
     )
 }

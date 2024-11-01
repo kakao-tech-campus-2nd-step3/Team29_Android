@@ -57,7 +57,7 @@ class RecentFilesViewModel @Inject constructor(
         val intent = Intent(context, NotetakingActivity::class.java).apply {
             putExtra("PDF_URI", recentFile.fileUri)
             putExtra("PDF_TITLE", recentFile.fileName)
-            putExtra("DOCUMENT_ID", recentFile.id.toString())
+            putExtra("DOCUMENT_ID", recentFile.id)
         }
         context.startActivity(intent)
     }
@@ -117,10 +117,10 @@ class RecentFilesViewModel @Inject constructor(
 
                     // TODO: 서버완료되면 아래 코드 삭제 후 위 코드 주석해제
                     val intent = Intent(context, NotetakingActivity::class.java).apply {
-                        putExtra("PDF_URI", internalUri)
+                        putExtra("PDF_URI", internalUri.toString())
                         putExtra("PDF_TITLE", fileName)
                         // 시간으로 더미값 생성해서 넣기
-                        putExtra("DOCUMENT_ID", System.currentTimeMillis().toString())
+                        putExtra("DOCUMENT_ID", System.currentTimeMillis())
                     }
                     context.startActivity(intent)
                 } catch (e: Exception) {

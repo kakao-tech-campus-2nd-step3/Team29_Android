@@ -1,7 +1,8 @@
 package com.iguana.domain.model.record
 
-data class PageTurnEvent (
+data class PageTurnEvent(
     val documentId: Long,
-    val pageNumber: Int,
-    val timestamp: Long
+    val prevPage : Int,
+    val nextPage : Int,
+    val timestamp: Double
 )

@@ -26,13 +26,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Toolbar (도구 바) -->
+        <!-- 도구 바 -->
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/pdf_fragment_container"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleBar" />
@@ -43,10 +42,22 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/grey_90"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- 텍스트 편집 바 -->
+        <include
+            android:id="@+id/text_edit_bar"
+            layout="@layout/text_edit_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/pdf_fragment_container"
+            app:layout_constraintEnd_toStartOf="@id/side_bar_container"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
         <!-- 사이드바 프라그먼트 (Default: Closed) TODO : visibility 변수화-->
         <FrameLayout
@@ -68,7 +79,7 @@
             android:layout_margin="0dp"
             android:layout_marginTop="72dp"
             android:background="?attr/selectableItemBackground"
-            android:onClick="@{() -> viewModel.toggleSideBarVisibility()}"
+            android:onClick="@{() -> viewModel.toggleSideBar()}"
             android:src="@drawable/slider_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/side_bar_container"
