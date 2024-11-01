@@ -1,4 +1,4 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.pdf
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -19,6 +19,13 @@ class PdfViewerViewModel @Inject constructor(private val pdfRendererHelper: PdfR
 
     private val _currentPageNumber = MutableLiveData<Int>() // 페이지 번호를 LiveData로 관리
     val currentPageNumber: LiveData<Int> get() = _currentPageNumber
+
+    private val _isEditMode = MutableLiveData<Boolean>(false) // 텍스트 편집 모드 여부
+    val isEditMode: LiveData<Boolean> get() = _isEditMode
+
+    fun toggleEditMode() {
+        _isEditMode.value = !(_isEditMode.value ?: false)
+    }
 
     // PDF 파일의 특정 페이지를 렌더링
     fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {

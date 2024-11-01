@@ -1,8 +1,9 @@
-package com.iguana.data.local.entity
+package com.iguana.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.iguana.data.local.entity.PageTurnEventEntity
 
 @Dao
 interface PageTurnEventDao {
