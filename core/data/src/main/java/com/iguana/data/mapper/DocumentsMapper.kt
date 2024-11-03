@@ -4,7 +4,7 @@ import com.iguana.data.remote.model.*
 import com.iguana.domain.model.*
 
 // DTO to Domain
-fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, updatedAt)
+fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, System.currentTimeMillis().toString())
 
 fun FolderContentResponseDto.toDomain() = FolderContent(
     content.map { it.toDomain() },

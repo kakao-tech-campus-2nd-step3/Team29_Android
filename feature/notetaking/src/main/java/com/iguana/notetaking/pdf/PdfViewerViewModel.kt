@@ -27,8 +27,10 @@ class PdfViewerViewModel @Inject constructor(
 
 
     // PDF 파일의 특정 페이지를 렌더링
-    fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
-        return pdfRendererHelper.renderPage(uri, pageIdx)
+    suspend fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
+        return withContext(Dispatchers.IO) {
+            pdfRendererHelper.renderPage(uri, pageIdx)
+        }
     }
 
     // 전체 PDF 페이지 수를 가져옴

@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -72,10 +74,13 @@ class PdfPageFragment : Fragment() {
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
-            val bitmap = pdViewerViewModel.renderPage(pdfUri, pageIndex)
-
-            // PhotoView에 이미지 설정 (확대/축소 기능)
-            binding.photoView.setImageBitmap(bitmap)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val bitmap = pdViewerViewModel.renderPage(pdfUri, pageIndex)
+                bitmap?.let {
+                    // PhotoView에 이미지 설정 (확대/축소 기능)
+                    binding.photoView.setImageBitmap(it)
+                }
+            }
         }
     }
 
