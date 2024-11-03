@@ -6,7 +6,7 @@ data class DocumentDto(
     val name: String,
     val url: String?,
     val pageCount: Int?,
-    val updatedAt: String
+    val updatedAt: String?
 )
 
 data class FolderContentDto(
