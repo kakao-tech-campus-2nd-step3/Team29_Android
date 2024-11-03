@@ -9,14 +9,7 @@ data class Document(
     val updatedAt: String
 )
 
-data class FolderContent(
-    val content: List<FolderContentItem>,
-    val totalElements: Int,
-    val currentPage: Int,
-    val totalPages: Int,
-    val sortBy: String,
-    val sortDirection: String
-)
+typealias FolderContent = List<FolderContentItem>
 
 data class FolderContentItem(
     val type: String,

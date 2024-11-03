@@ -80,8 +80,8 @@ class DocumentsFragment : Fragment() {
         }
     }
 
-    private fun updateUI(folderContent: FolderContent) {
-        val items = folderContent.content.map { item ->
+    private fun updateUI(folderContent: List<FolderContentItem>) {
+        val items = folderContent.map { item ->
             when (item.type) {
                 "FOLDER" -> DocumentItem.FolderItem(
                     id = item.id,
@@ -102,7 +102,7 @@ class DocumentsFragment : Fragment() {
 
     private fun onItemClick(item: DocumentItem) {
         when (item) {
-            is DocumentItem.FolderItem -> viewModel.loadSubItems(item.id, item.name)
+            is DocumentItem.FolderItem -> viewModel.loadFolderContents(item.id, item.name)
             is DocumentItem.PdfItem -> openPdf(item.id, item.title)
         }
     }

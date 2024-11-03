@@ -8,7 +8,7 @@ import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.usecase.CreateFolderUseCase
 import com.iguana.domain.usecase.DeleteFolderUseCase
 import com.iguana.domain.usecase.GetAllDocumentsUseCase
-import com.iguana.domain.usecase.GetSubItemsUseCase
+import com.iguana.domain.usecase.GetFolderContentsUseCase
 import com.iguana.domain.usecase.UpdateFolderNameUseCase
 import com.iguana.domain.usecase.DeleteFileUseCase
 import com.iguana.domain.usecase.UpdateDocumentNameUseCase
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.Stack
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -25,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DocumentsViewModel @Inject constructor(
     private val getAllDocumentsUseCase: GetAllDocumentsUseCase,
-    private val getSubItemsUseCase: GetSubItemsUseCase,
+    private val getFolderContentsUseCase: GetFolderContentsUseCase,
     private val createFolderUsecase: CreateFolderUseCase,
     private val updateDocumentNameUseCase: UpdateDocumentNameUseCase,
     private val updateFolderNameUseCase: UpdateFolderNameUseCase,
@@ -33,8 +32,8 @@ class DocumentsViewModel @Inject constructor(
     private val deleteFileUseCase: DeleteFileUseCase
 ) : ViewModel() {
 
-    private val _documents = MutableStateFlow<FolderContent?>(null)
-    val documents: StateFlow<FolderContent?> = _documents.asStateFlow()
+    private val _documents = MutableStateFlow<List<FolderContentItem>>(emptyList())
+    val documents: StateFlow<List<FolderContentItem>> = _documents.asStateFlow()
 
     private val _currentFolderName = MutableStateFlow("문서")
     val currentFolderName: StateFlow<String> = _currentFolderName
@@ -42,13 +41,14 @@ class DocumentsViewModel @Inject constructor(
     private data class FolderNode(val id: Long, val name: String, val parent: FolderNode?)
     private var currentFolder: FolderNode = FolderNode(-1L, "문서", null)
 
-    var currentFolderId: Long = 0L
+    var currentFolderId: Long = -1L
 
     fun loadAllDocuments() {
         viewModelScope.launch {
             try {
                 val result = getAllDocumentsUseCase()
                 result.onSuccess { rootContent ->
+                    currentFolderId = -1L
                     val contentWithDummy = addDummyDataIfEmpty(rootContent)
                     _documents.value = contentWithDummy
                     _currentFolderName.value = "문서"
@@ -62,11 +62,19 @@ class DocumentsViewModel @Inject constructor(
         }
     }
 
-    private fun addDummyDataIfEmpty(content: FolderContent): FolderContent {
-        if (content.content.isEmpty()) {
-            val dummyFolder = createDummyFolder()
-            val dummyPdf = createDummyPdf()
-            return content.copy(content = listOf(dummyFolder, dummyPdf))
+    private fun addDummyDataIfEmpty(content: List<FolderContentItem>): List<FolderContentItem> {
+        if (content.isEmpty()) {
+            return when (currentFolderId) {
+                -1L -> listOf(
+                    createDummyFolder(),
+                    createDummyPdf("테스트 PDF.pdf")
+                )
+                9999L -> listOf(
+                    createDummySubFolder(),
+                    createDummyPdf("테스트2 PDF.pdf")
+                )
+                else -> emptyList()
+            }
         }
         return content
     }
@@ -76,49 +84,68 @@ class DocumentsViewModel @Inject constructor(
             id = 9999L,
             name = "테스트 폴더",
             type = "FOLDER",
+            totalElements = 2,
+            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+        )
+    }
+
+    private fun createDummySubFolder(): FolderContentItem {
+        return FolderContentItem(
+            id = 9998L,
+            name = "테스트2 폴더",
+            type = "FOLDER",
             totalElements = 0,
             updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
         )
     }
 
-    private fun createDummyPdf(): FolderContentItem {
+    private fun createDummyPdf(name: String): FolderContentItem {
         return FolderContentItem(
-            id = 9998L,
-            name = "테스트 PDF.pdf",
+            id = 9997L,
+            name = name,
             type = "PDF",
             totalElements = 1,
             updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
         )
     }
 
-    fun loadSubItems(folderId: Long, folderName: String) {
+    fun loadFolderContents(folderId: Long, folderName: String) {
         currentFolderId = folderId
         viewModelScope.launch {
             try {
-                val result = getSubItemsUseCase(folderId)
-                result.onSuccess { subItems ->
-                    val contentWithDummy = addDummyDataIfEmpty(subItems)
-                    _documents.value = contentWithDummy
+                val result = getFolderContentsUseCase(
+                    folderId = folderId,
+                    page = 0,
+                    size = 20,
+                    sortBy = "updatedAt",
+                    sortDirection = "DESC"
+                )
+                result.onSuccess { folderContent ->
+                    _documents.value = folderContent
                     _currentFolderName.value = folderName
                     currentFolder = FolderNode(folderId, folderName, currentFolder)
                 }.onFailure { e ->
-                    Log.e("DocumentsViewModel", "하위 항목 로딩 중 오류 발생", e)
+                    Log.e("DocumentsViewModel", "폴더 내용 로딩 중 오류 발생", e)
                 }
             } catch (e: Exception) {
-                Log.e("DocumentsViewModel", "하위 항목 로딩 중 예외 발생", e)
+                Log.e("DocumentsViewModel", "폴더 내용 로딩 중 예외 발생", e)
             }
         }
     }
 
     fun navigateUp() {
         currentFolder.parent?.let { parentFolder ->
+            currentFolderId = parentFolder.id
             if (parentFolder.id == -1L) {
                 loadAllDocuments()
             } else {
-                loadSubItems(parentFolder.id, parentFolder.name)
+                loadFolderContents(parentFolder.id, parentFolder.name)
             }
             currentFolder = parentFolder
-        } ?: loadAllDocuments()
+        } ?: run {
+            currentFolderId = -1L
+            loadAllDocuments()
+        }
     }
 
     fun createFolder(parentFolderId: Long, folderName: String) {
@@ -133,9 +160,9 @@ class DocumentsViewModel @Inject constructor(
                     totalElements = 0,
                     updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 )
-                val updatedContent = _documents.value?.content?.toMutableList() ?: mutableListOf()
+                val updatedContent = _documents.value.toMutableList()
                 updatedContent.add(newFolderItem)
-                _documents.value = _documents.value?.copy(content = updatedContent)
+                _documents.value = updatedContent
                 Log.d("DocumentsViewModel", "Documents updated: ${updatedContent.size} items")
             }.onFailure {
                 Log.e("DocumentsViewModel", "Error creating folder", it)
@@ -146,13 +173,11 @@ class DocumentsViewModel @Inject constructor(
     fun updateFolderName(folderId: Long, newName: String) {
         viewModelScope.launch {
             updateFolderNameUseCase(folderId, newName).onSuccess { updatedFolder ->
-                val currentContent = _documents.value?.content ?: emptyList()
-                val updatedContent = currentContent.map { item ->
+                val updatedContent = _documents.value.map { item ->
                     if (item.id == folderId) updatedFolder else item
                 }
-                _documents.value = _documents.value?.copy(content = updatedContent)
+                _documents.value = updatedContent
             }.onFailure {
-                // 에러 처리
                 Log.e("DocumentsViewModel", "폴더 이름 변경 실패", it)
             }
         }
@@ -161,17 +186,14 @@ class DocumentsViewModel @Inject constructor(
     fun updateDocumentName(documentId: Long, newName: String) {
         viewModelScope.launch {
             updateDocumentNameUseCase(documentId, newName).onSuccess { updatedDocument ->
-                _documents.value?.let { currentContent ->
-                    val updatedContent = currentContent.content.map { item ->
-                        if (item.id == documentId) {
-                            item.copy(name = newName)
-                        } else {
-                            item
-                        }
+                val updatedContent = _documents.value.map { item ->
+                    if (item.id == documentId) {
+                        item.copy(name = newName)
+                    } else {
+                        item
                     }
-                    _documents.value = currentContent.copy(content = updatedContent)
                 }
-                Log.d("DocumentsViewModel", "문서 이름이 성공적으로 수정되었습니다.")
+                _documents.value = updatedContent
             }.onFailure { error ->
                 Log.e("DocumentsViewModel", "문서 이름 수정 실패: ${error.message}", error)
             }
@@ -181,14 +203,9 @@ class DocumentsViewModel @Inject constructor(
     fun deleteFolder(folderId: Long) {
         viewModelScope.launch {
             deleteFolderUseCase(folderId).onSuccess {
-                // 폴더 삭제 성공 처리
-                val updatedContent = _documents.value?.content?.filter { it.id != folderId }
-                _documents.value = _documents.value?.copy(content = updatedContent ?: emptyList())
-                
-                // 성공 로그
+                _documents.value = _documents.value.filter { it.id != folderId }
                 Log.d("DocumentsViewModel", "폴더가 성공적으로 삭제되었습니다.")
             }.onFailure { error ->
-                // 에러 로그
                 Log.e("DocumentsViewModel", "폴더 삭제 실패: ${error.message}", error)
             }
         }
@@ -197,14 +214,9 @@ class DocumentsViewModel @Inject constructor(
     fun deleteFile(fileId: Long) {
         viewModelScope.launch {
             deleteFileUseCase(fileId).onSuccess {
-                // 파일 삭제 성공 처리
-                val updatedContent = _documents.value?.content?.filter { it.id != fileId }
-                _documents.value = _documents.value?.copy(content = updatedContent ?: emptyList())
-                
-                // 성공 로그
+                _documents.value = _documents.value.filter { it.id != fileId }
                 Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
             }.onFailure { error ->
-                // 에러 로그
                 Log.e("DocumentsViewModel", "파일 삭제 실패: ${error.message}", error)
             }
         }

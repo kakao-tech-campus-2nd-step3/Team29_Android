@@ -6,15 +6,6 @@ import com.iguana.domain.model.*
 // DTO to Domain
 fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, updatedAt)
 
-fun FolderContentResponseDto.toDomain() = FolderContent(
-    content.map { it.toDomain() },
-    totalElements,
-    currentPage,
-    totalPages,
-    sortBy,
-    sortDirection
-)
-
 fun FolderContentDto.toDomain() = FolderContentItem(type, id, name, updatedAt, totalElements)
 
 fun CreateFolderResponseDto.toDomain() = Folder(id, parentId, name)
