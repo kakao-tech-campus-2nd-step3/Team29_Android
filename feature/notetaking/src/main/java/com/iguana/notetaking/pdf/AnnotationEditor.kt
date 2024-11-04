@@ -10,13 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import kotlin.math.roundToInt
 
 
-interface PdfEditorListener {
+interface AnnotationListener {
     fun onDrag(dragging: Boolean)
     fun onTextBoxClick(focused: Boolean)
 }
 
-class PdfEditor(
-    private val context: Context, private val listener: PdfEditorListener
+class AnnotationEditor(
+    private val context: Context, private val listener: AnnotationListener
 ) {
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가

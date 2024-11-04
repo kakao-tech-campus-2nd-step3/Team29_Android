@@ -21,14 +21,14 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class PdfPageFragment : Fragment(), PdfEditorListener {
+class PdfPageFragment : Fragment(), AnnotationListener {
 
     private val pdViewerViewModel: PdfViewerViewModel by viewModels()
     private val pdfPageViewModel: PdfPageViewModel by viewModels()
     private val sharedViewModel: NotetakingViewModel by activityViewModels()
     private var _binding: FragmentPdfPageBinding? = null
     private val binding get() = _binding!!
-    private lateinit var pdfEditor: PdfEditor
+    private lateinit var annotationEditor: AnnotationEditor
 
     companion object {
         private const val ARG_PDF_URI = "PDF_URI"
@@ -50,7 +50,7 @@ class PdfPageFragment : Fragment(), PdfEditorListener {
     ): View {
         // XML 레이아웃 파일을 인플레이트하여 반환
         _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
-        pdfEditor = PdfEditor(requireContext(), this)
+        annotationEditor = AnnotationEditor(requireContext(), this)
         return binding.root
     }
 
@@ -85,8 +85,8 @@ class PdfPageFragment : Fragment(), PdfEditorListener {
 
     // 새로운 텍스트 상자 추가
     fun addNewTextBox(pageIndex: Int) {
-        val editText = pdfEditor.addTextBox(binding.pdfEditorView)
-        pdfEditor.enableTextBoxEditing(editText) // 편집 모드 설정
+        val editText = annotationEditor.addTextBox(binding.pdfEditorView)
+        annotationEditor.enableTextBoxEditing(editText) // 편집 모드 설정
         // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
         val annotation = com.iguana.domain.model.Annotation(
             content = editText.text.toString(),
