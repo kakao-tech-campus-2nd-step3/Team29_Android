@@ -1,5 +1,6 @@
 package com.iguana.documents
 
+import android.net.http.HttpException
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,10 +32,12 @@ class DocumentsViewModel @Inject constructor(
     private val _currentFolderName = MutableStateFlow("문서")
     val currentFolderName: StateFlow<String> = _currentFolderName
 
-    private data class FolderNode(val id: Long, val name: String, val parent: FolderNode?)
-    private var currentFolder: FolderNode = FolderNode(-1L, "문서", null)
-
+    private var currentFolder: FolderNode? = null
     var currentFolderId: Long = -1L
+
+    init {
+        loadAllDocuments()
+    }
 
     fun loadAllDocuments() {
         viewModelScope.launch {
@@ -44,7 +47,7 @@ class DocumentsViewModel @Inject constructor(
                     currentFolderId = -1L
                     _documents.value = rootContent
                     _currentFolderName.value = "문서"
-                    currentFolder = FolderNode(-1L, "문서", null)
+                    currentFolder = null
                 }.onFailure { e ->
                     Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
                 }
@@ -79,13 +82,13 @@ class DocumentsViewModel @Inject constructor(
     }
 
     fun navigateUp() {
-        currentFolder.parent?.let { parentFolder ->
+        if (currentFolder == null) {
+            return
+        }
+        
+        currentFolder?.parent?.let { parentFolder ->
             currentFolderId = parentFolder.id
-            if (parentFolder.id == -1L) {
-                loadAllDocuments()
-            } else {
-                loadFolderContents(parentFolder.id, parentFolder.name)
-            }
+            loadFolderContents(parentFolder.id, parentFolder.name)
             currentFolder = parentFolder
         } ?: run {
             currentFolderId = -1L
@@ -106,11 +109,10 @@ class DocumentsViewModel @Inject constructor(
                     updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
                 )
                 val updatedContent = _documents.value.toMutableList()
-                updatedContent.add(newFolderItem)
+                updatedContent.add(0, newFolderItem)
                 _documents.value = updatedContent
-                Log.d("DocumentsViewModel", "Documents updated: ${updatedContent.size} items")
-            }.onFailure {
-                Log.e("DocumentsViewModel", "Error creating folder", it)
+            }.onFailure { error ->
+                Log.e("DocumentsViewModel", "폴더 생성 중 오류 발생", error)
             }
         }
     }
@@ -166,4 +168,35 @@ class DocumentsViewModel @Inject constructor(
             }
         }
     }
+
+    private fun updateUI(folderContent: List<FolderContentItem>) {
+        val items = folderContent.map { item ->
+            when (item.type.uppercase()) {
+                "FOLDER" -> DocumentItem.FolderItem(
+                    id = item.id,
+                    name = item.name,
+                    fileCount = item.totalElements,
+                    isBookmarked = false
+                )
+                "FILE", "PDF", "DOCUMENT" -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
+                    isBookmarked = false
+                )
+                else -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
+                    isBookmarked = false
+                )
+            }
+        }
+    }
 }
+
+data class FolderNode(
+    val id: Long,
+    val name: String,
+    val parent: FolderNode?
+)

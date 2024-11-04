@@ -23,6 +23,7 @@ interface DocumentApi {
 
     @GET("/api/folders")
     suspend fun getRootFolderContents(
+        @Query("parentFolderId") parentFolderId: Long? = null,
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
         @Query("sortBy") sortBy: String = "updatedAt",
@@ -53,9 +54,8 @@ interface DocumentApi {
     @DELETE("/api/documents/{documentId}")
     suspend fun deleteDocument(@Path("documentId") documentId: Long)
 
-    @POST("/api/folders/{parentFolderId}")
+    @POST("/api/folders")
     suspend fun createFolder(
-        @Path("parentFolderId") parentFolderId: Long,
         @Body request: CreateFolderRequestDto
     ): CreateFolderResponseDto
 

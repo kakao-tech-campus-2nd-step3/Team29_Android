@@ -19,12 +19,18 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.HttpException
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
     override suspend fun getAllDocuments(): Result<FolderContent> = try {
-        val response = api.getRootFolderContents()
+        val response = api.getRootFolderContents(
+            page = 0,
+            size = 20,
+            sortBy = "updatedAt",
+            sortDirection = "DESC"
+        )
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
@@ -103,8 +109,12 @@ class DocumentsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createFolder(parentFolderId: Long, name: String): Result<Folder> = try {
-        val request = CreateFolderRequestDto(name)
-        val response = api.createFolder(parentFolderId, request)
+        Logger.d(TAG, "Creating folder with name: $name, parentFolderId: $parentFolderId")
+        val request = CreateFolderRequestDto(
+            name = name,
+            parentFolderId = if (parentFolderId == -1L) null else parentFolderId
+        )
+        val response = api.createFolder(request)
         Result.success(response.toDomain())
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 생성 중 예외 발생: ${e.message}", e)
