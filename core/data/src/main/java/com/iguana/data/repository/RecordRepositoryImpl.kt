@@ -39,7 +39,7 @@ class RecordRepositoryImpl @Inject constructor(
                 Log.d("RecordRepositoryImpl", "API 응답 상태: ${response.isSuccessful}")
                 val body =
                     response.body() ?: throw AppError.NullResponseError("녹음 파일 업로드 응답이 비어 있습니다.")
-                return@withContext recordingFile.updateWithResponse(body)
+                recordingFile.updateWithResponse(body)
             } else {
                 Log.e("RecordRepositoryImpl", "API 요청 실패: 코드 ${response.code()}, 메시지 ${response.message()}")
                 throw AppError.UploadFailed
@@ -87,9 +87,7 @@ class RecordRepositoryImpl @Inject constructor(
     // 로컬 스토리지에 페이지 이동 이벤트 저장
     override suspend fun savePageTurnEvents(documentId: Long, event: PageTurnEvent) {
         withContext(Dispatchers.IO) {
-            withContext(Dispatchers.IO) {
                 pageTurnEventDao.insert(event.toEntity(documentId))
-            }
         }
     }
 
