@@ -10,10 +10,10 @@ data class DocumentDto(
 )
 
 data class FolderContentDto(
-    val type: String,
+    val type: String?,
     val id: Long,
     val name: String,
-    val updatedAt: String,
+    val updatedAt: String?,
     val totalElements: Int
 )
 
@@ -27,7 +27,8 @@ data class FolderContentResponseDto(
 )
 
 data class CreateFolderRequestDto(
-    val name: String
+    val name: String,
+    val parentFolderId: Long?
 )
 
 data class CreateFolderResponseDto(

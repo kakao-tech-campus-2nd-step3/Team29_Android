@@ -3,6 +3,7 @@ package com.iguana.data.remote.api
 import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.data.remote.model.CreateFolderResponseDto
 import com.iguana.data.remote.model.DocumentDto
+import com.iguana.data.remote.model.FolderContentDto
 import com.iguana.data.remote.model.FolderContentItemDto
 import com.iguana.data.remote.model.FolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto
@@ -20,14 +21,23 @@ interface DocumentApi {
         @Part("documentSaveRequest") documentSaveRequest: RequestBody
     ): DocumentDto
 
-    @GET("/api/folders/{folderId}")
-    suspend fun getFolderContents(
-        @Path("folderId") folderId: Long?,
+    @GET("/api/folders")
+    suspend fun getRootFolderContents(
+        @Query("parentFolderId") parentFolderId: Long? = null,
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
         @Query("sortBy") sortBy: String = "updatedAt",
         @Query("sortDirection") sortDirection: String = "DESC"
-    ): FolderContentResponseDto
+    ): List<FolderContentDto>
+
+    @GET("/api/folders")
+    suspend fun getFolderContents(
+        @Query("parentFolderId") parentFolderId: Long,
+        @Query("page") page: Int = 0,
+        @Query("size") size: Int = 20,
+        @Query("sortBy") sortBy: String = "updatedAt",
+        @Query("sortDirection") sortDirection: String = "DESC"
+    ): List<FolderContentDto>
 
     @GET("/api/documents")
     suspend fun getDocuments(@Query("documentIds") documentIds: List<Long>): List<DocumentDto>
@@ -44,9 +54,8 @@ interface DocumentApi {
     @DELETE("/api/documents/{documentId}")
     suspend fun deleteDocument(@Path("documentId") documentId: Long)
 
-    @POST("/api/folders/{parentFolderId}")
+    @POST("/api/folders")
     suspend fun createFolder(
-        @Path("parentFolderId") parentFolderId: Long,
         @Body request: CreateFolderRequestDto
     ): CreateFolderResponseDto
 
