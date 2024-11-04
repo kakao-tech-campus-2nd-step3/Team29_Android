@@ -2,9 +2,13 @@ package com.iguana.notetaking.pdf
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -71,6 +75,11 @@ class PdfPageFragment : Fragment(), PdfEditorListener {
                 }
             }
         }
+
+        // 텍스트 박스 외부 클릭시 텍스트 모드 해제
+        binding.pdfEditorView.setOnClickListener {
+            sharedViewModel.setTextMode(false)
+        }
     }
 
 
@@ -106,4 +115,11 @@ class PdfPageFragment : Fragment(), PdfEditorListener {
     override fun onDrag(dragging: Boolean) {
         (parentFragment as? PdfViewerFragment)?.setPagingEnabled(!dragging)
     }
+
+    override fun onTextBoxClick(focused: Boolean) {
+        if (focused) {
+            sharedViewModel.setTextMode(true)
+        }
+    }
+
 }

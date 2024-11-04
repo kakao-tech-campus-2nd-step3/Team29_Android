@@ -12,12 +12,12 @@ import kotlin.math.roundToInt
 
 interface PdfEditorListener {
     fun onDrag(dragging: Boolean)
+    fun onTextBoxClick(focused: Boolean)
 }
 
 class PdfEditor(
-    private val context: Context,
-    private val listener: PdfEditorListener) {
-
+    private val context: Context, private val listener: PdfEditorListener
+) {
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup): EditText {
@@ -25,8 +25,7 @@ class PdfEditor(
             setText("텍스트")
             setBackgroundColor(Color.TRANSPARENT)
             layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
             )
 
             setPadding(16, 16, 16, 16)
@@ -41,6 +40,11 @@ class PdfEditor(
 
             // 터치 이벤트로 위치 이동 가능하게 설정
             setDraggable()
+
+            // 클릭 이벤트 리스너 설정하여 인터페이스 메서드 호출
+            setOnClickListener {
+                listener.onTextBoxClick(true) // 텍스트 상자가 클릭될 때 호출
+            }
         }
 
         parentView.addView(editText)
@@ -59,14 +63,13 @@ class PdfEditor(
                     dY = (view.y - event.rawY).roundToInt()
                     listener.onDrag(false) // 드래그 시작 전
                 }
+
                 MotionEvent.ACTION_MOVE -> {
-                    view.animate()
-                        .x((event.rawX + dX).roundToInt().toFloat())
-                        .y((event.rawY + dY).roundToInt().toFloat())
-                        .setDuration(0)
-                        .start()
+                    view.animate().x((event.rawX + dX).roundToInt().toFloat())
+                        .y((event.rawY + dY).roundToInt().toFloat()).setDuration(0).start()
                     listener.onDrag(true) // 드래그 시작 전
                 }
+
                 MotionEvent.ACTION_UP -> {
                     listener.onDrag(false) // 드래그 시작 전
                     view.performClick()
