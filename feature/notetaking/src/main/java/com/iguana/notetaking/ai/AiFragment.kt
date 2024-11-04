@@ -14,6 +14,7 @@ import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.R
 import com.iguana.notetaking.recording.RecordFragment
+import com.iguana.notetaking.util.HtmlFormatter
 import com.iguana.notetaking.util.hide
 import com.iguana.notetaking.util.isVisible
 import com.iguana.notetaking.util.show
@@ -96,15 +97,13 @@ class AiFragment : Fragment() {
 
     // AI 결과에 따라 UI 업데이트
     private fun updateUiForResult(result: AIResult) {
-        // 요약 텍스트 업데이트
-        binding.aiContentTextView.text = result.formattedSummary.takeIf { result.hasSummary }
+        binding.aiContentTextView.text = result.summary?.let { HtmlFormatter.formatAsHtml(it) }
             ?: getString(R.string.no_summary_available)
 
-        // 문제 텍스트 업데이트
-        binding.aiProblemTextView.text = result.formattedProblem.takeIf { result.hasProblem }
-            ?: getString(R.string.no_summary_available)
+        binding.aiProblemTextView.text = result.problem?.let { HtmlFormatter.formatAsHtml(it) }
+            ?: getString(R.string.no_problem_available)
 
-        showAIContent()
+                showAIContent ()
     }
 
     private fun showAIContent() {
