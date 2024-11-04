@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentViewHolder
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.recording.RecordFragment
 
-class SidebarAdapter(fragment: Fragment, private val documentId: Long, private var currentPage: Int) : FragmentStateAdapter(fragment) {
+class SidebarAdapter(fragment: Fragment, documentId: Long, currentPage: Int) : FragmentStateAdapter(fragment) {
 
         private val fragments = listOf<Fragment>(
             RecordFragment.newInstance(documentId, currentPage),

@@ -31,6 +31,12 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
             .addInterceptor(logging)
+            // 연결 타임아웃 설정 (예: 30초)
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 읽기 타임아웃 설정 (예: 30초)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 쓰기 타임아웃 설정 (예: 30초)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
     }
 

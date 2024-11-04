@@ -88,7 +88,6 @@ class RecentFilesViewModel @Inject constructor(
                     // 1. 로컬에 파일 저장 -> 내부 URI 리턴
                     val internalUri = saveFileInLocalUseCase.execute(uri, fileName)
 
-                    // TODO: 서버 구현이 되면 아래 주석 해제
                     if (internalUri != null) {
                         // 2. 서버에 파일 업로드 - 서버 구현이 되면 주석 해제
                         val result = saveFileInRemoteUseCase.execute(-1, internalUri, fileName)

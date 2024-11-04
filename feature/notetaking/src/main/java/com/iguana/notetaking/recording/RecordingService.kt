@@ -34,8 +34,8 @@ class RecordingService : Service() {
         Log.d("RecordingService", "onStartCommand: $action")
 
         when (action) {
-            "START_RECORDING" -> startRecording()
-            "STOP_RECORDING" -> stopRecording()
+            ACTION_START_RECORDING -> startRecording()
+            ACTION_STOP_RECORDING -> stopRecording()
         }
 
         return START_STICKY
