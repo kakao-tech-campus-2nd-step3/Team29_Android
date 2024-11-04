@@ -3,6 +3,7 @@ package com.iguana.data.di
 import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
+import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.RecordApi
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.domain.repository.SharedPreferencesHelper
@@ -21,9 +22,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
+    fun provideOkHttpClient(
+        sharedPreferencesHelper: SharedPreferencesHelper,
+        tokenAuthenticator: TokenAuthenticator
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
+            .authenticator(tokenAuthenticator)
             .build()
     }
 
@@ -39,8 +44,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginApi(retrofit: Retrofit): com.iguana.data.remote.api.LoginApi {
-        return retrofit.create(com.iguana.data.remote.api.LoginApi::class.java)
+    fun provideLoginApi(retrofit: Retrofit): LoginApi {
+        return retrofit.create(LoginApi::class.java)
     }
 
     @Provides

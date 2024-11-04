@@ -3,15 +3,8 @@ package com.iguana.documents
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iguana.domain.model.FolderContent
 import com.iguana.domain.model.FolderContentItem
-import com.iguana.domain.usecase.CreateFolderUseCase
-import com.iguana.domain.usecase.DeleteFolderUseCase
-import com.iguana.domain.usecase.GetAllDocumentsUseCase
-import com.iguana.domain.usecase.GetFolderContentsUseCase
-import com.iguana.domain.usecase.UpdateFolderNameUseCase
-import com.iguana.domain.usecase.DeleteFileUseCase
-import com.iguana.domain.usecase.UpdateDocumentNameUseCase
+import com.iguana.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,8 +42,7 @@ class DocumentsViewModel @Inject constructor(
                 val result = getAllDocumentsUseCase()
                 result.onSuccess { rootContent ->
                     currentFolderId = -1L
-                    val contentWithDummy = addDummyDataIfEmpty(rootContent)
-                    _documents.value = contentWithDummy
+                    _documents.value = rootContent
                     _currentFolderName.value = "문서"
                     currentFolder = FolderNode(-1L, "문서", null)
                 }.onFailure { e ->
@@ -60,53 +52,6 @@ class DocumentsViewModel @Inject constructor(
                 Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
             }
         }
-    }
-
-    private fun addDummyDataIfEmpty(content: List<FolderContentItem>): List<FolderContentItem> {
-        if (content.isEmpty()) {
-            return when (currentFolderId) {
-                -1L -> listOf(
-                    createDummyFolder(),
-                    createDummyPdf("테스트 PDF.pdf")
-                )
-                9999L -> listOf(
-                    createDummySubFolder(),
-                    createDummyPdf("테스트2 PDF.pdf")
-                )
-                else -> emptyList()
-            }
-        }
-        return content
-    }
-
-    private fun createDummyFolder(): FolderContentItem {
-        return FolderContentItem(
-            id = 9999L,
-            name = "테스트 폴더",
-            type = "FOLDER",
-            totalElements = 2,
-            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-        )
-    }
-
-    private fun createDummySubFolder(): FolderContentItem {
-        return FolderContentItem(
-            id = 9998L,
-            name = "테스트2 폴더",
-            type = "FOLDER",
-            totalElements = 0,
-            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-        )
-    }
-
-    private fun createDummyPdf(name: String): FolderContentItem {
-        return FolderContentItem(
-            id = 9997L,
-            name = name,
-            type = "PDF",
-            totalElements = 1,
-            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-        )
     }
 
     fun loadFolderContents(folderId: Long, folderName: String) {
