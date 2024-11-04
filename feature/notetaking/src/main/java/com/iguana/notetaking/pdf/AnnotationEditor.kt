@@ -5,8 +5,6 @@ import android.graphics.Color
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kotlin.math.roundToInt
 
 

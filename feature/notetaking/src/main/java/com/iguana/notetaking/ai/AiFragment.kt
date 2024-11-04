@@ -1,5 +1,6 @@
 package com.iguana.notetaking.ai
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.iguana.notetaking.databinding.FragmentAiBinding
 import androidx.fragment.app.viewModels
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.R
 import com.iguana.notetaking.recording.RecordFragment
 import com.iguana.notetaking.util.HtmlFormatter
@@ -37,21 +40,23 @@ class AiFragment : Fragment() {
 
     private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AiViewModel by viewModels()
 
+    // Shared ViewModel (Activity 범위)
+    private val sharedViewModel: NotetakingViewModel by activityViewModels()
 
+    // Local ViewModel (Fragment 범위)
+    private val aiViewModel: AiViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         arguments?.let {
-            viewModel.documentId = it.getLong(DOCUMENT_ID)
-            viewModel.setPageNumber(it.getInt(CURRENT_PAGE))
+            aiViewModel.documentId = it.getLong(DOCUMENT_ID)
+            aiViewModel.setPageNumber(it.getInt(CURRENT_PAGE))
         }
 
         _binding = FragmentAiBinding.inflate(inflater, container, false)
-
-        binding.viewModel = viewModel
+        binding.viewModel = aiViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
@@ -60,7 +65,7 @@ class AiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // AI 상태가 변경될 때 상태에 따른 UI 업데이트
-        viewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
+        aiViewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
             aiStatus?.let { status ->
                 updateUiForStatus(status)
             } ?: run {
@@ -70,17 +75,13 @@ class AiFragment : Fragment() {
             }
         }
         // AI 결과가 있으면 해당 결과를 반영
-        viewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
+        aiViewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
             aiResult?.let { result ->
                 updateUiForResult(result)
             }
         }
-    }
-
-    // 페이지 번호 업데이트 메서드
-    fun updateContentForPage(pageNumber: Int) {
-        if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
-            viewModel.setPageNumber(pageNumber + 1)
+        sharedViewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
+            aiViewModel.setPageNumber(pageNumber)
         }
     }
 
@@ -102,8 +103,7 @@ class AiFragment : Fragment() {
 
         binding.aiProblemTextView.text = result.problem?.let { HtmlFormatter.formatAsHtml(it) }
             ?: getString(R.string.no_problem_available)
-
-                showAIContent ()
+        showAIContent ()
     }
 
     private fun showAIContent() {

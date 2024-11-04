@@ -13,8 +13,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
-import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentRecordBinding
@@ -73,6 +71,10 @@ class RecordFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeRecordingState()
+
+        sharedViewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
+            viewModel.setPageNumber(pageNumber)
+        }
     }
 
     // Fragment 화면에 표시되며, 입력을 받을 수 있는 상태
@@ -90,13 +92,6 @@ class RecordFragment() : Fragment() {
         super.onPause()
         // BroadcastReceiver 해제
         requireContext().unregisterReceiver(recordingReceiver)
-    }
-
-    // 페이지 번호 업데이트 메서드  -> 페이지 이동 이벤트 발생시 상위 프래그먼트에서 호출되는 함수
-    fun updateContentForPage(pageNumber: Int) {
-        if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
-            viewModel.setPageNumber(pageNumber+1)
-        }
     }
 
     override fun onDestroyView() {

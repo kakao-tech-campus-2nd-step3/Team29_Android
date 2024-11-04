@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@{String.valueOf(viewModel.pageNumber) + ` 페이지`}"
+                android:text="@{viewModel.pageNumber != null ? String.valueOf(viewModel.pageNumber + 1) + ` 페이지` : `1 페이지`}"
                 android:textColor="@color/grey_20"
                 app:layout_constraintBottom_toBottomOf="@id/boxView"
                 app:layout_constraintEnd_toEndOf="@id/boxView"
