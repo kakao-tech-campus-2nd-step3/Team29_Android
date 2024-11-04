@@ -17,31 +17,31 @@ interface SummarizeApi {
     @POST("/api/ai/llm")
     suspend fun requestSummarization(
         @Body request: SummarizeRequestDto
-    ): Response<SummarizeResponseDto>
+    ): SummarizeResponseDto
 
     // 요약 상태 확인
     @GET("/api/ai/llm/status/{documentId}")
     suspend fun checkStatus(
         @Path("documentId") documentId: Long
-    ): Response<StatusCheckResponseDto>
+    ): StatusCheckResponseDto
 
     // 요약 결과 조회
     @GET("/api/ai/llm/results/{documentId}")
     suspend fun getSummarization(
         @Path("documentId") documentId: Long
-    ): Response<SummarizeResultsResponseDto>
+    ): SummarizeResultsResponseDto
 
     // 요약 상태 확인 (페이지별)
     @GET("/api/ai/llm/status/{documentId}/{pageNumber}")
     suspend fun checkStatusByPage(
         @Path("documentId") documentId: Long,
         @Path("pageNumber") pageNumber: Int
-    ): Response<StatusCheckByPageResponseDto>
+    ): StatusCheckByPageResponseDto
 
     // 요약 결과 조회 (페이지별)
     @GET("/api/ai/llm/results/{documentId}/{pageNumber}")
     suspend fun getSummarizationByPage(
         @Path("documentId") documentId: Long,
         @Path("pageNumber") pageNumber: Int
-    ): Response<SummarizeResultsByPageResponseDto>
+    ): SummarizeResultsByPageResponseDto
 }

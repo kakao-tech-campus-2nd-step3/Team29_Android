@@ -1,4 +1,4 @@
-package com.iguana.notetaking
+package com.iguana.notetaking.pdf
 
 import android.net.Uri
 import androidx.fragment.app.Fragment

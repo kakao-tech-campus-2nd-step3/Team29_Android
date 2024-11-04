@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_text_size_dropdown"
+    android:layout_width="wrap_content"
+    android:layout_height="36dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <!-- 텍스트 사이즈 -->
+    <TextView
+        android:id="@+id/tv_text_size"
+        android:layout_width="50dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="16"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="12dp"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <!-- 드롭다운 -->
+    <ImageView
+        android:id="@+id/iv_dropdown_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:src="@drawable/ic_at_chevron_down" />
+</LinearLayout>
