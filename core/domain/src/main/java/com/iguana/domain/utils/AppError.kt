@@ -34,4 +34,9 @@ sealed class AppError : Exception() {
             get() = "페이지 이동 이벤트 업로드 실패: 에러 코드 $errorCode"
     }
 
+    data class ConversionFailed(val errorMessage: String) : AppError() {
+        override val message: String
+            get() = "파일 변환에 실패했습니다: $errorMessage"
+    }
+
 }

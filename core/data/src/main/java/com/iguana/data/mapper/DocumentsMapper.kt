@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // DTO to Domain
-fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, updatedAt)
+fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, System.currentTimeMillis().toString())
 
 fun FolderContentDto.toDomain() = FolderContentItem(
     type = when {

@@ -11,6 +11,7 @@
     <string name="ai_failed">AI 요약이 실패했습니다.</string>
     <string name="status_unavailable">상태를 확인할 수 없습니다.</string>
     <string name="no_summary_available">요약 데이터가 없습니다.</string>
+    <string name="no_problem_available">문제 데이터가 없습니다.</string>
     <string name="default_file_name">무제</string>
     <string name="is_not_recording">녹음 중이 아닙니다.</string>
     <string name="is_recording">녹음 중..</string>

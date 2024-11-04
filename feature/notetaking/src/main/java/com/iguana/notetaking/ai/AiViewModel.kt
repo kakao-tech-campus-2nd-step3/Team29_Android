@@ -37,7 +37,6 @@ class AiViewModel @Inject constructor(
     fun setPageNumber(pageNumber: Int) {
         _pageNumber.value = pageNumber
         fetchAiStatus(pageNumber)
-        Log.d("testt", "fetchAiStatus: $pageNumber")
     }
 
 

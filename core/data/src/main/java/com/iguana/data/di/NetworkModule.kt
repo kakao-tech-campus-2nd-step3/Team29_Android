@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -19,6 +20,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    // 로그 설정 추가
+    val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 
     @Provides
     @Singleton
@@ -29,6 +35,13 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
             .authenticator(tokenAuthenticator)
+            .addInterceptor(logging)
+            // 연결 타임아웃 설정 (예: 30초)
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 읽기 타임아웃 설정 (예: 30초)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 쓰기 타임아웃 설정 (예: 30초)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
     }
 

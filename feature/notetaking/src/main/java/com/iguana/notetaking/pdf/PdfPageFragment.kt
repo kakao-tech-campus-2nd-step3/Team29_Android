@@ -4,27 +4,31 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.iguana.notetaking.NotetakingActivity
+import androidx.lifecycle.lifecycleScope
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class PdfPageFragment : Fragment() {
+class PdfPageFragment : Fragment(), AnnotationListener {
 
     private val pdViewerViewModel: PdfViewerViewModel by viewModels()
     private val pdfPageViewModel: PdfPageViewModel by viewModels()
     private val sharedViewModel: NotetakingViewModel by activityViewModels()
     private var _binding: FragmentPdfPageBinding? = null
     private val binding get() = _binding!!
-    private lateinit var pdfEditor: PdfEditor
+    private lateinit var annotationEditor: AnnotationEditor
 
     companion object {
         private const val ARG_PDF_URI = "PDF_URI"
@@ -46,8 +50,7 @@ class PdfPageFragment : Fragment() {
     ): View {
         // XML 레이아웃 파일을 인플레이트하여 반환
         _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
-        pdfEditor = PdfEditor(requireContext()) // PdfEditor 초기화
-
+        annotationEditor = AnnotationEditor(requireContext(), this)
         return binding.root
     }
 
@@ -59,31 +62,31 @@ class PdfPageFragment : Fragment() {
 
         // 주석을 로드하기 전에 화면에 있던 기존 주석을 제거
         clearAnnotationsOnPage()
-
         // 현재 페이지 주석 로드
         pdfPageViewModel.loadAnnotations(sharedViewModel.documentId, pageIndex)
 
-
-        // 드래그 중일 때 ViewPager 스크롤을 비활성화
-        pdfEditor.isDragging.observe(viewLifecycleOwner, Observer { isDragging ->
-            (parentFragment as? PdfViewerFragment)?.setPagingEnabled(!isDragging)
-        })
-
-
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
-            val bitmap = pdViewerViewModel.renderPage(pdfUri, pageIndex)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val bitmap = pdViewerViewModel.renderPage(pdfUri, pageIndex)
+                bitmap?.let {
+                    // PhotoView에 이미지 설정 (확대/축소 기능)
+                    binding.photoView.setImageBitmap(it)
+                }
+            }
+        }
 
-            // PhotoView에 이미지 설정 (확대/축소 기능)
-            binding.photoView.setImageBitmap(bitmap)
+        // 텍스트 박스 외부 클릭시 텍스트 모드 해제
+        binding.pdfEditorView.setOnClickListener {
+            sharedViewModel.setTextMode(false)
         }
     }
 
 
     // 새로운 텍스트 상자 추가
     fun addNewTextBox(pageIndex: Int) {
-        val editText = pdfEditor.addTextBox(binding.pdfEditorView)
-        pdfEditor.enableTextBoxEditing(editText) // 편집 모드 설정
+        val editText = annotationEditor.addTextBox(binding.pdfEditorView)
+        annotationEditor.enableTextBoxEditing(editText) // 편집 모드 설정
         // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
         val annotation = com.iguana.domain.model.Annotation(
             content = editText.text.toString(),
@@ -108,4 +111,15 @@ class PdfPageFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onDrag(dragging: Boolean) {
+        (parentFragment as? PdfViewerFragment)?.setPagingEnabled(!dragging)
+    }
+
+    override fun onTextBoxClick(focused: Boolean) {
+        if (focused) {
+            sharedViewModel.setTextMode(true)
+        }
+    }
+
 }
