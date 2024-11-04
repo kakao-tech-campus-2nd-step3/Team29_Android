@@ -88,6 +88,7 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         annotationEditor.enableTextBoxEditing(editText) // 편집 모드 설정
         // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
         val annotation = com.iguana.domain.model.Annotation(
+            id = 0,
             content = editText.text.toString(),
             x = editText.x,
             y = editText.y,
@@ -95,8 +96,11 @@ class PdfPageFragment : Fragment(), AnnotationListener {
             height = editText.height.toFloat(),
             pageNumber = pageIndex
         )
-        // 주석을 저장하도록 ViewModel 호출
-        pdfPageViewModel.saveAnnotation(sharedViewModel.documentId, annotation, pageIndex)
+        viewLifecycleOwner.lifecycleScope.launch {
+            // 주석을 저장하도록 ViewModel 호출
+            val generatedId = pdfPageViewModel.saveAnnotation(sharedViewModel.documentId, annotation, pageIndex)
+            editText.tag = generatedId // EditText에 생성된 주석의 고유 ID 설정
+        }
     }
 
 
@@ -113,6 +117,22 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         if (focused) {
             sharedViewModel.setTextMode(true)
         }
+    }
+
+    override fun onTextEditingFinished(editText: EditText) {
+        val pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0) ?: 0
+        val annotationId = editText.tag as? Long ?: return
+
+        val annotation = com.iguana.domain.model.Annotation(
+            id = annotationId,
+            content = editText.text.toString(),
+            x = editText.x,
+            y = editText.y,
+            width = editText.width.toFloat(),
+            height = editText.height.toFloat(),
+            pageNumber = pageIndex
+        )
+        pdfPageViewModel.updateAnnotation(sharedViewModel.documentId, annotation)
     }
 
 }
