@@ -60,8 +60,7 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         val pdfUriString = arguments?.getString(ARG_PDF_URI)
         val pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0) ?: 0
 
-        // 주석을 로드하기 전에 화면에 있던 기존 주석을 제거
-        clearAnnotationsOnPage()
+
         // 현재 페이지 주석 로드
         pdfPageViewModel.loadAnnotations(sharedViewModel.documentId, pageIndex)
 
@@ -98,12 +97,6 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         )
         // 주석을 저장하도록 ViewModel 호출
         pdfPageViewModel.saveAnnotation(sharedViewModel.documentId, annotation, pageIndex)
-    }
-
-    // 주석 제거
-    private fun clearAnnotationsOnPage() {
-        pdfPageViewModel.clearAnnotations()
-        binding.pdfEditorView.removeAllViews() // pdfEditorView 내 모든 뷰 제거
     }
 
 
