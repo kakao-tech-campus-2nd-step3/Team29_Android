@@ -10,7 +10,7 @@ import com.iguana.data.local.entity.AnnotationEntity
 interface AnnotationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAnnotation(annotation: AnnotationEntity)
+    fun insertAnnotation(annotation: AnnotationEntity): Long
 
     @Query("SELECT * FROM annotations WHERE documentId = :documentId AND pageNumber = :pageNumber")
     fun getAnnotationsByPage(documentId: Long, pageNumber: Int): List<AnnotationEntity>

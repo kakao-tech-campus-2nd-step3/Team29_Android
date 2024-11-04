@@ -14,7 +14,8 @@ class SaveAnnotationUseCase @Inject constructor(
         pageNumber: Int
     ) {
         withContext(Dispatchers.IO) {
-            annotationRepository.saveAnnotation(documentId, annotation, pageNumber)
+            annotationRepository.saveAnnotationInLocal(documentId, annotation, pageNumber)
+            annotationRepository.saveAnnotationToServer(documentId, annotation, pageNumber)
         }
     }
 }

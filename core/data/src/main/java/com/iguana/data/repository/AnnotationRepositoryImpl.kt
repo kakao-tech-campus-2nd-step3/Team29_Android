@@ -15,21 +15,25 @@ class AnnotationRepositoryImpl @Inject constructor(
     private val annotationApi: AnnotationApi,
     private val annotationDao: AnnotationDao
 ) : AnnotationRepository {
-    override suspend fun saveAnnotation(
+    // 로컬에 저장하는 로직
+    override suspend fun saveAnnotationInLocal(
         documentId: Long,
         annotation: com.iguana.domain.model.Annotation,
         pageNumber: Int
     ) {
-        // TODO 서버 호출 부분 주석처리 해서 서버 구동되면 주석 해제
+        val annotationEntity = annotation.toEntity(documentId, pageNumber)
+        annotationDao.insertAnnotation(annotationEntity)
+    }
+
+    // 서버에 저장하는 로직 (현재 주석 처리됨)
+    override suspend fun saveAnnotationToServer(
+        documentId: Long,
+        annotation: com.iguana.domain.model.Annotation,
+        pageNumber: Int
+    ) {
         // val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
         // val responseDto = annotationApi.createAnnotation(documentId, requestDto)
-
-//        val createdAnnotation = responseDto.toDomain()
-          val annotationEntity = annotation.toEntity(documentId, pageNumber)
-
-        // 로컬에 저장
-        annotationDao.insertAnnotation(annotationEntity)
-        return
+        // val createdAnnotation = responseDto.toDomain()
     }
 
     // 특정 페이지 번호로 로컬에서 주석을 조회
@@ -52,11 +56,12 @@ class AnnotationRepositoryImpl @Inject constructor(
         return remoteAnnotations
     }
 
-    override suspend fun updateAnnotation(documentId: Long, annotation: Annotation): Annotation {
+    override suspend fun updateAnnotationToServer(documentId: Long, annotation: com.iguana.domain.model.Annotation): Annotation {
         val requestDto = annotation.toUpdateAnnotationRequestDto()
         val responseDto = annotationApi.updateAnnotation(documentId, annotation.id!!, requestDto)
         return responseDto.toDomain()
     }
+
 
     override suspend fun deleteAnnotation(documentId: Long, annotationId: Long) {
         annotationApi.deleteAnnotation(documentId, annotationId)
@@ -64,6 +69,15 @@ class AnnotationRepositoryImpl @Inject constructor(
 
     override suspend fun clearAnnotations() {
         annotationDao.clearAnnotations()
+    }
+
+    override suspend fun updateAnnotationInLocal(annotation: com.iguana.domain.model.Annotation) {
+        annotationDao.updateAnnotation(
+            id = annotation.id,
+            content = annotation.content,
+            xPosition = annotation.x,
+            yPosition = annotation.y
+        )
     }
 
 }

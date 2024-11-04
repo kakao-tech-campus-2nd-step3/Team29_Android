@@ -11,6 +11,7 @@ import kotlin.math.roundToInt
 interface AnnotationListener {
     fun onDrag(dragging: Boolean)
     fun onTextBoxClick(focused: Boolean)
+    fun onTextEditingFinished(editText: EditText)
 }
 
 class AnnotationEditor(

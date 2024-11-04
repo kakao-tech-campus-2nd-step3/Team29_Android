@@ -29,7 +29,7 @@ fun Annotation.toCreateAnnotationRequestDto(pageNumber: Int): CreateAnnotationRe
 
 // 도메인 모델을 로컬 데이터베이스 엔티티로 변환
 fun Annotation.toEntity(documentId:Long, pageNumber:Int) = AnnotationEntity(
-    id = id ?: 0,  // id가 null일 경우 새로 생성된 엔티티로 간주
+    id = id,
     documentId = documentId,
     pageNumber = pageNumber,
     content = content,
