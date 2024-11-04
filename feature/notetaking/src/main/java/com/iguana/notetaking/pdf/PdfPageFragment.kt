@@ -2,7 +2,6 @@ package com.iguana.notetaking.pdf
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +17,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class PdfPageFragment : Fragment() {
+class PdfPageFragment : Fragment(), PdfEditorListener {
 
     private val pdViewerViewModel: PdfViewerViewModel by viewModels()
     private val pdfPageViewModel: PdfPageViewModel by viewModels()
@@ -48,8 +46,7 @@ class PdfPageFragment : Fragment() {
     ): View {
         // XML 레이아웃 파일을 인플레이트하여 반환
         _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
-        pdfEditor = PdfEditor(requireContext()) // PdfEditor 초기화
-
+        pdfEditor = PdfEditor(requireContext(), this)
         return binding.root
     }
 
@@ -61,16 +58,8 @@ class PdfPageFragment : Fragment() {
 
         // 주석을 로드하기 전에 화면에 있던 기존 주석을 제거
         clearAnnotationsOnPage()
-
         // 현재 페이지 주석 로드
         pdfPageViewModel.loadAnnotations(sharedViewModel.documentId, pageIndex)
-
-
-        // 드래그 중일 때 ViewPager 스크롤을 비활성화
-        pdfEditor.isDragging.observe(viewLifecycleOwner, Observer { isDragging ->
-            (parentFragment as? PdfViewerFragment)?.setPagingEnabled(!isDragging)
-        })
-
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
@@ -112,5 +101,9 @@ class PdfPageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDrag(dragging: Boolean) {
+        (parentFragment as? PdfViewerFragment)?.setPagingEnabled(!dragging)
     }
 }

@@ -1,6 +1,9 @@
 package com.iguana.notetaking.recording
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +26,7 @@ class RecordFragment() : Fragment() {
     companion object {
         private const val DOCUMENT_ID = "documentId"
         private const val CURRENT_PAGE = "currentPage"
+
         fun newInstance(documentId: Long, currentPage: Int) = RecordFragment().apply {
             arguments = bundleOf(
                 DOCUMENT_ID to documentId,
@@ -35,6 +39,19 @@ class RecordFragment() : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: RecordViewModel by viewModels()
     private val sharedViewModel: NotetakingViewModel by activityViewModels()
+
+    private val recordingReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val filePath = intent?.getStringExtra("filePath")
+            val fileName = intent?.getStringExtra("fileName")
+            if (filePath != null && fileName != null) {
+                viewModel.setFileInfo(filePath, fileName) // 파일 정보를 ViewModel에 설정
+                viewModel.processRecordingAndEvents()
+            } else {
+                Log.e("RecordFragment", "filePath 또는 fileName이 null입니다.")
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +75,22 @@ class RecordFragment() : Fragment() {
         observeRecordingState()
     }
 
+    // Fragment 화면에 표시되며, 입력을 받을 수 있는 상태
+    override fun onResume() {
+        super.onResume()
+        // 브로드캐스트 등록
+        requireContext().registerReceiver(
+            recordingReceiver,
+            IntentFilter(BROADCAST_RECORDING_FINISHED)
+        )
+    }
+
+    // 사용자와의 상호작용 멈출 때 호출
+    override fun onPause() {
+        super.onPause()
+        // BroadcastReceiver 해제
+        requireContext().unregisterReceiver(recordingReceiver)
+    }
 
     // 페이지 번호 업데이트 메서드  -> 페이지 이동 이벤트 발생시 상위 프래그먼트에서 호출되는 함수
     fun updateContentForPage(pageNumber: Int) {
@@ -71,13 +104,11 @@ class RecordFragment() : Fragment() {
         _binding = null
     }
 
-    fun startRecording(context: Context) {
-        Log.d("RecordFragment", "녹음이 시작되기 바로 직전입니다.")
+    private fun startRecording(context: Context) {
         viewModel.startRecording(context)
-        Log.d("RecordFragment", "녹음이 시작되었습니다.")
     }
 
-    fun stopRecording(context: Context) {
+    private fun stopRecording(context: Context) {
         viewModel.stopRecording(context)
     }
 
@@ -86,7 +117,4 @@ class RecordFragment() : Fragment() {
             if (isActive) startRecording(requireContext()) else stopRecording(requireContext())
         }
     }
-
-
-
 }

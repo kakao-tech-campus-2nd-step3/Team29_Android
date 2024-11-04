@@ -1,5 +1,7 @@
 package com.iguana.data.local.files
 
+import android.util.Log
+import com.arthenica.mobileffmpeg.FFmpeg
 import com.iguana.data.remote.model.PageTurnEventDto
 import com.iguana.domain.utils.AppError
 import java.io.File
@@ -15,45 +17,38 @@ class RecordingFileStorage @Inject constructor(
         file.copyTo(destination, overwrite = true)
     }
 
-    // 페이지 이동 이벤트 저장
-    fun savePageTurnEvents(documentId: Long, events: List<PageTurnEventDto>) {
-        val file = File(baseDir, "page_turn_events_$documentId.txt")
-        // 기존 파일 내용에 이어서 새 이벤트를 추가
-        file.appendText(events.joinToString(separator = "\n") { event ->
-            "${event.prevPage},${event.nextPage},${event.timestamp}"
-        } + "\n")
-    }
-
-    // 로컬 스토리지에서 페이지 이동 이벤트 삭제
-    fun deletePageTurnEvents(documentId: Long) {
-        val file = File(baseDir, "page_turn_events_$documentId.txt")
-        if (file.exists()) {
-            file.delete()
-            Result.success(Unit)
-        } else {
-            throw AppError.FileNotFound
-        }
-    }
-
     // 파일 존재 여부 확인 함수
     fun isFileExists(filePath: String): Boolean {
         val file = File(filePath)
         return file.exists()
     }
 
-    // 페이지 이동 이벤트 로드
-    fun loadPageTurnEvents(documentId: Long): List<PageTurnEventDto> {
-        val file = File(baseDir, "page_turn_events_$documentId.txt")
-        if (!file.exists()) throw AppError.FileNotFound
+    // 3gp 파일을 mp3로 변환하고 변환된 파일 저장
+    fun convertAndSave3gpToMp3(inputFilePath: String, outputFileName: String): File {
+        // 기존 확장자를 제거하고 ".mp3" 확장자를 추가
+        val sanitizedOutputFileName = outputFileName.substringBeforeLast('.') + ".mp3"
+        val outputFilePath = "$baseDir/$sanitizedOutputFileName"
 
-        return file.readLines().map { line ->
-            val (prevPage, nextPage, timestamp) = line.split(",")
-            PageTurnEventDto(
-                prevPage = prevPage.toInt(),
-                nextPage = nextPage.toInt(),
-                timestamp = timestamp.toDouble()
-            )
+        val command = "-i \"$inputFilePath\" -vn -ar 44100 -ac 2 -b:a 192k \"$outputFilePath\""
+
+        val result = FFmpeg.execute(command)
+
+
+        if (result != 0) {
+            Log.e("RecordingFileStorage", "변환 실패: $result")
+            throw AppError.ConversionFailed("3gp 파일을 mp3로 변환하는데 실패했습니다.")
         }
-    }
 
+        val outputFile = File(outputFilePath)
+        if (!outputFile.exists()) {
+            Log.e("RecordingFileStorage", "변환된 파일이 존재하지 않습니다.")
+            throw AppError.FileNotFound
+        }
+
+        Log.d("RecordingFileStorage", "Input file path: $inputFilePath")
+        Log.d("RecordingFileStorage", "Output file path: $outputFilePath")
+
+
+        return outputFile
+    }
 }
