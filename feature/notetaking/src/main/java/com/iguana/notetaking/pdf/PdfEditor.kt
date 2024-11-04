@@ -9,10 +9,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlin.math.roundToInt
 
-class PdfEditor(private val context: Context) {
 
-    private val _isDragging = MutableLiveData(false)
-    val isDragging: LiveData<Boolean> get() = _isDragging
+interface PdfEditorListener {
+    fun onDrag(dragging: Boolean)
+}
+
+class PdfEditor(
+    private val context: Context,
+    private val listener: PdfEditorListener) {
 
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
@@ -53,7 +57,7 @@ class PdfEditor(private val context: Context) {
                 MotionEvent.ACTION_DOWN -> {
                     dX = (view.x - event.rawX).roundToInt()
                     dY = (view.y - event.rawY).roundToInt()
-                    _isDragging.value = false // 드래그가 시작되지 않음
+                    listener.onDrag(false) // 드래그 시작 전
                 }
                 MotionEvent.ACTION_MOVE -> {
                     view.animate()
@@ -61,13 +65,11 @@ class PdfEditor(private val context: Context) {
                         .y((event.rawY + dY).roundToInt().toFloat())
                         .setDuration(0)
                         .start()
-                    _isDragging.value = true // 드래그가 시작됨
+                    listener.onDrag(true) // 드래그 시작 전
                 }
                 MotionEvent.ACTION_UP -> {
-                    _isDragging.value = false // 드래그 종료
-                    if (!_isDragging.value!!) {
-                        view.performClick()
-                    }
+                    listener.onDrag(false) // 드래그 시작 전
+                    view.performClick()
                 }
             }
             true
