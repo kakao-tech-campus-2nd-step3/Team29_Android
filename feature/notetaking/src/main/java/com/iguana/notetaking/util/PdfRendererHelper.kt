@@ -25,8 +25,20 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
         // PDFBox 리소스 로더 초기화
         PDFBoxResourceLoader.init(context)
     }
+
+    // 캐시 디렉토리와 캐시 파일 이름 정의
+    private val cacheDir: File = context.cacheDir
+    private val cacheFileName = "downloaded_pdf.pdf"
+    private val cachedPdfFile: File = File(cacheDir, cacheFileName)
+
     private suspend fun downloadPdfToLocal(fileUrl: String): File? {
         return withContext(Dispatchers.IO) {
+            if (cachedPdfFile.exists()) {
+                // 캐시된 파일이 존재하면 다운로드를 생략하고 반환
+                Log.d("PdfRendererHelper", "캐시된 PDF 파일을 사용: ${cachedPdfFile.absolutePath}")
+                return@withContext cachedPdfFile
+            }
+
             try {
                 Log.d("PdfRendererHelper", "다운로드 URL: $fileUrl")
                 val url = URL(fileUrl)
@@ -83,7 +95,6 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
                 val renderer = PDFRenderer(document)
                 val bitmap = renderer.renderImageWithDPI(pageIndex, 150f) // DPI를 적절하게 조절
                 document.close()
-                localFile.delete() // 사용 후 파일 삭제
                 bitmap
             } else {
                 Log.e("PdfRendererHelper", "PDF 파일 다운로드 실패")
@@ -103,7 +114,6 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
                 val document = PDDocument.load(localFile)
                 val pageCount = document.numberOfPages
                 document.close()
-                localFile.delete() // 사용 후 파일 삭제
                 pageCount
             } else {
                 Log.e("PdfRendererHelper", "PDF 파일 다운로드 실패")
@@ -115,5 +125,12 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
         }
     }
 
-
+    // 캐시된 파일을 삭제하는 함수
+    fun clearCache() {
+        if (cachedPdfFile.exists() && cachedPdfFile.delete()) {
+            Log.d("PdfRendererHelper", "캐시 파일 삭제 성공: ${cachedPdfFile.absolutePath}")
+        } else {
+            Log.e("PdfRendererHelper", "캐시 파일 삭제 실패")
+        }
+    }
 }
