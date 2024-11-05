@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.iguana.notetaking.databinding.FragmentAiBinding
@@ -83,6 +84,7 @@ class AiFragment : Fragment() {
             aiViewModel.setPageNumber(pageNumber)
         }
         binding.aiButton.setOnClickListener {
+            Toast.makeText(requireContext(), "AI 요청이 완료되었습니다. AI 요청은 30초-1분 정도 소요될 수 있습니다.", Toast.LENGTH_SHORT).show()
             aiViewModel.requestAI()
         }
     }
