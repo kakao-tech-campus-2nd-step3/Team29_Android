@@ -48,10 +48,17 @@ class PdfViewerViewModel @Inject constructor(
         _currentPageNumber.value = page
     }
 
-    // 캐시되어있던 다른 주석을 모두 삭제하는 메서드
-    fun clearAnnotations() {
-        viewModelScope.launch(Dispatchers.IO) { // IO 디스패처로 실행
-            clearAnnotationsUseCase()
+    // 주석 데이터 및 캐시된 PDF 파일 삭제
+    fun clearCache() {
+        Log.d("testt", "(ViewModel) clearCache 호출")
+        try {
+            // 메인 스레드에서 PDF 캐시를 삭제하기 위해 동기적으로 호출
+            pdfRendererHelper.clearCache()
+            viewModelScope.launch(Dispatchers.IO) {
+                clearAnnotationsUseCase()
+            }
+        } catch (e: Exception) {
+            Log.e("testt", "clearCache 호출 중 예외 발생: ${e.message}")
         }
     }
 

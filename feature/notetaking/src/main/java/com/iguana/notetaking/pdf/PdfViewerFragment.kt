@@ -3,6 +3,7 @@ package com.iguana.notetaking.pdf
 import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -51,9 +52,6 @@ class PdfViewerFragment : Fragment() {
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
             }
 
-            // 캐시되어있던 다른 document의 주석들 삭제
-            viewModel.clearAnnotations()
-
             // ViewPager2의 페이지 변경 리스너 설정
             binding.pdfViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -74,7 +72,9 @@ class PdfViewerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        Log.d("testt", "PdfViewerFragment onDestroyView")
         super.onDestroyView()
+        viewModel.clearCache() // 캐시된 파일 및 주석 삭제
         _binding = null
     }
 

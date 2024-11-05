@@ -34,17 +34,15 @@ class RecordRepositoryImpl @Inject constructor(
                 // 변환된 파일 경로로 RecordingFile 업데이트
                 val convertedRecordingFile = recordingFile.copy(filePath = mp3File.absolutePath)
                 val uploadRequest = convertedRecordingFile.toUploadRequestDto()
-                Log.d("RecordRepositoryImpl", "요청 바디: ${uploadRequest.audioData.take(100)}...") // 데이터 길이를 줄여서 로그에 표시
-                Log.d("RecordRepositoryImpl", "Upload request 생성 완료: $uploadRequest")
                 val response = recordApi.uploadRecording(
                     recordingFile.documentId
                         ?: throw AppError.NullResponseError("Document ID가 없습니다."),
                     uploadRequest
                 )
 
+                Log.d("testt", "uploadRecordingFile: $response")
                 // 업데이트된 정보 반환
-                convertedRecordingFile.updateWithResponse(response)
-                convertedRecordingFile
+                return@withContext convertedRecordingFile.updateWithResponse(response)
             } catch (e: Exception) {
                 Log.e("RecordRepositoryImpl", "녹음 파일 업로드 중 오류 발생: ${e.message}", e)
                 throw e
@@ -79,8 +77,10 @@ class RecordRepositoryImpl @Inject constructor(
     override suspend fun uploadPageTurnEvents(recordingId: Long, documentId: Long, events: List<PageTurnEvent>) {
         return withContext(Dispatchers.IO) {
             val requestDto = events.toPageTurnEventRequestDto(recordingId)  // 도메인 모델을 DTO로 변환
-            val response = recordApi.recordPageTurnEvent(recordingId, requestDto)
+            Log.d("testt", "uploadPageTurnEvents: $requestDto")
+            val response = recordApi.recordPageTurnEvent(documentId, requestDto)
 
+            Log.d("testt", "uploadPageTurnEvents: $response")
             if (!response.isSuccessful) {
                 throw AppError.PageTurnEventUploadFailed(response.code())
             } else {
