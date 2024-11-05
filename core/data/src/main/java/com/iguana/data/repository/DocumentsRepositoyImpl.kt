@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
+import retrofit2.Response
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
@@ -122,8 +123,12 @@ class DocumentsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteFolder(folderId: Long): Result<Unit> = try {
-        api.deleteFolder(folderId)
-        Result.success(Unit)
+        val response = api.deleteFolder(folderId)
+        if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(HttpException(response))
+        }
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
         Result.failure(e)

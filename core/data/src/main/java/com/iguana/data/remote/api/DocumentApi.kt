@@ -10,6 +10,7 @@ import com.iguana.data.remote.model.MoveFolderRequestDto
 import com.iguana.domain.model.FolderContentItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.*
 
 interface DocumentApi {
@@ -60,7 +61,7 @@ interface DocumentApi {
     ): CreateFolderResponseDto
 
     @DELETE("/api/folders/{folderId}")
-    suspend fun deleteFolder(@Path("folderId") folderId: Long)
+    suspend fun deleteFolder(@Path("folderId") folderId: Long): Response<Unit>
 
     @POST("/api/folders/move")
     suspend fun moveItems(@Body request: MoveFolderRequestDto): MoveFolderRequestDto
