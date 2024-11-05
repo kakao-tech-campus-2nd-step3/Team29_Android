@@ -44,7 +44,7 @@
             android:id="@+id/recordStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="150dp"
             android:layout_weight="1"
             android:text="@string/is_not_recording"
             app:layout_constraintEnd_toEndOf="parent"
