@@ -77,9 +77,13 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun getDocuments(documentIds: List<Long>): Result<List<Document>> = try {
-        val response = api.getDocuments(documentIds)
-        Result.success(response.map { it.toDomain() })
+    override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>> = try {
+        val response = api.getDocuments(folderId, documentIds)
+        if (response.isSuccessful) {
+            Result.success(response.body()?.map { it.toDomain() } ?: emptyList())
+        } else {
+            Result.failure(Exception("문서 조회 실패"))
+        }
     } catch (e: Exception) {
         Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)

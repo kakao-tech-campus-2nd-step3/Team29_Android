@@ -40,8 +40,11 @@ interface DocumentApi {
         @Query("sortDirection") sortDirection: String = "DESC"
     ): List<FolderContentDto>
 
-    @GET("/api/documents")
-    suspend fun getDocuments(@Query("documentIds") documentIds: List<Long>): List<DocumentDto>
+    @GET("/api/folders/{folderId}/documents")
+    suspend fun getDocuments(
+        @Path("folderId") folderId: Long,
+        @Query("documentIds") documentIds: List<Long>
+    ): Response<List<DocumentDto>>
 
     @GET("/api/documents/{documentId}")
     suspend fun getDocumentDetails(@Path("documentId") documentId: Long): DocumentDto
