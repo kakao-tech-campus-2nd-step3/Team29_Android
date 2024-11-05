@@ -76,9 +76,8 @@ class AiViewModel @Inject constructor(
     // AI 요청 메서드
     fun requestAI() {
         viewModelScope.launch {
-            for (i in 0.._pageNumber.value!!) {
-                requestAISummaryUseCase(documentId, listOf(i))
-            }
+            val pages = (0.._pageNumber.value!!).toList()
+            requestAISummaryUseCase(documentId, pages)
             fetchAiStatus(pageNumber = pageNumber.value!!)
         }
     }

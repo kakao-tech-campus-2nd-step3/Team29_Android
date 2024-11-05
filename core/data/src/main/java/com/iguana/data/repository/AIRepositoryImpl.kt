@@ -1,5 +1,6 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.data.remote.model.SummarizeRequestDto
