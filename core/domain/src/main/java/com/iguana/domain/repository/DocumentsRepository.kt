@@ -10,7 +10,6 @@ interface DocumentsRepository {
     suspend fun getFolderContents(folderId: Long, page: Int, size: Int, sortBy: String, sortDirection: String): Result<FolderContent>
     suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>>
     suspend fun getDocumentDetails(documentId: Long): Result<Document>
-    suspend fun updateDocumentName(documentId: Long, name: String): Result<Document>
     suspend fun deleteDocument(documentId: Long): Result<Unit>
     suspend fun createFolder(parentFolderId: Long, name: String): Result<Folder>
     suspend fun deleteFolder(folderId: Long): Result<Unit>

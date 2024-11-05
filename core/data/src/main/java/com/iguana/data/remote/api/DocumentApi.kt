@@ -7,6 +7,7 @@ import com.iguana.data.remote.model.FolderContentDto
 import com.iguana.data.remote.model.FolderContentItemDto
 import com.iguana.data.remote.model.FolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto
+import com.iguana.data.remote.model.UpdateFolderNameRequestDto
 import com.iguana.domain.model.FolderContentItem
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -48,13 +49,6 @@ interface DocumentApi {
 
     @GET("/api/documents/{documentId}")
     suspend fun getDocumentDetails(@Path("documentId") documentId: Long): DocumentDto
-
-    @PUT("/api/documents/{documentId}/name")
-    suspend fun updateDocumentName(
-        @Path("documentId") documentId: Long,
-        @Body name: Map<String, String>
-    ): DocumentDto
-
     @DELETE("/api/documents/{documentId}")
     suspend fun deleteDocument(@Path("documentId") documentId: Long)
 
@@ -69,9 +63,9 @@ interface DocumentApi {
     @POST("/api/folders/move")
     suspend fun moveItems(@Body request: MoveFolderRequestDto): MoveFolderRequestDto
 
-    @PUT("/api/folders/{folderId}/name")
+    @PUT("/api/folders/{id}")
     suspend fun updateFolderName(
-        @Path("folderId") folderId: Long,
-        @Body name: Map<String, String>
-    ): FolderContentItemDto
+        @Path("id") id: Long,
+        @Body request: Map<String, String>
+    ): CreateFolderResponseDto
 }
