@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioManager
 import android.media.MediaRecorder
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -62,9 +64,20 @@ class RecordViewModel @Inject constructor(
     }
 
     init {
-        context.registerReceiver(
-            recordingReceiver, IntentFilter(BROADCAST_RECORDING_FINISHED)
-        )
+        val intentFilter = IntentFilter().apply {
+            addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED)
+            // 필요한 다른 action들도 여기에 추가
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(
+                recordingReceiver,
+                intentFilter,
+                Context.RECEIVER_NOT_EXPORTED  // exported = false 설정
+            )
+        } else {
+            context.registerReceiver(recordingReceiver, intentFilter)
+        }
     }
 
     fun setPageNumber(pageNumber: Int) {

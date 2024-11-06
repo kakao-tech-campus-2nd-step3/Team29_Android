@@ -26,6 +26,13 @@ import kotlinx.coroutines.launch
 import com.iguana.documents.R
 import com.iguana.documents.DocumentsViewModel
 import com.iguana.domain.model.FolderContentItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import com.iguana.notetaking.NotetakingActivity
+import kotlinx.coroutines.flow.StateFlow
 
 @AndroidEntryPoint
 class DocumentsFragment : Fragment() {
@@ -35,6 +42,8 @@ class DocumentsFragment : Fragment() {
 
     private lateinit var adapter: DocumentsAdapter
     private val viewModel: DocumentsViewModel by viewModels()
+
+    private lateinit var openPdfLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDocumentsBinding.inflate(inflater, container, false)
@@ -47,17 +56,30 @@ class DocumentsFragment : Fragment() {
         setupRecyclerView()
         setupToolbar()
         observeViewModel()
+        setupFilePicker()
         viewModel.loadAllDocuments()
     }
 
     private fun setupRecyclerView() {
         adapter = DocumentsAdapter(
-            onItemClick = { item -> onItemClick(item) },
+            onItemClick = { item ->
+                when (item) {
+                    is DocumentItem.FolderItem -> {
+                        viewModel.loadFolderContents(item.id, item.name)
+                    }
+                    is DocumentItem.PdfItem -> {
+                        val intent = Intent(requireContext(), NotetakingActivity::class.java).apply {
+                            putExtra("PDF_URI", item.url)
+                            putExtra("PDF_TITLE", item.title)
+                            putExtra("DOCUMENT_ID", item.id)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            },
             onItemLongClick = { item -> showEditDeleteDialog(item) }
         )
-        binding.recyclerView.apply {
-            this.adapter = this@DocumentsFragment.adapter
-        }
+        binding.recyclerView.adapter = adapter
     }
 
     private fun setupToolbar() {
@@ -66,15 +88,22 @@ class DocumentsFragment : Fragment() {
         binding.btnAdd.setOnClickListener { showAddOptionsDialog() }
     }
 
+    private fun setupFilePicker() {
+        openPdfLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            uri?.let {
+                viewModel.uploadPdf(it, requireContext())
+            } ?: run {
+                Toast.makeText(requireContext(), "PDF 선택 취소됨", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun showAddOptionsDialog() {
         val options = arrayOf("파일 업로드", "폴더 추가")
         AlertDialog.Builder(requireContext())
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> {
-                        // TODO: 파일 업로드 기능 구현
-                        // uploadFile()
-                    }
+                    0 -> openPdfLauncher.launch(arrayOf("application/pdf"))
                     1 -> showCreateFolderDialog()
                 }
             }
@@ -83,8 +112,8 @@ class DocumentsFragment : Fragment() {
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.documents.collect { folderContent ->
-                folderContent?.let { updateUI(it) }
+            viewModel.documentItems.collect { items ->
+                adapter.setItems(items)
             }
         }
 
@@ -102,6 +131,12 @@ class DocumentsFragment : Fragment() {
                     id = item.id,
                     name = item.name,
                     fileCount = item.totalElements,
+                    isBookmarked = false
+                )
+                "DOCUMENT" -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
                     isBookmarked = false
                 )
                 else -> DocumentItem.PdfItem(
@@ -141,7 +176,7 @@ class DocumentsFragment : Fragment() {
 
     fun showCreateFolderDialog() {
         val dialog = CreateFolderDialogFragment { folderName ->
-            viewModel.createFolder(viewModel.currentFolderId, folderName)
+            viewModel.createFolder(folderName)
         }
         dialog.show(parentFragmentManager, "CreateFolderDialog")
     }
@@ -215,6 +250,36 @@ class DocumentsFragment : Fragment() {
             }
             .setNegativeButton("취소", null)
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshCurrentFolder()
+    }
+
+    private fun mapToDocumentItems(folderContent: FolderContent): List<DocumentItem> {
+        return folderContent.map { item ->
+            when (item.type.uppercase()) {
+                "FOLDER" -> DocumentItem.FolderItem(
+                    id = item.id,
+                    name = item.name,
+                    fileCount = item.totalElements,
+                    isBookmarked = false
+                )
+                "DOCUMENT" -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
+                    isBookmarked = false
+                )
+                else -> DocumentItem.PdfItem(
+                    id = item.id,
+                    title = item.name,
+                    timestamp = item.updatedAt,
+                    isBookmarked = false
+                )
+            }
+        }
     }
 
 }

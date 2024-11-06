@@ -5,7 +5,6 @@ import com.iguana.data.remote.model.CreateFolderResponseDto
 import com.iguana.data.remote.model.DocumentDto
 import com.iguana.data.remote.model.FolderContentDto
 import com.iguana.data.remote.model.FolderContentItemDto
-import com.iguana.data.remote.model.FolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto
 import com.iguana.data.remote.model.UpdateFolderNameRequestDto
 import com.iguana.domain.model.FolderContentItem
@@ -47,8 +46,6 @@ interface DocumentApi {
         @Query("documentIds") documentIds: List<Long>
     ): Response<List<DocumentDto>>
 
-    @GET("/api/documents/{documentId}")
-    suspend fun getDocumentDetails(@Path("documentId") documentId: Long): DocumentDto
     @DELETE("/api/documents/{documentId}")
     suspend fun deleteDocument(@Path("documentId") documentId: Long)
 
