@@ -1,5 +1,6 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.local.dao.AnnotationDao
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.domain.repository.AnnotationRepository
@@ -22,6 +23,7 @@ class AnnotationRepositoryImpl @Inject constructor(
         pageNumber: Int
     ) {
         val annotationEntity = annotation.toEntity(documentId, pageNumber)
+        Log.d("PdfPageViewModel", "Saving annotationEntity: x=${annotationEntity.xPosition}, y=${annotationEntity.yPosition}, width=${annotationEntity.width}, height=${annotationEntity.height}")
         annotationDao.insertAnnotation(annotationEntity)
     }
 
@@ -31,9 +33,9 @@ class AnnotationRepositoryImpl @Inject constructor(
         annotation: com.iguana.domain.model.Annotation,
         pageNumber: Int
     ) {
-        // val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
-        // val responseDto = annotationApi.createAnnotation(documentId, requestDto)
-        // val createdAnnotation = responseDto.toDomain()
+         val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
+         val responseDto = annotationApi.createAnnotation(documentId, requestDto)
+         val createdAnnotation = responseDto.toDomain()
     }
 
     // 특정 페이지 번호로 로컬에서 주석을 조회

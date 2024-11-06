@@ -4,15 +4,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
@@ -77,15 +74,18 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
         // 텍스트 박스 외부 클릭시 텍스트 모드 해제
         binding.pdfEditorView.setOnClickListener {
+            Log.d("AnnotationEditor", "Clicked on PDF Editor View")
             sharedViewModel.setTextMode(false)
+            annotationEditor.exitEditMode()
         }
     }
 
 
     // 새로운 텍스트 상자 추가
     fun addNewTextBox(pageIndex: Int) {
+        Log.d("PdfPageFragment", "${annotationEditor.getCurrentAnnotationInfo()}")
         val editText = annotationEditor.addTextBox(binding.pdfEditorView)
-        annotationEditor.enableTextBoxEditing(editText) // 편집 모드 설정
+        annotationEditor.enterEditMode()
         // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
         val annotation = com.iguana.domain.model.Annotation(
             id = 0,
@@ -96,6 +96,7 @@ class PdfPageFragment : Fragment(), AnnotationListener {
             height = editText.height.toFloat(),
             pageNumber = pageIndex
         )
+
         viewLifecycleOwner.lifecycleScope.launch {
             // 주석을 저장하도록 ViewModel 호출
             val generatedId = pdfPageViewModel.saveAnnotation(sharedViewModel.documentId, annotation, pageIndex)
@@ -120,6 +121,7 @@ class PdfPageFragment : Fragment(), AnnotationListener {
     }
 
     override fun onTextEditingFinished(editText: EditText) {
+        Log.d("AnnotationEditor", "Text editing finished")
         val pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0) ?: 0
         val annotationId = editText.tag as? Long ?: return
 
