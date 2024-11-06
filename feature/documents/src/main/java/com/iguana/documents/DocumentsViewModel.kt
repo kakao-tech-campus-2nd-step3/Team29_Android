@@ -1,5 +1,6 @@
 package com.iguana.documents
 
+import android.content.Context
 import android.net.http.HttpException
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
@@ -20,7 +22,6 @@ class DocumentsViewModel @Inject constructor(
     private val getAllDocumentsUseCase: GetAllDocumentsUseCase,
     private val getFolderContentsUseCase: GetFolderContentsUseCase,
     private val createFolderUsecase: CreateFolderUseCase,
-    private val updateDocumentNameUseCase: UpdateDocumentNameUseCase,
     private val updateFolderNameUseCase: UpdateFolderNameUseCase,
     private val deleteFolderUseCase: DeleteFolderUseCase,
     private val deleteFileUseCase: DeleteFileUseCase
@@ -126,23 +127,6 @@ class DocumentsViewModel @Inject constructor(
                 _documents.value = updatedContent
             }.onFailure {
                 Log.e("DocumentsViewModel", "폴더 이름 변경 실패", it)
-            }
-        }
-    }
-
-    fun updateDocumentName(documentId: Long, newName: String) {
-        viewModelScope.launch {
-            updateDocumentNameUseCase(documentId, newName).onSuccess { updatedDocument ->
-                val updatedContent = _documents.value.map { item ->
-                    if (item.id == documentId) {
-                        item.copy(name = newName)
-                    } else {
-                        item
-                    }
-                }
-                _documents.value = updatedContent
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "문서 이름 수정 실패: ${error.message}", error)
             }
         }
     }

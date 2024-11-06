@@ -5,6 +5,7 @@ import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toDto
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.model.CreateFolderRequestDto
+import com.iguana.data.remote.model.UpdateFolderNameRequestDto
 import com.iguana.domain.model.Document
 import com.iguana.domain.model.Folder
 import com.iguana.domain.model.FolderContent
@@ -20,6 +21,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
@@ -76,9 +80,13 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun getDocuments(documentIds: List<Long>): Result<List<Document>> = try {
-        val response = api.getDocuments(documentIds)
-        Result.success(response.map { it.toDomain() })
+    override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>> = try {
+        val response = api.getDocuments(folderId, documentIds)
+        if (response.isSuccessful) {
+            Result.success(response.body()?.map { it.toDomain() } ?: emptyList())
+        } else {
+            Result.failure(Exception("문서 조회 실패"))
+        }
     } catch (e: Exception) {
         Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
@@ -89,14 +97,6 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.success(response.toDomain())
     } catch (e: Exception) {
         Logger.e(TAG, "문서 상세 정보 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
-    }
-
-    override suspend fun updateDocumentName(documentId: Long, name: String): Result<Document> = try {
-        val response = api.updateDocumentName(documentId, mapOf("name" to name))
-        Result.success(response.toDomain())
-    } catch (e: Exception) {
-        Logger.e(TAG, "문서 이름 업데이트 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
@@ -122,8 +122,12 @@ class DocumentsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteFolder(folderId: Long): Result<Unit> = try {
-        api.deleteFolder(folderId)
-        Result.success(Unit)
+        val response = api.deleteFolder(folderId)
+        if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(HttpException(response))
+        }
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
         Result.failure(e)
@@ -138,8 +142,16 @@ class DocumentsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem> = try {
-        val response = api.updateFolderName(folderId, mapOf("name" to newName))
-        Result.success(response.toDomain())
+        val request = mapOf("name" to newName)
+        val response = api.updateFolderName(folderId, request)
+        val folderContentItem = FolderContentItem(
+            type = "FOLDER",
+            id = response.id,
+            name = response.name,
+            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+            totalElements = 0
+        )
+        Result.success(folderContentItem)
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)
         Result.failure(e)

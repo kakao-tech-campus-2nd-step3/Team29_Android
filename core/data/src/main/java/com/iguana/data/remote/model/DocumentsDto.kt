@@ -50,3 +50,7 @@ data class FolderContentItemDto(
     val totalElements: Int,
     val updatedAt: String
 )
+
+data class UpdateFolderNameRequestDto(
+    val name: String
+)
