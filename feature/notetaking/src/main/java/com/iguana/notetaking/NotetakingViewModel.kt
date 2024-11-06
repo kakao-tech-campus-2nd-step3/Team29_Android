@@ -39,7 +39,6 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
    private val _isTextMode =  MutableLiveData(false)
     val isTextMode: LiveData<Boolean> get() = _isTextMode
 
-
     // 텍스트 모드로 설정하기
     fun setTextMode(enabled: Boolean) {
         _isTextMode.value = enabled

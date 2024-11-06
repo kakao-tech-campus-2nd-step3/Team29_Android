@@ -6,20 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.iguana.notetaking.databinding.FragmentAiBinding
 import androidx.fragment.app.viewModels
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResultByPage
-import com.iguana.notetaking.NotetakingActivity
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.R
 import com.iguana.notetaking.recording.RecordFragment
 import com.iguana.notetaking.util.HtmlFormatter
 import com.iguana.notetaking.util.hide
-import com.iguana.notetaking.util.isVisible
 import com.iguana.notetaking.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,25 +66,32 @@ class AiFragment : Fragment() {
         aiViewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
             aiStatus?.let { status ->
                 updateUiForStatus(status)
+                // AI 상태가 완료된 경우에만 aiResult를 observe하도록 설정
+                if (status.isCompleted()) {
+                    aiViewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
+                        aiResult?.let { result ->
+                            updateUiForResult(result)
+                        }
+                    }
+                }
             } ?: run {
                 binding.aiStatusTextView.text = getString(R.string.status_unavailable)
                 binding.aiStatusTextView.show()
                 binding.aiContentTextView.hide()
             }
         }
-        // AI 결과가 있으면 해당 결과를 반영
-        aiViewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
-            aiResult?.let { result ->
-                updateUiForResult(result)
-            }
-        }
         sharedViewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
             aiViewModel.setPageNumber(pageNumber)
+        }
+        binding.aiButton.setOnClickListener {
+            Toast.makeText(requireContext(), "AI 요청이 완료되었습니다. AI 요청은 30초-1분 정도 소요될 수 있습니다.", Toast.LENGTH_SHORT).show()
+            aiViewModel.requestAI()
         }
     }
 
     // AI 상태에 따라 UI 업데이트
     private fun updateUiForStatus(status: AIStatusResultByPage) {
+        hideAIContent()
         binding.aiStatusTextView.text = when {
             status.isInProgress() -> getString(R.string.ai_in_progress)
             status.isCompleted() -> getString(R.string.ai_completed)
@@ -112,6 +117,16 @@ class AiFragment : Fragment() {
         binding.aiContentTextView.show()
         binding.aiProblemTextView.show()
         binding.summaryTitleTextView.show()
+        binding.divider.show()
+    }
+
+    private fun hideAIContent() {
+        binding.aiStatusTextView.show()
+        binding.problemTitleTextView.hide()
+        binding.aiContentTextView.hide()
+        binding.aiProblemTextView.hide()
+        binding.summaryTitleTextView.hide()
+        binding.divider.hide()
     }
 
 
