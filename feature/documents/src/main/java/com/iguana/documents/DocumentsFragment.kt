@@ -63,7 +63,22 @@ class DocumentsFragment : Fragment() {
     private fun setupToolbar() {
         binding.btnBack.setOnClickListener { onBackPressed() }
         binding.btnEdit.setOnClickListener { /* 편집 기능 구현 */ }
-        binding.btnAdd.setOnClickListener { showCreateFolderDialog() }
+        binding.btnAdd.setOnClickListener { showAddOptionsDialog() }
+    }
+
+    private fun showAddOptionsDialog() {
+        val options = arrayOf("파일 업로드", "폴더 추가")
+        AlertDialog.Builder(requireContext())
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        // TODO: 파일 업로드 기능 구현
+                        // uploadFile()
+                    }
+                    1 -> showCreateFolderDialog()
+                }
+            }
+            .show()
     }
 
     private fun observeViewModel() {
