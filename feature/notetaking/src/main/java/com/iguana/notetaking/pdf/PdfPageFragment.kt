@@ -187,8 +187,7 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         val annotationId = annotationEditor.currentEditText?.tag as? Long
         if (annotationId != null) {
             deleteAnnotation(annotationId)
-            // 삭제 후 currentEditText 초기화
-            annotationEditor.currentEditText = null
+            annotationEditor.exitEditMode()
         } else {
             Log.e("PdfPageFragment", "Error: Invalid annotation ID or no selected text box")
         }
