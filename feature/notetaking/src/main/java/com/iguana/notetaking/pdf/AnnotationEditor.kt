@@ -133,7 +133,6 @@ class AnnotationEditor(
     }
 
     private fun selectAllText(editText: EditText) {
-        Log.d("AnnotationEditor", "Entering editing mode")
         editText.selectAll()
         enableTextBoxEditing(editText)
     }
@@ -162,7 +161,6 @@ class AnnotationEditor(
 
     // exit editing mode
     fun exitEditMode() {
-        Log.d("AnnotationEditor", "Exiting editing mode(exitEditMode)")
         currentEditText?.let {
             updateAnnotationInfo()
             disableTextBoxEditing(it)
@@ -178,7 +176,6 @@ class AnnotationEditor(
 
     // 편집 모드가 아닌 상태로 전환
     private fun disableTextBoxEditing(editText: EditText) {
-        Log.d("AnnotationEditor", "Exiting editing mode(disableTextBoxEditing)")
         editText.apply {
             isFocusable = false
             isFocusableInTouchMode = false

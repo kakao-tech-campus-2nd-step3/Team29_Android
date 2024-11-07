@@ -1,7 +1,6 @@
 package com.iguana.notetaking.pdf
 
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,7 +46,6 @@ class PdfPageViewModel @Inject constructor(
         annotation: com.iguana.domain.model.Annotation
     ) {
         viewModelScope.launch {
-            Log.d("Annotation", "(뷰모델)Updating annotation: id=${annotation.id} x=${annotation.x}, y=${annotation.y}, width=${annotation.width}, height=${annotation.height}")
             updateAnnotationUseCase(documentId, annotation)
             _annotations.value = _annotations.value.orEmpty().map {
                 if (it.id == annotation.id) annotation else it

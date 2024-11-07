@@ -45,7 +45,6 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // XML 레이아웃 파일을 인플레이트하여 반환
         _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
         annotationEditor =
             AnnotationEditor(requireContext(), this, sharedViewModel.pageNumber.value ?: 0)
@@ -79,7 +78,6 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
         // 텍스트 박스 외부 클릭시 텍스트 모드 해제
         binding.pdfEditorView.setOnClickListener {
-            Log.d("AnnotationEditor", "Clicked on PDF Editor View")
             sharedViewModel.setTextMode(false)
             annotationEditor.exitEditMode()
         }
@@ -88,14 +86,9 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
     // 새로운 텍스트 상자 추가
     fun addNewTextBox(pageIndex: Int) {
-        Log.d("PdfPageFragment", "${annotationEditor.getCurrentAnnotationInfo()}")
         val editText = annotationEditor.addTextBox(binding.pdfEditorView)
         editText.post {
             annotationEditor.enterEditMode()
-            Log.d(
-                "PdfPageFragment",
-                "EditText 위치와 크기: ${annotationEditor.getCurrentAnnotationInfo()}"
-            )
 
             // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
             val annotation = com.iguana.domain.model.Annotation(
@@ -115,7 +108,6 @@ class PdfPageFragment : Fragment(), AnnotationListener {
                     annotation,
                     pageIndex
                 )
-                Log.d("PdfPageFragment", "Generated Annotation ID: $generatedId")
                 editText.tag = generatedId // 이 부분에서 Null이 아닌지 확인
             }
         }
@@ -138,14 +130,8 @@ class PdfPageFragment : Fragment(), AnnotationListener {
     }
 
     override fun onTextEditingFinished(annotation: com.iguana.domain.model.Annotation) {
-        Log.d("AnnotationEditor", "업데이트 호출")
-
         val pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0) ?: 0
         val editText = binding.pdfEditorView.findViewWithTag<EditText>(annotation.id)
-        Log.d(
-            "AnnotationEditor",
-            "edit 텍스트를 가져옴 id=${annotation.id} x=${annotation.x}, y=${annotation.y}, width=${annotation.width}, height=${annotation.height}"
-        )
 
         // annotationId 확인
         val annotationId = editText?.tag as? Long
@@ -153,7 +139,6 @@ class PdfPageFragment : Fragment(), AnnotationListener {
             Log.e("AnnotationEditor", "Annotation ID is null")
             return
         }
-        Log.d("AnnotationEditor", "주석 ID: $annotationId")
 
         // 새로운 Annotation 객체 생성하여 ViewModel에 업데이트
         val updatedAnnotation = com.iguana.domain.model.Annotation(
@@ -165,16 +150,9 @@ class PdfPageFragment : Fragment(), AnnotationListener {
             width = annotation.width,
             height = annotation.height
         )
-        Log.d(
-            "AnnotationEditor",
-            "업데이트 주석: x= ${updatedAnnotation.id}${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}"
-        )
+
 
         viewLifecycleOwner.lifecycleScope.launch {
-            Log.d(
-                "AnnotationEditor",
-                "(Fragment) Updating annotation: x=${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}"
-            )
             pdfPageViewModel.updateAnnotation(sharedViewModel.documentId, updatedAnnotation)
         }
 
