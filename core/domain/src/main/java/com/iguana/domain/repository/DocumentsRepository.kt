@@ -9,7 +9,7 @@ interface DocumentsRepository {
     suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Result<Document>
     suspend fun getFolderContents(folderId: Long, page: Int, size: Int, sortBy: String, sortDirection: String): Result<FolderContent>
     suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>>
-    suspend fun deleteDocument(documentId: Long): Result<Unit>
+    suspend fun deleteDocument(folderId: Long, documentId: Long): Result<Unit>
     suspend fun createFolder(parentFolderId: Long, name: String): Result<Folder>
     suspend fun deleteFolder(folderId: Long): Result<Unit>
     suspend fun moveItems(request: MoveItemsRequest): Result<Unit>

@@ -144,8 +144,7 @@ class DocumentsViewModel @Inject constructor(
 
     fun deleteFile(fileId: Long) {
         viewModelScope.launch {
-            deleteFileUseCase(fileId).onSuccess {
-                // 파일 삭제 후 현재 폴더 내용을 새로고침
+            deleteFileUseCase(currentFolderId, fileId).onSuccess {
                 refreshCurrentFolder()
                 Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
             }.onFailure { error ->
