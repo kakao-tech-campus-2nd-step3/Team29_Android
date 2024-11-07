@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="login"
             type="com.iguana.login.LoginActivity" />
@@ -13,28 +14,48 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
         android:background="@color/grey_70"
+        android:padding="16dp"
         tools:context=".LoginActivity">
+
+        <!-- "WELCOME" -->
+
+        <TextView
+            android:id="@+id/background_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/italianno"
+            android:rotation="-18"
+            android:text="WELCOME"
+            android:textColor="#66FFFFFF"
+            android:textSize="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.105" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                style="@style/SemiBold24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="환영합니다!"
                 android:layout_marginBottom="5dp"
-                android:textColor="@color/grey_30"/>
+                android:fontFamily="@font/rubik_regular"
+                android:text="환영합니다!"
+                android:textColor="@color/grey_30"
+                android:textSize="32sp" />
 
             <TextView
                 style="@style/ExtraBold56"
@@ -46,16 +67,16 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp" />
 
             <ImageButton
                 android:id="@+id/btn_Kakao_Login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/kakao_login_medium_wide"
+                android:contentDescription="카카오 로그인 버튼"
                 android:onClick="@{() -> login.onLoginButtonClicked()}"
-                android:contentDescription="카카오 로그인 버튼" />
+                android:src="@drawable/kakao_login_medium_wide" />
 
         </LinearLayout>
 
