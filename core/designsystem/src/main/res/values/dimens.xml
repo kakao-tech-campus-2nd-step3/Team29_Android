@@ -9,6 +9,9 @@
     <dimen name="text_size_12">16sp</dimen>
     <dimen name="text_size_9">12sp</dimen>
     <dimen name="text_size_8">10sp</dimen>
+    <dimen name="text_size_7">9sp</dimen>
     <dimen name="text_size_6">8sp</dimen>
     <dimen name="title_border_spacing">12dp</dimen>
+    <dimen name="file_width">160dp</dimen>
+    <dimen name="file_height">200dp</dimen>
 </resources>
