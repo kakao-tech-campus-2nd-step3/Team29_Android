@@ -1,6 +1,10 @@
 package com.iguana.ui
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.documents.DocumentsFragment
@@ -25,6 +29,8 @@ class BaseActivity : AppCompatActivity() {
                 .replace(R.id.content_frame, DashBoardFragment())
                 .commit()
         }
+
+        StatusBarManager.setTransparentStatusBar(this)
     }
 
     fun showDashBoard() {

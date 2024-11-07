@@ -1,7 +1,9 @@
 package com.iguana.notetaking
 
 import android.Manifest
+import android.app.StatusBarManager
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.databinding.ActivityNotetakingBinding
 import com.iguana.notetaking.pdf.PdfPageFragment
@@ -39,6 +42,8 @@ class NotetakingActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityNotetakingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.statusBarColor = Color.WHITE
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

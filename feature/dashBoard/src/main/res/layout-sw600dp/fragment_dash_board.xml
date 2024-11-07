@@ -3,8 +3,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <!-- 상단 여백 추가 -->
         <Space
@@ -24,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="@dimen/title_border_spacing" />
 
         <FrameLayout
             android:id="@+id/recent_files_container"
@@ -48,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="@dimen/title_border_spacing" />
 
         <FrameLayout
             android:id="@+id/ai_history_container"
