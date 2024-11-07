@@ -30,8 +30,11 @@ interface AnnotationRepository {
     // 주석 수정 (로컬)
     suspend fun updateAnnotationInLocal(annotation: Annotation)
 
-    // 주석 삭제
-    suspend fun deleteAnnotation(documentId: Long, annotationId: Long)
+    // 서버에서 주석 삭제
+    suspend fun deleteAnnotationFromServer(documentId: Long, annotationId: Long)
+
+    // 로컬에서 주석 삭제
+    suspend fun deleteAnnotationFromLocal(annotationId: Long)
 
     // 테이블 초기화
     suspend fun clearAnnotations()

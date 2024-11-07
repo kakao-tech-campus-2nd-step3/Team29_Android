@@ -34,5 +34,5 @@ interface AnnotationApi {
     suspend fun deleteAnnotation(
         @Path("documentId") documentId: Long,
         @Path("annotationId") annotationId: Long
-    )
+    ): Unit
 }

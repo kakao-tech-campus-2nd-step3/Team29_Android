@@ -3,9 +3,7 @@ package com.iguana.notetaking.pdf
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.graphics.PointF.length
 import android.graphics.drawable.GradientDrawable
-import android.text.Selection.setSelection
 import android.util.Log
 import android.view.GestureDetector
 import android.view.KeyEvent
@@ -13,9 +11,7 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import com.google.android.material.color.utilities.MaterialDynamicColors.background
 import com.iguana.domain.model.Annotation
-import com.iguana.notetaking.pdf.model.AnnotationUIModel
 import kotlin.math.roundToInt
 
 
@@ -29,7 +25,9 @@ class AnnotationEditor(
     private val context: Context, private val listener: AnnotationListener, private val pageNumber: Int
 ) {
 
-    private var currentEditText: EditText? = null // 현재 편집 중인 EditText
+    private var _currentEditText: EditText? = null // 현재 편집 중인 EditText
+    var currentEditText: EditText? = null
+        get() = _currentEditText
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup, x: Float? = null, y: Float? = null): EditText {
@@ -100,7 +98,7 @@ class AnnotationEditor(
             }
 
             // 드래그 기능 처리
-            currentEditText = editText
+            _currentEditText = editText
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -159,7 +157,7 @@ class AnnotationEditor(
             updateAnnotationInfo()
             disableTextBoxEditing(it)
         }
-        currentEditText = null
+        _currentEditText = null
     }
 
     // edit mode
@@ -180,7 +178,7 @@ class AnnotationEditor(
 
     // 텍스트 상자에 포커스를 주고 편집 모드로 진입
     private fun enableTextBoxEditing(editText: EditText) {
-        currentEditText = editText // 현재 편집 중인 EditText로 설정
+        _currentEditText = editText // 현재 편집 중인 EditText로 설정
         editText.apply {
             isFocusable = true
             isFocusableInTouchMode = true

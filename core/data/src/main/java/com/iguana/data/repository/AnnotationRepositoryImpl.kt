@@ -74,11 +74,6 @@ class AnnotationRepositoryImpl @Inject constructor(
         return responseDto.toDomain()
     }
 
-
-    override suspend fun deleteAnnotation(documentId: Long, annotationId: Long) {
-        annotationApi.deleteAnnotation(documentId, annotationId)
-    }
-
     override suspend fun clearAnnotations() {
         annotationDao.clearAnnotations()
     }
@@ -96,6 +91,14 @@ class AnnotationRepositoryImpl @Inject constructor(
             width = annotation.width,
             height = annotation.height
         )
+    }
+
+    override suspend fun deleteAnnotationFromServer(documentId: Long, annotationId: Long) {
+        annotationApi.deleteAnnotation(documentId, annotationId)
+    }
+
+    override suspend fun deleteAnnotationFromLocal(annotationId: Long) {
+        annotationDao.deleteAnnotation(annotationId)
     }
 
     override suspend fun updateAnnotationId(localId: Long, serverId: Long) {

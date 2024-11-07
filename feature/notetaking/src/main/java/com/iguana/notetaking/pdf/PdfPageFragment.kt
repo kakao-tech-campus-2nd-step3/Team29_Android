@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfPageBinding
-import com.iguana.notetaking.pdf.model.AnnotationUIModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,7 +47,8 @@ class PdfPageFragment : Fragment(), AnnotationListener {
     ): View {
         // XML 레이아웃 파일을 인플레이트하여 반환
         _binding = FragmentPdfPageBinding.inflate(inflater, container, false)
-        annotationEditor = AnnotationEditor(requireContext(), this, sharedViewModel.pageNumber.value ?: 0)
+        annotationEditor =
+            AnnotationEditor(requireContext(), this, sharedViewModel.pageNumber.value ?: 0)
         return binding.root
     }
 
@@ -92,7 +92,10 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         val editText = annotationEditor.addTextBox(binding.pdfEditorView)
         editText.post {
             annotationEditor.enterEditMode()
-            Log.d("PdfPageFragment", "EditText 위치와 크기: ${annotationEditor.getCurrentAnnotationInfo()}")
+            Log.d(
+                "PdfPageFragment",
+                "EditText 위치와 크기: ${annotationEditor.getCurrentAnnotationInfo()}"
+            )
 
             // EditText의 위치와 크기 정보를 기반으로 Annotation 객체 생성
             val annotation = com.iguana.domain.model.Annotation(
@@ -107,7 +110,11 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 // 주석을 저장하도록 ViewModel 호출
-                val generatedId = pdfPageViewModel.saveAnnotation(sharedViewModel.documentId, annotation, pageIndex)
+                val generatedId = pdfPageViewModel.saveAnnotation(
+                    sharedViewModel.documentId,
+                    annotation,
+                    pageIndex
+                )
                 Log.d("PdfPageFragment", "Generated Annotation ID: $generatedId")
                 editText.tag = generatedId // 이 부분에서 Null이 아닌지 확인
             }
@@ -135,7 +142,10 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
         val pageIndex = arguments?.getInt(ARG_PAGE_INDEX, 0) ?: 0
         val editText = binding.pdfEditorView.findViewWithTag<EditText>(annotation.id)
-        Log.d("AnnotationEditor", "edit 텍스트를 가져옴 id=${annotation.id} x=${annotation.x}, y=${annotation.y}, width=${annotation.width}, height=${annotation.height}")
+        Log.d(
+            "AnnotationEditor",
+            "edit 텍스트를 가져옴 id=${annotation.id} x=${annotation.x}, y=${annotation.y}, width=${annotation.width}, height=${annotation.height}"
+        )
 
         // annotationId 확인
         val annotationId = editText?.tag as? Long
@@ -155,10 +165,16 @@ class PdfPageFragment : Fragment(), AnnotationListener {
             width = annotation.width,
             height = annotation.height
         )
-        Log.d("AnnotationEditor", "업데이트 주석: x= ${updatedAnnotation.id}${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}")
+        Log.d(
+            "AnnotationEditor",
+            "업데이트 주석: x= ${updatedAnnotation.id}${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}"
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
-            Log.d("AnnotationEditor", "(Fragment) Updating annotation: x=${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}")
+            Log.d(
+                "AnnotationEditor",
+                "(Fragment) Updating annotation: x=${updatedAnnotation.x}, y=${updatedAnnotation.y}, width=${updatedAnnotation.width}, height=${updatedAnnotation.height}"
+            )
             pdfPageViewModel.updateAnnotation(sharedViewModel.documentId, updatedAnnotation)
         }
 
@@ -188,4 +204,36 @@ class PdfPageFragment : Fragment(), AnnotationListener {
         }
     }
 
+    fun deleteSelectedTextBox() {
+        // 현재 선택된 텍스트 박스가 있는지 확인
+        val annotationId = annotationEditor.currentEditText?.tag as? Long
+        if (annotationId != null) {
+            deleteAnnotation(annotationId)
+            // 삭제 후 currentEditText 초기화
+            annotationEditor.currentEditText = null
+        } else {
+            Log.e("PdfPageFragment", "Error: Invalid annotation ID or no selected text box")
+        }
+    }
+
+    // 주석 삭제
+    private fun deleteAnnotation(annotationId: Long) {
+        // 주석 ID로 태그가 지정된 EditText를 찾아서 UI에서 제거
+        val editText = binding.pdfEditorView.findViewWithTag<EditText>(annotationId)
+        editText?.let {
+            binding.pdfEditorView.removeView(it)
+            Log.d("PdfPageFragment", "Annotation with ID $annotationId removed from view")
+        } ?: Log.e("PdfPageFragment", "Error: EditText with annotation ID $annotationId not found")
+
+        // 주석 ID로 ViewModel에 삭제 요청
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                pdfPageViewModel.deleteAnnotation(sharedViewModel.documentId, annotationId)
+                Log.d("PdfPageFragment", "Annotation $annotationId deleted from ViewModel")
+            } catch (e: Exception) {
+                Log.e("PdfPageFragment", "Failed to delete annotation: ${e.message}")
+            }
+        }
+    }
 }
+
