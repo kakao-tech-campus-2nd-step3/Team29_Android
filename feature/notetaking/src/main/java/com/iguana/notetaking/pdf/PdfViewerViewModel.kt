@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.domain.usecase.CacheAnnotationsToLocalUseCase
 import com.iguana.domain.usecase.ClearAnnotationsUseCase
-import com.iguana.domain.usecase.LoadAnnotationsUseCase
 import com.iguana.notetaking.util.PdfRendererHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

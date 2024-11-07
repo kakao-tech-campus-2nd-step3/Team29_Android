@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.domain.repository.GetAnnotationsByPageUseCase
-import com.iguana.domain.usecase.LoadAnnotationsUseCase
 import com.iguana.domain.usecase.SaveAnnotationUseCase
 import com.iguana.domain.usecase.UpdateAnnotationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
