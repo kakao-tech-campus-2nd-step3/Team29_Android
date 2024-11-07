@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -24,10 +25,16 @@ interface AnnotationListener {
 class AnnotationEditor(
     private val context: Context, private val listener: AnnotationListener, private val pageNumber: Int
 ) {
+    companion object {
+        private const val HANDLE_SIZE = 16
+    }
 
     private var _currentEditText: EditText? = null // 현재 편집 중인 EditText
     var currentEditText: EditText? = null
         get() = _currentEditText
+
+    private var resizing = false // 크기 조절 중인지 여부 확인용 변수
+    private lateinit var resizeHandle: View
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup, x: Float? = null, y: Float? = null): EditText {
@@ -40,6 +47,10 @@ class AnnotationEditor(
         // 인터랙션과 초기 설정
         enableTextBoxInteractions(editText)
         setupEditTextAppearance(editText)
+
+        // 크기 조정 핸들러 추가
+        addResizeHandle(editText, parentView)
+        editText.post { updateHandlePosition(editText) }
 
         // MarginLayoutParams 설정
         editText.layoutParams = ViewGroup.MarginLayoutParams(
@@ -77,13 +88,6 @@ class AnnotationEditor(
         }
     }
 
-    private fun centerTextBoxInView(parentView: ViewGroup, editText: EditText) {
-        editText.post {
-            editText.x = ((parentView.width - editText.width) / 2).toFloat()
-            editText.y = ((parentView.height - editText.height) / 2).toFloat()
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private fun enableTextBoxInteractions(editText: EditText) {
         val gestureDetector = createGestureDetector(editText)
@@ -102,24 +106,30 @@ class AnnotationEditor(
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    resizing = false // 크기 조정 모드 종료
                     dX = (view.x - event.rawX).roundToInt()
                     dY = (view.y - event.rawY).roundToInt()
                     listener.onDrag(false)
                 }
-                MotionEvent.ACTION_MOVE -> {
-                    view.animate().x((event.rawX + dX).toFloat())
-                        .y((event.rawY + dY).toFloat())
-                        .setDuration(0).start()
-                    listener.onDrag(true)
-                }
-                MotionEvent.ACTION_UP -> {
-                    listener.onDrag(false)
-                    updateAnnotationInfo()
-                    exitEditMode()
-                }
+                MotionEvent.ACTION_MOVE -> handleMove(view, event, dX, dY)
+                MotionEvent.ACTION_UP -> handleActionUp()
             }
             true
         }
+    }
+
+    private fun handleMove(view: View, event: MotionEvent, dX: Int, dY: Int) {
+        if (!resizing) {
+            view.animate().x((event.rawX + dX).toFloat()).y((event.rawY + dY).toFloat()).setDuration(0).start()
+            updateHandlePosition(view as EditText)
+            listener.onDrag(true)
+        }
+    }
+
+    private fun handleActionUp() {
+        listener.onDrag(false)
+        updateAnnotationInfo()
+        exitEditMode()
     }
 
     private fun selectAllText(editText: EditText) {
@@ -156,6 +166,7 @@ class AnnotationEditor(
         currentEditText?.let {
             updateAnnotationInfo()
             disableTextBoxEditing(it)
+            resizeHandle.visibility = View.GONE
         }
         _currentEditText = null
     }
@@ -186,6 +197,7 @@ class AnnotationEditor(
             setEditModeBorder(editText, true) // 테두리 설정
             requestFocus()
         }
+        resizeHandle.visibility = View.VISIBLE // 핸들러 표시
     }
 
     // 편집 모드 테두리 설정 메서드
@@ -224,19 +236,57 @@ class AnnotationEditor(
     }
 
     private fun updateAnnotationInfo() {
-        Log.d("AnnotationEditor", "Updating annotation info 업데이트시 호출(updateAnnotationInfo)")
-        currentEditText?.let { editText ->
-            val annotationInfo = Annotation(
-                id = editText.tag as? Long ?: 0,
-                content = editText.text.toString(),
-                x = editText.x,
-                y = editText.y,
-                width = editText.width.toFloat(),
-                height = editText.height.toFloat(),
-                pageNumber = pageNumber
-            )
-            listener.onTextEditingFinished(annotationInfo)
+        getCurrentAnnotationInfo()?.let { listener.onTextEditingFinished(it) }
+    }
+
+    private fun addResizeHandle(editText: EditText, parentView: ViewGroup) {
+        resizeHandle = View(context).apply {
+            layoutParams = ViewGroup.LayoutParams(HANDLE_SIZE, HANDLE_SIZE)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(Color.GRAY)
+            }
+            visibility = View.GONE
         }
+
+        parentView.addView(resizeHandle)
+        updateHandlePosition(editText)
+
+        resizeHandle.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    resizing = true
+                    parentView.requestDisallowInterceptTouchEvent(true)
+                }
+                MotionEvent.ACTION_MOVE -> handleResize(editText, event)
+                MotionEvent.ACTION_UP -> {
+                    handleResizeEnd()
+                    parentView.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            true
+        }
+    }
+    private fun updateHandlePosition(editText: EditText) {
+        // 핸들러를 EditText의 오른쪽 중앙에 위치시킴
+        resizeHandle.x = editText.x + editText.width - HANDLE_SIZE / 2
+        resizeHandle.y = editText.y + editText.height / 2 - HANDLE_SIZE / 2
+    }
+
+    private fun handleResize(view: View, event: MotionEvent) {
+        val newWidth = (event.rawX - view.x).roundToInt()
+        if (newWidth > 0) {
+            view.layoutParams.width = newWidth
+            view.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            view.requestLayout()
+            updateHandlePosition(view as EditText)
+        }
+    }
+
+    private fun handleResizeEnd() {
+        resizing = false
+        updateAnnotationInfo()
+        listener.onDrag(false)
     }
 
 }
