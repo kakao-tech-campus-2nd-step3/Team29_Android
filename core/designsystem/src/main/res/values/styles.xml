@@ -61,6 +61,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ExtraBold24">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Bold36">
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">@dimen/text_size_36</item>
