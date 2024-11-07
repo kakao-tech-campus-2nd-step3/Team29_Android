@@ -27,16 +27,11 @@ data class AnnotationResponseDto(
     val id: Long,
     val documentId: Long,
     val pageNumber: Int,
-    val content: String,
     val x: Int,
     val y: Int,
     val width: Int,
     val height: Int,
+    val content: String,
     val createdAt: String,
     val updatedAt: String
-)
-
-@Serializable
-data class GetAnnotationsResponseDto(
-    val annotations: List<AnnotationResponseDto>
 )

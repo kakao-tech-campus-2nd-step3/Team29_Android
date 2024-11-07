@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.google.android.material.color.utilities.MaterialDynamicColors.background
+import com.iguana.domain.model.Annotation
 import com.iguana.notetaking.pdf.model.AnnotationUIModel
 import kotlin.math.roundToInt
 
@@ -21,21 +22,33 @@ import kotlin.math.roundToInt
 interface AnnotationListener {
     fun onDrag(dragging: Boolean)
     fun onTextBoxClick(focused: Boolean)
-    fun onTextEditingFinished(editText: EditText)
+    fun onTextEditingFinished(annotation: Annotation)
 }
 
 class AnnotationEditor(
-    private val context: Context, private val listener: AnnotationListener
+    private val context: Context, private val listener: AnnotationListener, private val pageNumber: Int
 ) {
 
     private var currentEditText: EditText? = null // 현재 편집 중인 EditText
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
-    fun addTextBox(parentView: ViewGroup): EditText {
+    fun addTextBox(parentView: ViewGroup, x: Float? = null, y: Float? = null): EditText {
         val editText = createEditText()
-        centerTextBoxInView(parentView, editText)
+
+        // x와 y 좌표가 주어졌다면 해당 위치에 배치하고, 없다면 중앙에 배치
+        editText.x = x ?: ((parentView.width - editText.width) / 2).toFloat()
+        editText.y = y ?: ((parentView.height - editText.height) / 2).toFloat()
+
+        // 인터랙션과 초기 설정
         enableTextBoxInteractions(editText)
         setupEditTextAppearance(editText)
+
+        // MarginLayoutParams 설정
+        editText.layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
         parentView.addView(editText)
         return editText
     }
@@ -62,7 +75,6 @@ class AnnotationEditor(
                 }
                 false
             }
-
             imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
         }
     }
@@ -74,6 +86,7 @@ class AnnotationEditor(
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun enableTextBoxInteractions(editText: EditText) {
         val gestureDetector = createGestureDetector(editText)
 
@@ -87,6 +100,8 @@ class AnnotationEditor(
             }
 
             // 드래그 기능 처리
+            currentEditText = editText
+
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     dX = (view.x - event.rawX).roundToInt()
@@ -101,7 +116,8 @@ class AnnotationEditor(
                 }
                 MotionEvent.ACTION_UP -> {
                     listener.onDrag(false)
-                    view.performClick()
+                    updateAnnotationInfo()
+                    exitEditMode()
                 }
             }
             true
@@ -140,7 +156,7 @@ class AnnotationEditor(
     fun exitEditMode() {
         Log.d("AnnotationEditor", "Exiting editing mode(exitEditMode)")
         currentEditText?.let {
-            listener.onTextEditingFinished(it) // 편집 종료 리스너 호출
+            updateAnnotationInfo()
             disableTextBoxEditing(it)
         }
         currentEditText = null
@@ -189,22 +205,40 @@ class AnnotationEditor(
 
     private fun setupEditTextAppearance(editText: EditText) {
         // 초기 상태에서 커서 활성화
-        enableTextBoxEditing(editText)
+        disableTextBoxEditing(editText)
     }
 
 
     // 현재 편집 중인 EditText의 텍스트, 크기, 위치 정보를 반환하는 함수
-    fun getCurrentAnnotationInfo(): AnnotationUIModel? {
+    fun getCurrentAnnotationInfo(): Annotation? {
         currentEditText?.let { editText ->
-            return AnnotationUIModel(
+            return Annotation(
+                id = editText.tag as? Long ?: 0,
                 content = editText.text.toString(),
                 x = editText.x,
                 y = editText.y,
                 width = editText.width.toFloat(),
-                height = editText.height.toFloat()
+                height = editText.height.toFloat(),
+                pageNumber = pageNumber
             )
         }
         return null
+    }
+
+    private fun updateAnnotationInfo() {
+        Log.d("AnnotationEditor", "Updating annotation info 업데이트시 호출(updateAnnotationInfo)")
+        currentEditText?.let { editText ->
+            val annotationInfo = Annotation(
+                id = editText.tag as? Long ?: 0,
+                content = editText.text.toString(),
+                x = editText.x,
+                y = editText.y,
+                width = editText.width.toFloat(),
+                height = editText.height.toFloat(),
+                pageNumber = pageNumber
+            )
+            listener.onTextEditingFinished(annotationInfo)
+        }
     }
 
 }

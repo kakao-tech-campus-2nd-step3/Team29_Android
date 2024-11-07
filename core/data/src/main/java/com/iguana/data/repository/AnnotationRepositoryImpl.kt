@@ -10,6 +10,7 @@ import com.iguana.data.mapper.toCreateAnnotationRequestDto
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toEntity
 import com.iguana.data.mapper.toUpdateAnnotationRequestDto
+import com.iguana.domain.model.SyncStatus
 
 
 class AnnotationRepositoryImpl @Inject constructor(
@@ -21,10 +22,13 @@ class AnnotationRepositoryImpl @Inject constructor(
         documentId: Long,
         annotation: com.iguana.domain.model.Annotation,
         pageNumber: Int
-    ) {
+    ): Long {
         val annotationEntity = annotation.toEntity(documentId, pageNumber)
-        Log.d("PdfPageViewModel", "Saving annotationEntity: x=${annotationEntity.xPosition}, y=${annotationEntity.yPosition}, width=${annotationEntity.width}, height=${annotationEntity.height}")
-        annotationDao.insertAnnotation(annotationEntity)
+        Log.d(
+            "testt",
+            "Saving annotationEntity: x=${annotationEntity.xPosition}, y=${annotationEntity.yPosition}, width=${annotationEntity.width}, height=${annotationEntity.height}"
+        )
+        return annotationDao.insertAnnotation(annotationEntity)
     }
 
     // 서버에 저장하는 로직 (현재 주석 처리됨)
@@ -32,10 +36,10 @@ class AnnotationRepositoryImpl @Inject constructor(
         documentId: Long,
         annotation: com.iguana.domain.model.Annotation,
         pageNumber: Int
-    ) {
-         val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
-         val responseDto = annotationApi.createAnnotation(documentId, requestDto)
-         val createdAnnotation = responseDto.toDomain()
+    ): Long {
+        val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
+        val responseDto = annotationApi.createAnnotation(documentId, requestDto)
+        return responseDto.id
     }
 
     // 특정 페이지 번호로 로컬에서 주석을 조회
@@ -44,23 +48,29 @@ class AnnotationRepositoryImpl @Inject constructor(
         return localAnnotations.map { it.toDomain() }
     }
 
-    override suspend fun getAnnotations(documentId: Long, pageNumbers: List<Int>): List<Annotation> {
-        // 서버에서 모든 페이지의 주석을 가져옴
-        val responseDto = annotationApi.getAnnotations(documentId, pageNumbers)
-        val remoteAnnotations = responseDto.annotations.map { it.toDomain() }
+    override suspend fun getAnnotations(
+        documentId: Long,
+        pageNumbers: List<Int>
+    ): List<Annotation> {
+        return try {
+            val responseDto = annotationApi.getAnnotations(documentId, pageNumbers)
+            val remoteAnnotations = responseDto.toDomain()
 
-        // 로컬 데이터베이스에 각 페이지별로 주석 저장
-        remoteAnnotations.forEach { annotation ->
-            val pageNumber = annotation.pageNumber  // Annotation에 포함된 페이지 번호 사용
-            annotationDao.insertAnnotation(annotation.toEntity(documentId, pageNumber))
+            // 로컬 DB에 서버에서 받은 ID로 주석 저장
+            remoteAnnotations.forEach { annotation ->
+                annotationDao.insertAnnotation(annotation.toEntity(documentId, annotation.pageNumber))
+            }
+
+            remoteAnnotations
+        } catch (e: Exception) {
+            Log.e("AnnotationRepository", "Failed to load annotations: ${e.message}")
+            emptyList()
         }
-
-        return remoteAnnotations
     }
 
     override suspend fun updateAnnotationToServer(documentId: Long, annotation: com.iguana.domain.model.Annotation): Annotation {
         val requestDto = annotation.toUpdateAnnotationRequestDto()
-        val responseDto = annotationApi.updateAnnotation(documentId, annotation.id!!, requestDto)
+        val responseDto = annotationApi.updateAnnotation(documentId, annotation.id, requestDto)
         return responseDto.toDomain()
     }
 
@@ -73,13 +83,23 @@ class AnnotationRepositoryImpl @Inject constructor(
         annotationDao.clearAnnotations()
     }
 
+    override suspend fun updateSyncStatus(annotationId: Long, syncStatus: SyncStatus) {
+        annotationDao.updateSyncStatus(annotationId, syncStatus)
+    }
+
     override suspend fun updateAnnotationInLocal(annotation: com.iguana.domain.model.Annotation) {
         annotationDao.updateAnnotation(
             id = annotation.id,
             content = annotation.content,
             xPosition = annotation.x,
-            yPosition = annotation.y
+            yPosition = annotation.y,
+            width = annotation.width,
+            height = annotation.height
         )
+    }
+
+    override suspend fun updateAnnotationId(localId: Long, serverId: Long) {
+        annotationDao.updateAnnotationId(localId, serverId)
     }
 
 }

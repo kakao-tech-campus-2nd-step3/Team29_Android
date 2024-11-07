@@ -5,6 +5,7 @@ import com.iguana.data.remote.model.*
 import com.iguana.domain.model.Annotation
 
 
+// 서버의 응답 -> 도메인 모델 (주석 업데이트 시 사용됨)
 fun AnnotationResponseDto.toDomain() = Annotation(
     id = id,
     content = content,
@@ -15,8 +16,10 @@ fun AnnotationResponseDto.toDomain() = Annotation(
     pageNumber = pageNumber
 )
 
-fun GetAnnotationsResponseDto.toDomain() = annotations.map { it.toDomain() }
+// 서버에서 받은 주석 응답들의 리스트 -> 도메인 모델의 리스트 (초기 Fragment 진입 시 서버에 있던 주석들을 로컬에 캐싱 시 사용됨)
+fun List<AnnotationResponseDto>.toDomain() = map { it.toDomain() }
 
+// 도메인 모델 -> 서버에 주석 생성 요청을 위한 DTO
 fun Annotation.toCreateAnnotationRequestDto(pageNumber: Int): CreateAnnotationRequestDto =
     CreateAnnotationRequestDto(
         pageNumber = pageNumber,
