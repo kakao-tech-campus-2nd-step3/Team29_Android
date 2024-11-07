@@ -46,10 +46,10 @@ interface DocumentApi {
         @Query("documentIds") documentIds: List<Long>
     ): Response<List<DocumentDto>>
 
-    @DELETE("/api/folders/{folderId}/documents/{documentId}")
+    @DELETE("/api/folders/{folderId}/documents/{id}")
     suspend fun deleteDocument(
         @Path("folderId") folderId: Long,
-        @Path("documentId") documentId: Long
+        @Path("id") documentId: Long
     ): Response<Unit>
 
     @POST("/api/folders")
@@ -68,4 +68,11 @@ interface DocumentApi {
         @Path("id") id: Long,
         @Body request: Map<String, String>
     ): CreateFolderResponseDto
+
+    @PUT("/api/folders/{folderId}/documents/{documentId}")
+    suspend fun updateDocumentName(
+        @Path("folderId") folderId: Long,
+        @Path("documentId") documentId: Long,
+        @Body request: Map<String, String>
+    ): DocumentDto
 }

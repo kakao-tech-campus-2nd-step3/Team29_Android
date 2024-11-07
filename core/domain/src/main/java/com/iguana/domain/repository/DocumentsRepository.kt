@@ -14,4 +14,5 @@ interface DocumentsRepository {
     suspend fun deleteFolder(folderId: Long): Result<Unit>
     suspend fun moveItems(request: MoveItemsRequest): Result<Unit>
     suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem>
+    suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Result<Document>
 }

@@ -149,6 +149,15 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
+    override suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Result<Document> = try {
+        val request = mapOf("name" to newName)
+        val response = api.updateDocumentName(folderId, documentId, request)
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "문서 제목 업데이트 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
+    }
+
     companion object {
         private const val TAG = "DocumentsRepositoryImpl"
     }

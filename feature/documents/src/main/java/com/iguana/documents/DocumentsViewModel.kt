@@ -31,7 +31,8 @@ class DocumentsViewModel @Inject constructor(
     private val deleteFolderUseCase: DeleteFolderUseCase,
     private val deleteFileUseCase: DeleteFileUseCase,
     private val saveFileInLocalUsecase: SaveFileInLocalUsecase,
-    private val saveFileInRemoteUsecase: SaveFileInRemoteUsecase
+    private val saveFileInRemoteUsecase: SaveFileInRemoteUsecase,
+    private val updateDocumentNameUseCase: UpdateDocumentNameUseCase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<List<FolderContentItem>>(emptyList())
@@ -256,6 +257,17 @@ class DocumentsViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "폴더 내용 새로고침 실패", e)
+            }
+        }
+    }
+
+    fun updateDocumentName(folderId: Long, documentId: Long, newName: String) {
+        viewModelScope.launch {
+            updateDocumentNameUseCase(folderId, documentId, newName).onSuccess { updatedDocument ->
+                // 문서 제목 변경 후 현재 폴더 내용을 새로고침
+                refreshCurrentFolder()
+            }.onFailure { error ->
+                Log.e("DocumentsViewModel", "문서 제목 변경 실패", error)
             }
         }
     }
