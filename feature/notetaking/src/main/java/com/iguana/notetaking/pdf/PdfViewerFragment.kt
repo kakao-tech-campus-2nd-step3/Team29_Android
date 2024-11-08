@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfViewerBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PdfViewerFragment : Fragment() {
 
     private val viewModel: PdfViewerViewModel by viewModels()
+    private val sharedViewModel: NotetakingViewModel by activityViewModels()
     private var _binding: FragmentPdfViewerBinding? = null
     private val binding get() = _binding!!
 
@@ -44,6 +47,7 @@ class PdfViewerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val pdfUriString = arguments?.getString(ARG_PDF_URI)
+        viewModel.loadAllAnnotations(sharedViewModel.documentId) // 모든 주석 데이터를 로드
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)

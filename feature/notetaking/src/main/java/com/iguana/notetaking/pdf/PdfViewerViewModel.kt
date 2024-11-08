@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iguana.domain.usecase.CacheAnnotationsToLocalUseCase
 import com.iguana.domain.usecase.ClearAnnotationsUseCase
 import com.iguana.notetaking.util.PdfRendererHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(
     private val pdfRendererHelper: PdfRendererHelper,
-    private val clearAnnotationsUseCase: ClearAnnotationsUseCase
+    private val clearAnnotationsUseCase: ClearAnnotationsUseCase,
+    private val cacheAnnotationsToLocalUseCase: CacheAnnotationsToLocalUseCase,
 ) :
     ViewModel() {
 
@@ -62,4 +64,10 @@ class PdfViewerViewModel @Inject constructor(
         }
     }
 
+    // 모든 주석을 서버에서 가져와 로컬에 캐시하는 메서드
+    fun loadAllAnnotations(documentId: Long) {
+        viewModelScope.launch {
+            cacheAnnotationsToLocalUseCase(documentId)
+        }
+    }
 }

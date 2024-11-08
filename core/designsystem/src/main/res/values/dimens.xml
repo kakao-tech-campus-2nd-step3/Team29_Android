@@ -10,4 +10,5 @@
     <dimen name="text_size_9">12sp</dimen>
     <dimen name="text_size_8">10sp</dimen>
     <dimen name="text_size_6">8sp</dimen>
+    <dimen name="title_border_spacing">12dp</dimen>
 </resources>
