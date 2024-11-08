@@ -162,6 +162,13 @@
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
+    <style name="Regular4">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">@dimen/text_size_4</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
     <!-- 그 외 -->
     <style name="Thin24">
         <item name="android:fontFamily">@font/pretendard_thin</item>

@@ -12,7 +12,9 @@
     <dimen name="text_size_8">16sp</dimen>
     <dimen name="text_size_7">14sp</dimen>
     <dimen name="text_size_6">12sp</dimen>
-    <dimen name="title_border_spacing">16dp</dimen>
-    <dimen name="file_width">140dp</dimen>
-    <dimen name="file_height">180dp</dimen>
+    <dimen name="text_size_4">8sp</dimen>
+    <dimen name="title_border_spacing">14dp</dimen>
+    <dimen name="content_border_spacing">16dp</dimen>
+    <dimen name="file_width">136dp</dimen>
+    <dimen name="file_height">176dp</dimen>
 </resources>
