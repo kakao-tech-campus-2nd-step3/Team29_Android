@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:background="@drawable/ai_history_background"
+    android:layout_margin="8dp"
+    android:paddingHorizontal="16dp"
+    android:gravity="center"
+    android:paddingVertical="8dp">
 
     <TextView
         android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        style="@style/Regular6" />
+
+    <View
+        android:layout_width="0.8dp"
+        android:layout_height="match_parent"
+        android:background="@color/grey_50"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginTop="4dp" />
+        style="@style/Regular7"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold" />
 </LinearLayout>

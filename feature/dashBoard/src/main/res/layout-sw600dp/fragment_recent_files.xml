@@ -7,10 +7,10 @@
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="160dp"
-                android:layout_height="200dp"
+                android:layout_width="@dimen/file_width"
+                android:layout_height="@dimen/file_height"
                 android:background="@drawable/file_item_background"
-                android:elevation="2dp"
+                android:elevation="1dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="16dp"
@@ -33,7 +33,7 @@
                     android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:text="강의자료 불러오기"
-                    style="@style/Regular8"
+                    style="@style/Regular6"
                     />
             </LinearLayout>
 
