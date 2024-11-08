@@ -18,5 +18,5 @@ interface RecordApi {
     suspend fun uploadRecording(
         @Path("documentId") documentId: Long,
         @Body request: RecordingUploadRequestDto
-    ): Response<RecordingUploadResponseDto>
+    ): RecordingUploadResponseDto
 }

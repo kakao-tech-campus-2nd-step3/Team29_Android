@@ -1,5 +1,7 @@
 package com.iguana.data.remote.model
 
+import com.iguana.domain.model.ai.SummarizationStatus
+
 data class SummarizeRequestDto(
     val documentId: Long,
     var pages: List<Int>
@@ -18,7 +20,7 @@ data class StatusCheckResponseDto(
 )
 
 data class StatusCheckByPageResponseDto(
-    val status: String // "IN_PROGRESS", "COMPLETED", etc.
+    val status: SummarizationStatus // "IN_PROGRESS", "COMPLETED", etc.
 )
 
 data class SummarizeResultsResponseDto(

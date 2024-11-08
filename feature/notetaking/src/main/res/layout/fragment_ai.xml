@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@{String.valueOf(viewModel.pageNumber) + ` 페이지`}"
+                android:text="@{viewModel.pageNumber != null ? String.valueOf(viewModel.pageNumber + 1) + ` 페이지` : `1 페이지`}"
                 android:textColor="@color/grey_20"
                 app:layout_constraintBottom_toBottomOf="@id/boxView"
                 app:layout_constraintEnd_toEndOf="@id/boxView"
@@ -44,6 +44,7 @@
             android:id="@+id/aiStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
             android:text="@string/ai_empty_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -92,6 +93,7 @@
 
                 <!-- 구분선 -->
                 <View
+                    android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="16dp"

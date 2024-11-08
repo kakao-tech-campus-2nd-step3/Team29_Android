@@ -47,16 +47,19 @@ abstract class DataModule {
             ).build()
         }
 
+        @Singleton
         @Provides
         fun provideRecentFileDao(appDatabase: AppDatabase): RecentFileDao {
             return appDatabase.recentFileDao()
         }
 
+        @Singleton
         @Provides
         fun providePageTurnEventDao(appDatabase: AppDatabase): PageTurnEventDao {
             return appDatabase.pageTurnEventDao()
         }
 
+        @Singleton
         @Provides
         fun provideAnnotationDao(appDatabase: AppDatabase): AnnotationDao {
             return appDatabase.annotationDao()

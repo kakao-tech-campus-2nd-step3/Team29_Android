@@ -61,9 +61,11 @@ fun RecordingFile.toUploadRequestDto(): RecordingUploadRequestDto {
     val fileContent = File(this.filePath).readBytes()
     val base64AudioData = Base64.getEncoder().encodeToString(fileContent)
 
+    val mimeType = "audio/mpeg"
+
     return RecordingUploadRequestDto(
         documentName = this.documentName,
-        audioData = "data:audio/${this.format};base64,$base64AudioData"
+        audioData = "data:$mimeType;base64,$base64AudioData"
     )
 }
 
