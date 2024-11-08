@@ -3,12 +3,18 @@
 <resources>
     <dimen name="text_size_56">76sp</dimen>
     <dimen name="text_size_36">56sp</dimen>
-    <dimen name="text_size_24">40sp</dimen>
-    <dimen name="text_size_20">36sp</dimen>
+    <dimen name="text_size_24">38sp</dimen>
+    <dimen name="text_size_20">34sp</dimen>
     <dimen name="text_size_16">32sp</dimen>
     <dimen name="text_size_14">28sp</dimen>
     <dimen name="text_size_12">24sp</dimen>
     <dimen name="text_size_9">18sp</dimen>
     <dimen name="text_size_8">16sp</dimen>
+    <dimen name="text_size_7">14sp</dimen>
     <dimen name="text_size_6">12sp</dimen>
+    <dimen name="text_size_4">8sp</dimen>
+    <dimen name="title_border_spacing">14dp</dimen>
+    <dimen name="content_border_spacing">16dp</dimen>
+    <dimen name="file_width">136dp</dimen>
+    <dimen name="file_height">176dp</dimen>
 </resources>

@@ -6,14 +6,14 @@ data class DocumentDto(
     val name: String,
     val url: String?,
     val pageCount: Int?,
-    val updatedAt: String
+    val updatedAt: String?
 )
 
 data class FolderContentDto(
-    val type: String,
+    val type: String?,
     val id: Long,
     val name: String,
-    val updatedAt: String,
+    val updatedAt: String?,
     val totalElements: Int
 )
 
@@ -27,7 +27,8 @@ data class FolderContentResponseDto(
 )
 
 data class CreateFolderRequestDto(
-    val name: String
+    val name: String,
+    val parentFolderId: Long?
 )
 
 data class CreateFolderResponseDto(
@@ -48,4 +49,8 @@ data class FolderContentItemDto(
     val type: String,
     val totalElements: Int,
     val updatedAt: String
+)
+
+data class UpdateFolderNameRequestDto(
+    val name: String
 )

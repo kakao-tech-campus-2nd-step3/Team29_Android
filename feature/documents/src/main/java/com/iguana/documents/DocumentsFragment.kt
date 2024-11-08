@@ -80,9 +80,9 @@ class DocumentsFragment : Fragment() {
         }
     }
 
-    private fun updateUI(folderContent: FolderContent) {
-        val items = folderContent.content.map { item ->
-            when (item.type) {
+    private fun updateUI(folderContent: List<FolderContentItem>) {
+        val items = folderContent.map { item ->
+            when (item.type.uppercase()) {
                 "FOLDER" -> DocumentItem.FolderItem(
                     id = item.id,
                     name = item.name,
@@ -102,7 +102,7 @@ class DocumentsFragment : Fragment() {
 
     private fun onItemClick(item: DocumentItem) {
         when (item) {
-            is DocumentItem.FolderItem -> viewModel.loadSubItems(item.id, item.name)
+            is DocumentItem.FolderItem -> viewModel.loadFolderContents(item.id, item.name)
             is DocumentItem.PdfItem -> openPdf(item.id, item.title)
         }
     }
@@ -187,11 +187,16 @@ class DocumentsFragment : Fragment() {
             .setView(dialogView)
             .setPositiveButton("확인") { _, _ ->
                 val newName = editText.text.toString()
-                val documentId = when (item) {
-                    is DocumentItem.FolderItem -> item.id
-                    is DocumentItem.PdfItem -> item.id
+                when (item) {
+                    is DocumentItem.FolderItem -> {
+                        viewModel.updateFolderName(item.id, newName)
+                        Log.d("DocumentsFragment", "폴더 이름 변경 요청: ${item.id}, 새 이름: $newName")
+                    }
+                    is DocumentItem.PdfItem -> {
+                        viewModel.updateFolderName(item.id, newName) //문서 변경 요청 떄 다시 변경 필요
+                        Log.d("DocumentsFragment", "문서 이름 변경 요청: ${item.id}, 새 이름: $newName")
+                    }
                 }
-                viewModel.updateDocumentName(documentId, newName)
             }
             .setNegativeButton("취소", null)
             .show()

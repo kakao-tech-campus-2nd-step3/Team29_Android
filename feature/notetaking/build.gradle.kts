@@ -22,6 +22,7 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("jp.wasabeef:richeditor-android:2.0.0")
     implementation(libs.pdfbox)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -2,7 +2,6 @@ package com.iguana.data.remote.api
 
 import com.iguana.data.remote.model.AnnotationResponseDto
 import com.iguana.data.remote.model.CreateAnnotationRequestDto
-import com.iguana.data.remote.model.GetAnnotationsResponseDto
 import com.iguana.data.remote.model.UpdateAnnotationRequestDto
 import retrofit2.http.*
 
@@ -20,7 +19,7 @@ interface AnnotationApi {
     suspend fun getAnnotations(
         @Path("documentId") documentId: Long,
         @Query("pageNumbers") pageNumbers: List<Int>
-    ): GetAnnotationsResponseDto
+    ): List<AnnotationResponseDto>
 
     // 주석 수정
     @PUT("/api/documents/{documentId}/annotations/{annotationId}")
@@ -35,5 +34,5 @@ interface AnnotationApi {
     suspend fun deleteAnnotation(
         @Path("documentId") documentId: Long,
         @Path("annotationId") annotationId: Long
-    )
+    ): Unit
 }

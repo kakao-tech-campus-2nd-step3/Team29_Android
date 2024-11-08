@@ -3,11 +3,20 @@ package com.iguana.notetaking.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
+import com.iguana.data.BuildConfig
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.rendering.PDFRenderer
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import javax.inject.Inject
 
 class PdfRendererHelper @Inject constructor(@ApplicationContext private val context: Context) {
@@ -17,16 +26,79 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
         PDFBoxResourceLoader.init(context)
     }
 
+    // 캐시 디렉토리와 캐시 파일 이름 정의
+    private val cacheDir: File = context.cacheDir
+    private val cacheFileName = "downloaded_pdf.pdf"
+    private val cachedPdfFile: File = File(cacheDir, cacheFileName)
+
+    private suspend fun downloadPdfToLocal(fileUrl: String): File? {
+        return withContext(Dispatchers.IO) {
+            if (cachedPdfFile.exists()) {
+                // 캐시된 파일이 존재하면 다운로드를 생략하고 반환
+                Log.d("PdfRendererHelper", "캐시된 PDF 파일을 사용: ${cachedPdfFile.absolutePath}")
+                return@withContext cachedPdfFile
+            }
+
+            try {
+                Log.d("PdfRendererHelper", "다운로드 URL: $fileUrl")
+                val url = URL(fileUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.connect()
+
+                val responseCode = connection.responseCode
+                Log.d("PdfRendererHelper", "HTTP 응답 코드: $responseCode")
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    val errorStream =
+                        connection.errorStream?.bufferedReader()?.use { it.readText() }
+                }
+
+                val inputStream: InputStream = connection.inputStream
+                val file = File(context.cacheDir, "downloaded_pdf.pdf")
+                val outputStream = FileOutputStream(file)
+
+                val buffer = ByteArray(1024)
+                var length: Int
+                while (inputStream.read(buffer).also { length = it } > 0) {
+                    outputStream.write(buffer, 0, length)
+                }
+
+                outputStream.close()
+                inputStream.close()
+                connection.disconnect()
+
+                Log.d("PdfRendererHelper", "파일 다운로드 성공: ${file.absolutePath}")
+                file
+            } catch (e: IOException) {
+                Log.e("PdfRendererHelper", "IOException 발생: ${e.message}")
+                e.printStackTrace()
+                null
+            } catch (e: SecurityException) {
+                Log.e("PdfRendererHelper", "SecurityException 발생: ${e.message}")
+                e.printStackTrace()
+                null
+            } catch (e: Exception) {
+                Log.e("PdfRendererHelper", "예외 발생: ${e::class.java.simpleName} - ${e.message}")
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     // PDF 파일의 특정 페이지를 렌더링하여 반환
-    fun renderPage(uri: Uri, pageIndex: Int): Bitmap? {
+    suspend fun renderPage(uri: Uri, pageIndex: Int): Bitmap? {
         return try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            inputStream?.use {
-                val document = PDDocument.load(it)
+            // 렌더링 또는 파일 사용 시
+            val fullUrl = "${BuildConfig.API_BASE_URL}/${uri}"
+            val localFile = downloadPdfToLocal(fullUrl)
+            if (localFile != null && localFile.exists()) {
+                val document = PDDocument.load(localFile)
                 val renderer = PDFRenderer(document)
                 val bitmap = renderer.renderImageWithDPI(pageIndex, 150f) // DPI를 적절하게 조절
                 document.close()
                 bitmap
+            } else {
+                Log.e("PdfRendererHelper", "PDF 파일 다운로드 실패")
+                null
             }
         } catch (e: Exception) {
             e.printStackTrace() // 에러 로그를 출력하여 문제 파악에 도움
@@ -34,20 +106,31 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
         }
     }
 
-    fun getPageCount(uri: Uri): Int {
+    suspend fun getPageCount(uri: Uri): Int {
         return try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            inputStream?.use {
-                val document = PDDocument.load(it)
+            val fullUrl = "${BuildConfig.API_BASE_URL}/${uri}"
+            val localFile = downloadPdfToLocal(fullUrl)
+            if (localFile != null && localFile.exists()) {
+                val document = PDDocument.load(localFile)
                 val pageCount = document.numberOfPages
                 document.close()
                 pageCount
-            } ?: 0
+            } else {
+                Log.e("PdfRendererHelper", "PDF 파일 다운로드 실패")
+                0
+            }
         } catch (e: Exception) {
             e.printStackTrace() // 에러 로그를 출력하여 문제 파악에 도움
             0
         }
     }
 
-
+    // 캐시된 파일을 삭제하는 함수
+    fun clearCache() {
+        if (cachedPdfFile.exists() && cachedPdfFile.delete()) {
+            Log.d("PdfRendererHelper", "캐시 파일 삭제 성공: ${cachedPdfFile.absolutePath}")
+        } else {
+            Log.e("PdfRendererHelper", "캐시 파일 삭제 실패")
+        }
+    }
 }

@@ -31,6 +31,7 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(projects.core.domain)
     implementation(libs.okhttp.logging)
+    implementation("com.arthenica:mobile-ffmpeg-full:4.4")
 }
 
 // local.properties 파일에서 API_BASE_URL 읽어오는 함수

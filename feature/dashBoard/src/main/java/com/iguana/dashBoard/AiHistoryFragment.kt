@@ -27,7 +27,17 @@ class AiHistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        aiHistoryAdapter = AiHistoryAdapter(emptyList())
+        // 더미 데이터 생성
+        val dummyData = listOf(
+            AiHistoryItem("2024.11.01", "노트 요약 1"),
+            AiHistoryItem("2024.11.02", "노트 요약 2"),
+            AiHistoryItem("2024.11.03", "노트 요약 3"),
+            AiHistoryItem("2024.11.04", "노트 요약 4"),
+            AiHistoryItem("2024.11.05", "노트 요약 5"),
+            AiHistoryItem("2024.11.05", "노트 요약 6")
+        )
+
+        aiHistoryAdapter = AiHistoryAdapter(dummyData)
         binding.aiHistoryRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = aiHistoryAdapter

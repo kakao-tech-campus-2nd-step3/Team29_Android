@@ -35,12 +35,7 @@ fun StatusCheckResponseDto.toDomain(): AIStatusResult {
 // 상태 체크 응답 (페이지별) 매퍼
 fun StatusCheckByPageResponseDto.toDomain(): AIStatusResultByPage {
     return AIStatusResultByPage(
-        status = when (this.status) {
-            "IN_PROGRESS" -> SummarizationStatus.IN_PROGRESS
-            "COMPLETED" -> SummarizationStatus.COMPLETED
-            "NOT_REQUESTED" -> SummarizationStatus.NOT_REQUESTED
-            else -> SummarizationStatus.FAILED
-        }
+        status = status
     )
 }
 

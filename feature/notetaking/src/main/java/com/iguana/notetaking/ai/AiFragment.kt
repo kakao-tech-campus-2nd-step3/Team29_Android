@@ -1,21 +1,23 @@
 package com.iguana.notetaking.ai
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.iguana.notetaking.databinding.FragmentAiBinding
 import androidx.fragment.app.viewModels
 import com.iguana.domain.model.ai.AIResult
 import com.iguana.domain.model.ai.AIStatusResultByPage
-import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.R
 import com.iguana.notetaking.recording.RecordFragment
+import com.iguana.notetaking.util.HtmlFormatter
 import com.iguana.notetaking.util.hide
-import com.iguana.notetaking.util.isVisible
 import com.iguana.notetaking.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,21 +38,23 @@ class AiFragment : Fragment() {
 
     private var _binding: FragmentAiBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AiViewModel by viewModels()
 
+    // Shared ViewModel (Activity 범위)
+    private val sharedViewModel: NotetakingViewModel by activityViewModels()
 
+    // Local ViewModel (Fragment 범위)
+    private val aiViewModel: AiViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         arguments?.let {
-            viewModel.documentId = it.getLong(DOCUMENT_ID)
-            viewModel.setPageNumber(it.getInt(CURRENT_PAGE))
+            aiViewModel.documentId = it.getLong(DOCUMENT_ID)
+            aiViewModel.setPageNumber(it.getInt(CURRENT_PAGE))
         }
 
         _binding = FragmentAiBinding.inflate(inflater, container, false)
-
-        binding.viewModel = viewModel
+        binding.viewModel = aiViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
@@ -59,32 +63,35 @@ class AiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // AI 상태가 변경될 때 상태에 따른 UI 업데이트
-        viewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
+        aiViewModel.aiStatus.observe(viewLifecycleOwner) { aiStatus ->
             aiStatus?.let { status ->
                 updateUiForStatus(status)
+                // AI 상태가 완료된 경우에만 aiResult를 observe하도록 설정
+                if (status.isCompleted()) {
+                    aiViewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
+                        aiResult?.let { result ->
+                            updateUiForResult(result)
+                        }
+                    }
+                }
             } ?: run {
                 binding.aiStatusTextView.text = getString(R.string.status_unavailable)
                 binding.aiStatusTextView.show()
                 binding.aiContentTextView.hide()
             }
         }
-        // AI 결과가 있으면 해당 결과를 반영
-        viewModel.aiResult.observe(viewLifecycleOwner) { aiResult ->
-            aiResult?.let { result ->
-                updateUiForResult(result)
-            }
+        sharedViewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
+            aiViewModel.setPageNumber(pageNumber)
         }
-    }
-
-    // 페이지 번호 업데이트 메서드
-    fun updateContentForPage(pageNumber: Int) {
-        if (isAdded && !isDetached) { // Fragment가 활성 상태인지 확인
-            viewModel.setPageNumber(pageNumber + 1)
+        binding.aiButton.setOnClickListener {
+            Toast.makeText(requireContext(), "AI 요청이 완료되었습니다. AI 요청은 30초-1분 정도 소요될 수 있습니다.", Toast.LENGTH_SHORT).show()
+            aiViewModel.requestAI()
         }
     }
 
     // AI 상태에 따라 UI 업데이트
     private fun updateUiForStatus(status: AIStatusResultByPage) {
+        hideAIContent()
         binding.aiStatusTextView.text = when {
             status.isInProgress() -> getString(R.string.ai_in_progress)
             status.isCompleted() -> getString(R.string.ai_completed)
@@ -96,15 +103,12 @@ class AiFragment : Fragment() {
 
     // AI 결과에 따라 UI 업데이트
     private fun updateUiForResult(result: AIResult) {
-        // 요약 텍스트 업데이트
-        binding.aiContentTextView.text = result.formattedSummary.takeIf { result.hasSummary }
+        binding.aiContentTextView.text = result.summary?.let { HtmlFormatter.formatAsHtml(it) }
             ?: getString(R.string.no_summary_available)
 
-        // 문제 텍스트 업데이트
-        binding.aiProblemTextView.text = result.formattedProblem.takeIf { result.hasProblem }
-            ?: getString(R.string.no_summary_available)
-
-        showAIContent()
+        binding.aiProblemTextView.text = result.problem?.let { HtmlFormatter.formatAsHtml(it) }
+            ?: getString(R.string.no_problem_available)
+        showAIContent ()
     }
 
     private fun showAIContent() {
@@ -113,6 +117,16 @@ class AiFragment : Fragment() {
         binding.aiContentTextView.show()
         binding.aiProblemTextView.show()
         binding.summaryTitleTextView.show()
+        binding.divider.show()
+    }
+
+    private fun hideAIContent() {
+        binding.aiStatusTextView.show()
+        binding.problemTitleTextView.hide()
+        binding.aiContentTextView.hide()
+        binding.aiProblemTextView.hide()
+        binding.summaryTitleTextView.hide()
+        binding.divider.hide()
     }
 
 
