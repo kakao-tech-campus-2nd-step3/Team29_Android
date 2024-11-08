@@ -74,4 +74,9 @@
             super.onDestroyView()
             _binding = null
         }
+
+        // 특정 탭을 설정하는 메서드
+        fun setTab(tabPosition: Int) {
+            binding.sideBarViewPager.setCurrentItem(tabPosition, true)
+        }
     }

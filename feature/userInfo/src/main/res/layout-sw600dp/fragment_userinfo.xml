@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사용자 정보를 불러올 수 없습니다."
-                    style="@style/Regular8" />
+                    style="@style/Regular9" />
 
             </LinearLayout>
 
@@ -139,7 +139,7 @@
             android:layout_height="150dp"
             android:text="결제 내역이 없습니다."
             android:padding="16dp"
-            style="@style/Regular12" />
+            style="@style/Regular9" />
     </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
