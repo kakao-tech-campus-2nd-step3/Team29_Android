@@ -39,17 +39,63 @@
                 app:layout_constraintTop_toTopOf="@id/boxView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <TextView
-            android:id="@+id/aiStatusTextView"
+        <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
+        <LinearLayout
+            android:id="@+id/aiStatus"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="150dp"
-            android:layout_weight="1"
-            android:text="@string/ai_empty_message"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/boxView" />
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/boxView">
+
+            <TextView
+                android:id="@+id/aiStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/ai_empty_message" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="8dp"/>
+
+            <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
+            <LinearLayout
+                android:id="@+id/refreshButton"
+                android:layout_width="@dimen/refresh_btn_width"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:background="@drawable/button1_background"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
+
+                <!-- 아이콘 (좌측) -->
+                <ImageView
+                    android:id="@+id/refreshIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_refresh_white" />
+
+                <!-- 텍스트 -->
+                <TextView
+                    android:id="@+id/refreshText"
+                    style="@style/Regular6"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="서버 동기화" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <!-- 스크롤 가능한 영역 -->
         <ScrollView
@@ -61,7 +107,7 @@
             app:layout_constraintBottom_toTopOf="@id/aiButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aiStatusTextView">
+            app:layout_constraintTop_toBottomOf="@id/aiStatus">
 
 
             <!-- 요약 및 문제 결과 레이아웃 -->
