@@ -41,7 +41,7 @@ data class AIStatusResult(
 }
 
 data class AIStatusResultByPage(
-    val status: SummarizationStatus
+    val status: SummarizationStatus,
 ) {
     // 요약 작업이 완료되었는지 여부 확인
     fun isCompleted(): Boolean {

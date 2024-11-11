@@ -3,12 +3,15 @@ package com.iguana.notetaking.pdf
 import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.iguana.notetaking.NotetakingActivity
+import com.iguana.notetaking.NotetakingViewModel
 import com.iguana.notetaking.databinding.FragmentPdfViewerBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class PdfViewerFragment : Fragment() {
 
     private val viewModel: PdfViewerViewModel by viewModels()
+    private val sharedViewModel: NotetakingViewModel by activityViewModels()
     private var _binding: FragmentPdfViewerBinding? = null
     private val binding get() = _binding!!
 
@@ -43,6 +47,7 @@ class PdfViewerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val pdfUriString = arguments?.getString(ARG_PDF_URI)
+        viewModel.loadAllAnnotations(sharedViewModel.documentId) // 모든 주석 데이터를 로드
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
@@ -50,9 +55,6 @@ class PdfViewerFragment : Fragment() {
             viewModel.getPdfPageCount(pdfUri) { pageCount ->
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
             }
-
-            // 캐시되어있던 다른 document의 주석들 삭제
-            viewModel.clearAnnotations()
 
             // ViewPager2의 페이지 변경 리스너 설정
             binding.pdfViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -74,7 +76,9 @@ class PdfViewerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        Log.d("testt", "PdfViewerFragment onDestroyView")
         super.onDestroyView()
+        viewModel.clearCache() // 캐시된 파일 및 주석 삭제
         _binding = null
     }
 

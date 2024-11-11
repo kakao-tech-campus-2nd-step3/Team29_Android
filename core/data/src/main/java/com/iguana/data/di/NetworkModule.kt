@@ -3,6 +3,7 @@ package com.iguana.data.di
 import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
+import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.RecordApi
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.domain.repository.SharedPreferencesHelper
@@ -11,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -19,11 +21,27 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // 로그 설정 추가
+    val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     @Provides
     @Singleton
-    fun provideOkHttpClient(sharedPreferencesHelper: SharedPreferencesHelper): OkHttpClient {
+    fun provideOkHttpClient(
+        sharedPreferencesHelper: SharedPreferencesHelper,
+        tokenAuthenticator: TokenAuthenticator
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
+            .authenticator(tokenAuthenticator)
+            .addInterceptor(logging)
+            // 연결 타임아웃 설정 (예: 30초)
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 읽기 타임아웃 설정 (예: 30초)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 쓰기 타임아웃 설정 (예: 30초)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
     }
 
@@ -39,8 +57,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLoginApi(retrofit: Retrofit): com.iguana.data.remote.api.LoginApi {
-        return retrofit.create(com.iguana.data.remote.api.LoginApi::class.java)
+    fun provideLoginApi(retrofit: Retrofit): LoginApi {
+        return retrofit.create(LoginApi::class.java)
     }
 
     @Provides
