@@ -14,6 +14,9 @@ interface AnnotationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAnnotation(annotation: AnnotationEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllAnnotations(annotations: List<AnnotationEntity>): List<Long>
+
     @Query("SELECT * FROM annotations WHERE documentId = :documentId AND pageNumber = :pageNumber")
     fun getAnnotationsByPage(documentId: Long, pageNumber: Int): List<AnnotationEntity>
 
