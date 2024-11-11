@@ -79,9 +79,8 @@ class PdfViewerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Log.d("testt", "PdfViewerFragment onDestroyView")
         super.onDestroyView()
-        viewModel.clearCache() // 캐시된 파일 및 주석 삭제
+        viewModel.clearCache() // 캐시된 주석 삭제
         _binding = null
     }
 

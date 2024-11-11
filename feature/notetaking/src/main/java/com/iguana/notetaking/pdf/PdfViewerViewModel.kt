@@ -53,12 +53,12 @@ class PdfViewerViewModel @Inject constructor(
         _currentPageNumber.value = page
     }
 
-    // 주석 데이터 및 캐시된 PDF 파일 삭제
+    // 주석 데이터 삭제
     fun clearCache() {
         Log.d("testt", "(ViewModel) clearCache 호출")
         try {
             // 메인 스레드에서 PDF 캐시를 삭제하기 위해 동기적으로 호출
-            pdfRendererHelper.clearCache()
+//            pdfRendererHelper.clearCache()
             viewModelScope.launch(Dispatchers.IO) {
                 clearAnnotationsUseCase()
             }
@@ -69,13 +69,10 @@ class PdfViewerViewModel @Inject constructor(
 
     // 모든 주석을 서버에서 가져와 로컬에 캐시하는 메서드
     fun loadAllAnnotations(documentId: Long) {
-        Log.d("testt", "(ViewModel) loadAllAnnotations 호출")
         totalPageCount?.let { pageCount ->
             val allPageNumbers = (0 until pageCount).toList()
-            Log.d("testt", "2 loadAllAnnotations: documentId=$documentId, allPageNumbers=$allPageNumbers")
 
             viewModelScope.launch {
-                Log.d("testt", "3 loadAllAnnotations: documentId=$documentId, allPageNumbers=$allPageNumbers")
                 cacheAnnotationsToLocalUseCase(documentId, allPageNumbers)
             }
         }
