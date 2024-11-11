@@ -47,6 +47,8 @@ class DocumentsViewModel @Inject constructor(
     private val _documentItems = MutableStateFlow<List<DocumentItem>>(emptyList())
     val documentItems: StateFlow<List<DocumentItem>> = _documentItems
 
+    private var currentParentFolderId: Long = -1L
+
     init {
         loadAllDocuments()
     }
@@ -61,6 +63,7 @@ class DocumentsViewModel @Inject constructor(
                     _currentFolderName.value = "문서"
                     currentFolder = null
                     updateUI(rootContent)
+                    Log.d("DocumentsViewModel", "루트 폴더 문서 로딩 완료 - 폴더: ${rootContent.count { it.type == "FOLDER" }}, 문서: ${rootContent.count { it.type == "DOCUMENT" }}")
                 }.onFailure { e ->
                     Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
                 }
@@ -70,24 +73,23 @@ class DocumentsViewModel @Inject constructor(
         }
     }
 
-    fun loadFolderContents(folderId: Long, folderName: String) {
-        currentFolderId = folderId
+    fun loadFolderContents(folderId: Long, folderName: String, newParent: FolderNode? = null) {
         viewModelScope.launch {
             try {
-                val result = getFolderContentsUseCase(
-                    folderId = folderId,
-                    page = 0,
-                    size = 20,
-                    sortBy = "updatedAt",
-                    sortDirection = "DESC"
-                )
+                val result = getFolderContentsUseCase(folderId)
                 result.onSuccess { folderContent ->
                     _documents.value = folderContent
                     _currentFolderName.value = folderName
-                    currentFolder = FolderNode(folderId, folderName, currentFolder)
+                    
+                    currentFolder = FolderNode(
+                        id = folderId,
+                        name = folderName,
+                        parent = if (folderId != -1L) newParent else null
+                    )
+                    
+                    currentFolderId = folderId
                     updateUI(folderContent)
-                }.onFailure { e ->
-                    Log.e("DocumentsViewModel", "폴더 내용 로딩 중 오류 발생", e)
+                    Log.d("DocumentsViewModel", "폴더 이동 - 현재: $folderName, 부모: ${currentFolder?.parent?.name}")
                 }
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "폴더 내용 로딩 중 예외 발생", e)
@@ -96,17 +98,20 @@ class DocumentsViewModel @Inject constructor(
     }
 
     fun navigateUp() {
-        if (currentFolder == null) {
-            return
-        }
-        
-        currentFolder?.parent?.let { parentFolder ->
-            currentFolderId = parentFolder.id
-            loadFolderContents(parentFolder.id, parentFolder.name)
-            currentFolder = parentFolder
-        } ?: run {
-            currentFolderId = -1L
-            loadAllDocuments()
+        when {
+            currentFolderId == -1L -> return  // 이미 루트 폴더면 아무것도 하지 않음
+            currentFolder?.parent == null -> {
+                // 부모가 없으면 루트로 이동
+                loadAllDocuments()
+            }
+            else -> {
+                // 부모 폴더가 있으면 해당 폴더로 이동
+                currentFolder?.parent?.let { parentFolder ->
+                    currentFolderId = parentFolder.id
+                    _currentFolderName.value = parentFolder.name
+                    loadFolderContents(parentFolder.id, parentFolder.name, parentFolder.parent)
+                }
+            }
         }
     }
 
@@ -244,13 +249,7 @@ class DocumentsViewModel @Inject constructor(
                     }
                 } else {
                     // 특정 폴더인 경우
-                    getFolderContentsUseCase(
-                        folderId = currentFolderId,
-                        page = 0,
-                        size = 20,
-                        sortBy = "updatedAt",
-                        sortDirection = "DESC"
-                    ).onSuccess { content ->
+                    getFolderContentsUseCase(currentFolderId).onSuccess { content ->
                         _documents.value = content
                         updateUI(content)
                     }
@@ -270,6 +269,11 @@ class DocumentsViewModel @Inject constructor(
                 Log.e("DocumentsViewModel", "문서 제목 변경 실패", error)
             }
         }
+    }
+
+    // 일반 폴더 진입 시 사용하는 함수
+    fun onFolderClick(folderId: Long, folderName: String) {
+        loadFolderContents(folderId, folderName, currentFolder)
     }
 }
 

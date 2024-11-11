@@ -84,7 +84,6 @@ class DocumentsFragment : Fragment() {
 
     private fun setupToolbar() {
         binding.btnBack.setOnClickListener { onBackPressed() }
-        binding.btnEdit.setOnClickListener { /* 편집 기능 구현 */ }
         binding.btnAdd.setOnClickListener { showAddOptionsDialog() }
     }
 
@@ -243,7 +242,7 @@ class DocumentsFragment : Fragment() {
                         Log.d("DocumentsFragment", "폴더 이름 변경 요청: ${item.id}, 새 이름: $newName")
                     }
                     is DocumentItem.PdfItem -> {
-                        viewModel.updateFolderName(item.id, newName) //문서 변경 요청 떄 다시 변경 필요
+                        viewModel.updateDocumentName(viewModel.currentFolderId, item.id, newName)
                         Log.d("DocumentsFragment", "문서 이름 변경 요청: ${item.id}, 새 이름: $newName")
                     }
                 }

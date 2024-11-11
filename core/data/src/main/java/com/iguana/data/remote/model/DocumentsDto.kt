@@ -18,12 +18,15 @@ data class FolderContentDto(
 )
 
 data class FolderContentResponseDto(
-    val content: List<FolderContentDto>,
-    val totalElements: Int,
-    val currentPage: Int,
-    val totalPages: Int,
-    val sortBy: String,
-    val sortDirection: String
+    val response: ResponseDto?,
+    val folderAndDocumentResponseType: String
+)
+
+data class ResponseDto(
+    val id: Long,
+    val name: String,
+    val updatedAt: String?,
+    val totalElements: Int = -1
 )
 
 data class CreateFolderRequestDto(
@@ -44,11 +47,11 @@ data class MoveFolderRequestDto(
 )
 
 data class FolderContentItemDto(
+    val type: String,
     val id: Long,
     val name: String,
-    val type: String,
-    val totalElements: Int,
-    val updatedAt: String
+    val updatedAt: String,
+    val totalElements: Int
 )
 
 data class UpdateFolderNameRequestDto(

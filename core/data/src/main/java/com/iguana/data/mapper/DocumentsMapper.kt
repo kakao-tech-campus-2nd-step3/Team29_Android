@@ -29,7 +29,25 @@ fun FolderContentDto.toDomain() = FolderContentItem(
 
 fun CreateFolderResponseDto.toDomain() = Folder(id, parentId, name)
 
-fun FolderContentItemDto.toDomain() = FolderContentItem(type, id, name, updatedAt, totalElements)
+fun FolderContentItemDto.toDomain(): FolderContentItem {
+    return FolderContentItem(
+        type = type,            // String
+        id = id,               // Long
+        name = name,           // String
+        updatedAt = updatedAt, // String
+        totalElements = totalElements  // Int
+    )
+}
+
+fun FolderContentResponseDto.toDomain(): FolderContentItem {
+    return FolderContentItem(
+        type = folderAndDocumentResponseType,
+        id = response?.id ?: -1L,
+        name = response?.name ?: "",
+        updatedAt = response?.updatedAt ?: SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+        totalElements = response?.totalElements ?: -1
+    )
+}
 
 // Domain to DTO
 fun Document.toDto() = DocumentDto(id, folderId, name, url, pageCount, updatedAt)
@@ -38,4 +56,12 @@ fun Folder.toCreateFolderRequestDto(parentFolderId: Long) = CreateFolderRequestD
 
 fun MoveItemsRequest.toDto() = MoveFolderRequestDto(documentIds, folderIds, destinationFolderId)
 
-fun FolderContentItem.toDto() = FolderContentItemDto(id, name, type, totalElements, updatedAt)
+fun FolderContentItem.toDto(): FolderContentItemDto {
+    return FolderContentItemDto(
+        type = type,            // String
+        id = id,               // Long
+        name = name,           // String
+        updatedAt = updatedAt, // String
+        totalElements = totalElements  // Int
+    )
+}

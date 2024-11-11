@@ -29,12 +29,11 @@ class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
     override suspend fun getAllDocuments(): Result<FolderContent> = try {
-        val response = api.getRootFolderContents(
-            page = 0,
-            size = 20,
-            sortBy = "updatedAt",
-            sortDirection = "DESC"
-        )
+        val response = api.getFolderContents(-1)
+        Logger.d(TAG, "루트 폴더 응답 - 아이템 개수: ${response.size}")
+        response.forEach { item ->
+            Logger.d(TAG, "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}")
+        }
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
@@ -60,20 +59,12 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun getFolderContents(
-        folderId: Long,
-        page: Int,
-        size: Int,
-        sortBy: String,
-        sortDirection: String
-    ): Result<FolderContent> = try {
-        val response = api.getFolderContents(
-            parentFolderId = folderId,
-            page = page,
-            size = size,
-            sortBy = sortBy,
-            sortDirection = sortDirection
-        )
+    override suspend fun getFolderContents(folderId: Long): Result<FolderContent> = try {
+        val response = api.getFolderContents(folderId)
+        Logger.d(TAG, "폴더($folderId) 응답 - 아이템 개수: ${response.size}")
+        response.forEach { item ->
+            Logger.d(TAG, "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}")
+        }
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
