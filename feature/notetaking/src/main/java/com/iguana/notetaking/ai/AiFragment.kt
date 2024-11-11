@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -87,17 +88,37 @@ class AiFragment : Fragment() {
             Toast.makeText(requireContext(), "AI 요청이 완료되었습니다. AI 요청은 30초-1분 정도 소요될 수 있습니다.", Toast.LENGTH_SHORT).show()
             aiViewModel.requestAI()
         }
+        binding.refreshButton.setOnClickListener {
+            Toast.makeText(requireContext(), "AI 상태를 새로고침합니다.", Toast.LENGTH_SHORT).show()
+            Log.d("testt", "aiStatusButton clicked")
+            aiViewModel.fetchAiStatus()
+        }
     }
 
     // AI 상태에 따라 UI 업데이트
     private fun updateUiForStatus(status: AIStatusResultByPage) {
         hideAIContent()
         binding.aiStatusTextView.text = when {
-            status.isInProgress() -> getString(R.string.ai_in_progress)
-            status.isCompleted() -> getString(R.string.ai_completed)
-            status.isNotRequested() -> getString(R.string.ai_not_requested)
-            status.isFailed() -> getString(R.string.ai_failed)
-            else -> getString(R.string.status_unavailable)
+            status.isInProgress() -> {
+                binding.refreshButton.show()
+                getString(R.string.ai_in_progress)
+            }
+            status.isCompleted() -> {
+                binding.refreshButton.hide()
+                getString(R.string.ai_completed)
+            }
+            status.isNotRequested() -> {
+                binding.refreshButton.hide()
+                getString(R.string.ai_not_requested)
+            }
+            status.isFailed() -> {
+                binding.refreshButton.hide()
+                getString(R.string.ai_failed)
+            }
+            else -> {
+                binding.refreshButton.hide()
+                getString(R.string.status_unavailable)
+            }
         }
     }
 

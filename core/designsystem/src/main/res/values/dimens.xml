@@ -16,4 +16,5 @@
     <dimen name="content_border_spacing">12dp</dimen>
     <dimen name="file_width">160dp</dimen>
     <dimen name="file_height">200dp</dimen>
+    <dimen name="refresh_btn_width">200dp</dimen>
 </resources>

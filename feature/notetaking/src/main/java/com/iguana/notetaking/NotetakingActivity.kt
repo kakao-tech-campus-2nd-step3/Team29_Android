@@ -21,7 +21,6 @@ import com.iguana.notetaking.sidebar.SideBarFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 
-
 @AndroidEntryPoint
 class NotetakingActivity : AppCompatActivity() {
 
@@ -82,7 +81,17 @@ class NotetakingActivity : AppCompatActivity() {
                 }
             }
             btnRecord.setOnClickListener { handleRecordingPermissionAndToggle() }
-            btnAI.setOnClickListener { viewModel.toggleAI() }
+            btnAI.setOnClickListener {
+                // AI 버튼이 활성화 상태로 잠깐 변경
+                binding.toolbar.btnAI.isSelected = true
+
+                // AI 버튼의 토글 상태를 ViewModel에 전달 (필요 시)
+                viewModel.toggleAI()
+
+                binding.toolbar.btnAI.postDelayed({
+                    binding.toolbar.btnAI.isSelected = false
+                }, 300)
+            }
         }
         binding.textEditBar.llTextFormatIcons.ivDelete.setOnClickListener { onDeleteAnnotationClick() }
     }
@@ -101,8 +110,14 @@ class NotetakingActivity : AppCompatActivity() {
 
     // PDF 및 사이드바 초기화 메서드
     private fun setupPdfViewerAndSidebar() {
-        replaceFragment(R.id.pdf_fragment_container, PdfViewerFragment.newInstance(Uri.parse(viewModel.pdfUri)))
-        replaceFragment(R.id.side_bar_container, SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0))
+        replaceFragment(
+            R.id.pdf_fragment_container,
+            PdfViewerFragment.newInstance(Uri.parse(viewModel.pdfUri))
+        )
+        replaceFragment(
+            R.id.side_bar_container,
+            SideBarFragment.newInstance(viewModel.documentId, viewModel.pageNumber.value ?: 0)
+        )
     }
 
     // 프래그먼트 교체 메서드
@@ -125,7 +140,7 @@ class NotetakingActivity : AppCompatActivity() {
     }
 
     // 삭제 버튼 클릭 시 호출되는 메서드
-    fun onDeleteAnnotationClick() {
+    private fun onDeleteAnnotationClick() {
         val pdfViewerFragment = getPdfViewerFragment()
         val currentPageFragment = pdfViewerFragment?.getCurrentPdfPageFragment()
         currentPageFragment?.deleteSelectedTextBox()
@@ -147,15 +162,32 @@ class NotetakingActivity : AppCompatActivity() {
         viewModel.isRecordingActive.observe(this) { isActive ->
             binding.toolbar.btnRecord.isSelected = isActive
             toastRecordingStatus(isActive)
-        }
-
-        viewModel.isAIActive.observe(this) { isActive ->
-            binding.toolbar.btnAI.isSelected = isActive
+            if (isActive) {
+                viewModel.setActiveTab(0)
+            }
+            viewModel.showSideBar()
         }
 
         viewModel.isTextMode.observe(this) { isTextMode ->
             val textEditBar = binding.root.findViewById<View>(R.id.text_edit_bar)
             textEditBar.visibility = if (isTextMode) View.VISIBLE else View.GONE
+        }
+
+        viewModel.isAIActive.observe(this) { isActive ->
+            binding.toolbar.btnAI.isSelected = isActive
+            if (isActive) {
+                viewModel.setActiveTab(1) // AI 탭 활성화 (1이 AI 탭이라고 가정)
+            }
+            viewModel.showSideBar()
+        }
+
+        viewModel.isSideBarVisible.observe(this) { isVisible ->
+            binding.sideBarContainer.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
+        viewModel.activeTab.observe(this) { tab ->
+            val sideBarFragment = getSideBarFragment()
+            sideBarFragment?.setTab(tab) // SideBarFragment에 탭 설정 메서드를 추가
         }
     }
 
@@ -180,11 +212,18 @@ class NotetakingActivity : AppCompatActivity() {
 
     // 권한 요청 메서드
     private fun requestAudioPermissions() {
-        requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_REQUEST_CODE)
+        requestPermissions(
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            RECORD_AUDIO_PERMISSION_REQUEST_CODE
+        )
     }
 
     // 권한 요청 결과 처리
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == RECORD_AUDIO_PERMISSION_REQUEST_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             viewModel.toggleRecording()
