@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(project(":feature:notetaking"))
 
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)

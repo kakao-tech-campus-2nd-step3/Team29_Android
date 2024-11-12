@@ -1,23 +1,6 @@
 package com.iguana.data.remote.model
 
-data class DocumentDto(
-    val id: Long,
-    val folderId: Long?,
-    val name: String,
-    val url: String?,
-    val pageCount: Int?,
-    val updatedAt: String?
-)
-
-data class FolderContentDto(
-    val type: String?,
-    val id: Long,
-    val name: String,
-    val updatedAt: String?,
-    val totalElements: Int
-)
-
-data class FolderContentResponseDto(
+data class GetFolderContentResponseDto(
     val response: ResponseDto?,
     val folderAndDocumentResponseType: String
 )
@@ -54,6 +37,35 @@ data class FolderContentItemDto(
     val totalElements: Int
 )
 
-data class UpdateFolderNameRequestDto(
+data class UpdateContentNameRequestDto(
+    val name: String
+)
+
+data class UpdateDocumentNameResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class CreateDocumentResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class GetDocumentsResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class MoveFolderResponseDto(
+    val id: Long,
+    val name: String
+)
+
+data class UpdateFolderNameResponseDto(
+    val id: Long,
+    val parentId: Long,
     val name: String
 )

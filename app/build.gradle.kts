@@ -1,3 +1,4 @@
+import guru.nidi.graphviz.attribute.Font.config
 import java.util.Properties
 
 plugins {
@@ -33,11 +34,6 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
 

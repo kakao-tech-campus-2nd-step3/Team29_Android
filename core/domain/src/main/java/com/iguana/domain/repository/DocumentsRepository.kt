@@ -5,14 +5,14 @@ import java.io.File
 import kotlinx.coroutines.flow.Flow
 
 interface DocumentsRepository {
-    suspend fun getAllDocuments(): Result<FolderContent>
-    suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Result<Document>
-    suspend fun getFolderContents(folderId: Long): Result<FolderContent>
-    suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>>
-    suspend fun deleteDocument(folderId: Long, documentId: Long): Result<Unit>
-    suspend fun createFolder(parentFolderId: Long, name: String): Result<Folder>
-    suspend fun deleteFolder(folderId: Long): Result<Unit>
-    suspend fun moveItems(request: MoveItemsRequest): Result<Unit>
-    suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem>
-    suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Result<Document>
+    suspend fun getAllDocuments(): FolderContent
+    suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Document?
+    suspend fun getFolderContents(folderId: Long): FolderContent
+    suspend fun getDocuments(folderId: Long, documentIds: List<Long>): List<Document>
+    suspend fun deleteDocument(folderId: Long, documentId: Long)
+    suspend fun createFolder(parentFolderId: Long, name: String): Folder
+    suspend fun deleteFolder(folderId: Long)
+    suspend fun moveItems(request: MoveItemsRequest): Boolean
+    suspend fun updateFolderName(folderId: Long, newName: String) : FolderContentItem?
+    suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Document
 }

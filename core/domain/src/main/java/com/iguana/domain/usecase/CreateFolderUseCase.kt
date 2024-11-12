@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CreateFolderUseCase @Inject constructor(
     private val documentRepository: DocumentsRepository
 ) {
-    suspend fun execute(parentFolderId: Long, folderName: String): Result<Folder> {
+    suspend fun execute(parentFolderId: Long, folderName: String): Folder {
         return documentRepository.createFolder(parentFolderId, folderName)
     }
 }

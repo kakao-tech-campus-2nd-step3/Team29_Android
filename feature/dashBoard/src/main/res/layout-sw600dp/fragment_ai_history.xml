@@ -18,7 +18,7 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/RegularBodyExtraSmall"
+                style="@style/MediumBodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AI 요약" />

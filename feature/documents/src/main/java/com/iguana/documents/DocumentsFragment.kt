@@ -73,6 +73,7 @@ class DocumentsFragment : Fragment() {
                             putExtra("PDF_TITLE", item.title)
                             putExtra("DOCUMENT_ID", item.id)
                         }
+                        Log.d("DocumentsFragment", "Document ID: ${item.id}, PDF URI: ${item.url}, PDF Title: ${item.title}")
                         startActivity(intent)
                     }
                 }
