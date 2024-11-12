@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iguana.domain.usecase.CacheAnnotationsToLocalUseCase
 import com.iguana.domain.usecase.ClearAnnotationsUseCase
 import com.iguana.notetaking.util.PdfRendererHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PdfViewerViewModel @Inject constructor(
     private val pdfRendererHelper: PdfRendererHelper,
-    private val clearAnnotationsUseCase: ClearAnnotationsUseCase
+    private val clearAnnotationsUseCase: ClearAnnotationsUseCase,
+    private val cacheAnnotationsToLocalUseCase: CacheAnnotationsToLocalUseCase,
 ) :
     ViewModel() {
 
@@ -27,8 +29,10 @@ class PdfViewerViewModel @Inject constructor(
 
 
     // PDF 파일의 특정 페이지를 렌더링
-    fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
-        return pdfRendererHelper.renderPage(uri, pageIdx)
+    suspend fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
+        return withContext(Dispatchers.IO) {
+            pdfRendererHelper.renderPage(uri, pageIdx)
+        }
     }
 
     // 전체 PDF 페이지 수를 가져옴
@@ -46,11 +50,24 @@ class PdfViewerViewModel @Inject constructor(
         _currentPageNumber.value = page
     }
 
-    // 캐시되어있던 다른 주석을 모두 삭제하는 메서드
-    fun clearAnnotations() {
-        viewModelScope.launch(Dispatchers.IO) { // IO 디스패처로 실행
-            clearAnnotationsUseCase()
+    // 주석 데이터 및 캐시된 PDF 파일 삭제
+    fun clearCache() {
+        Log.d("testt", "(ViewModel) clearCache 호출")
+        try {
+            // 메인 스레드에서 PDF 캐시를 삭제하기 위해 동기적으로 호출
+            pdfRendererHelper.clearCache()
+            viewModelScope.launch(Dispatchers.IO) {
+                clearAnnotationsUseCase()
+            }
+        } catch (e: Exception) {
+            Log.e("testt", "clearCache 호출 중 예외 발생: ${e.message}")
         }
     }
 
+    // 모든 주석을 서버에서 가져와 로컬에 캐시하는 메서드
+    fun loadAllAnnotations(documentId: Long) {
+        viewModelScope.launch {
+            cacheAnnotationsToLocalUseCase(documentId)
+        }
+    }
 }

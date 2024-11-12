@@ -21,6 +21,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // 로그 설정 추가
+    val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -39,6 +44,13 @@ object NetworkModule {
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
             .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
+            .addInterceptor(logging)
+            // 연결 타임아웃 설정 (예: 30초)
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 읽기 타임아웃 설정 (예: 30초)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            // 쓰기 타임아웃 설정 (예: 30초)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
     }
 

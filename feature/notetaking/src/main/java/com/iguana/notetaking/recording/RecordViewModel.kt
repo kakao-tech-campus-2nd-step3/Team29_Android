@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.AudioManager
 import android.media.MediaRecorder
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,14 +31,11 @@ class RecordViewModel @Inject constructor(
     private val savePageTurnEventUseCase: SavePageTurnEventUseCase,
     private val deletePageTurnEventsUseCase: DeletePageTurnEventsUseCase,
     private val deleteRecordingUseCase: DeleteRecordingUseCase,
-    @ApplicationContext private val contextProvider: Provider<Context>
 ) : ViewModel() {
     var documentId: Long = -1L
-    private var recorder: MediaRecorder? = null
-
 
     private val _recordingStatus = MutableLiveData<Boolean>()
-    val recordingStatus: LiveData<Boolean> get() = _recordingStatus
+    private val recordingStatus: LiveData<Boolean> get() = _recordingStatus
 
     private var startTimeMillis: Long = 0L
 
@@ -50,35 +45,6 @@ class RecordViewModel @Inject constructor(
     private var filePath: String? = null
     private var fileName: String? = null
 
-
-    private val context by lazy { contextProvider.get() }
-
-    private val recordingReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            filePath = intent?.getStringExtra("filePath")
-            fileName = intent?.getStringExtra("fileName")
-            Log.d("RecordViewModel", "Recording finished: $filePath, $fileName")
-
-            processRecordingAndEvents()
-        }
-    }
-
-    init {
-        val intentFilter = IntentFilter().apply {
-            addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED)
-            // 필요한 다른 action들도 여기에 추가
-        }
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                recordingReceiver,
-                intentFilter,
-                Context.RECEIVER_NOT_EXPORTED  // exported = false 설정
-            )
-        } else {
-            context.registerReceiver(recordingReceiver, intentFilter)
-        }
-    }
 
     fun setPageNumber(pageNumber: Int) {
         _pageNumber.value = pageNumber
@@ -117,7 +83,7 @@ class RecordViewModel @Inject constructor(
         context.startService(intent)
     }
 
-    private fun processRecordingAndEvents() {
+    fun processRecordingAndEvents() {
         viewModelScope.launch {
             try {
                 // filePath 또는 fileName이 null일 경우
@@ -126,11 +92,10 @@ class RecordViewModel @Inject constructor(
                     return@launch
                 }
 
-                // TODO: 녹음 파일 업로드 및 페이지 이동 이벤트 업로드 -> 로컬에 저장된 파일 삭제 하는 부분인데 서버측 완료되면 주석해제
                 // 1. 녹음 파일 업로드
-              //  val recordingId = uploadRecordingUseCase(documentId, filePath ?: return@launch, fileName ?: return@launch)
+                val recordingId = uploadRecordingUseCase(documentId, filePath ?: return@launch, "$fileName")
                 // 2. 페이지 이동 이벤트 업로드
-             //   uploadPageTurnEventsUseCase(documentId, recordingId)
+                uploadPageTurnEventsUseCase(documentId, recordingId)
                 // 3. 로컬에 저장된 페이지 이동 이벤트 파일 삭제
                 deletePageTurnEventsUseCase(documentId)
                 // 4. 로컬에 저장된 녹음 파일 삭제
@@ -149,11 +114,9 @@ class RecordViewModel @Inject constructor(
         return recordingStatus.value ?: false
     }
 
-    companion object {
-        private const val ACTION_START_RECORDING = "START_RECORDING"
-        private const val ACTION_STOP_RECORDING = "STOP_RECORDING"
-        private const val BROADCAST_RECORDING_FINISHED = "com.iguana.notetaking.RECORDING_FINISHED"
+    // 파일 정보 설정
+    fun setFileInfo(path: String, name: String) {
+        filePath = path
+        fileName = name
     }
-
-
 }

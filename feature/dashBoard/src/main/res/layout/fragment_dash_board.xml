@@ -24,13 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="@dimen/title_border_spacing"
+            />
 
         <FrameLayout
             android:id="@+id/recent_files_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="@dimen/content_border_spacing">
 
         </FrameLayout>
 

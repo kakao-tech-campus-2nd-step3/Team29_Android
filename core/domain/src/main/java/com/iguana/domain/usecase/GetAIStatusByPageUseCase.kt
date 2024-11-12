@@ -10,14 +10,7 @@ import javax.inject.Inject
 class GetAIStatusByPageUseCase @Inject constructor(
     private val aiRepository: AIRepository
 ) {
-    suspend operator fun invoke(documentId:Long, pageNumber:Int): Result<AIStatusResultByPage> {
-        // TODO : 서버 완료되면 해당 내용 주석 해제
-//        return aiRepository.checkStatusByPage(documentId, pageNumber)
-        // 임시 결과 반환
-        return Result.success(
-            AIStatusResultByPage(
-                status = SummarizationStatus.COMPLETED
-            )
-        )
+    suspend operator fun invoke(documentId:Long, pageNumber:Int): AIStatusResultByPage {
+        return aiRepository.checkStatusByPage(documentId, pageNumber)
     }
 }

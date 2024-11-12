@@ -39,7 +39,13 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
    private val _isTextMode =  MutableLiveData(false)
     val isTextMode: LiveData<Boolean> get() = _isTextMode
 
+    private val _activeTab = MutableLiveData<Int>()
+    val activeTab: LiveData<Int> get() = _activeTab
 
+    // 텍스트 모드로 설정하기
+    fun setTextMode(enabled: Boolean) {
+        _isTextMode.value = enabled
+    }
 
     // 텍스트 모드 토글 함수
     fun toggleTextMode() {
@@ -50,9 +56,9 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
         _pageNumber.value = pageNumber
     }
 
-    // 사이드바의 가시성 상태를 토글하는 함수
-    fun toggleSideBar() {
-        _isSideBarVisible.value = _isSideBarVisible.value?.not()
+    private fun updateSideBarVisibility() {
+        // AI 또는 녹음 버튼이 활성화되어 있는 경우에만 사이드바를 표시
+        _isSideBarVisible.value = _isAIActive.value == true || _isRecordingActive.value == true
     }
 
     // 녹음 시작 및 종료 상태 변경 함수
@@ -72,12 +78,20 @@ class NotetakingViewModel @Inject constructor() : ViewModel() {
         return wasRecording && !_isRecordingActive.value!!
     }
     // 사이드바 보이기
-    private fun showSideBar() {
+    fun showSideBar() {
         _isSideBarVisible.value = true
     }
 
     // 사이드바 숨기기
     fun hideSideBar() {
         _isSideBarVisible.value = false
+    }
+
+    fun setActiveTab(tab: Int) {
+        _activeTab.value = tab
+    }
+
+    fun toggleSideBar() {
+        _isSideBarVisible.value = _isSideBarVisible.value?.not()
     }
 }

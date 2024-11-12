@@ -63,16 +63,6 @@
                     else -> throw IllegalArgumentException("Invalid position")
                 }
             }.attach()
-
-            // 페이지 번호 변경 시 호출되는 메서드
-            viewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
-                (viewPager.adapter as SidebarAdapter).getFragment(0)?.let {
-                    (it as RecordFragment).updateContentForPage(pageNumber)
-                }
-                (viewPager.adapter as SidebarAdapter).getFragment(1)?.let {
-                    (it as AiFragment).updateContentForPage(pageNumber)
-                }
-            }
         }
 
         // 사이드바 내용 업데이트 메서드
@@ -83,5 +73,10 @@
         override fun onDestroyView() {
             super.onDestroyView()
             _binding = null
+        }
+
+        // 특정 탭을 설정하는 메서드
+        fun setTab(tabPosition: Int) {
+            binding.sideBarViewPager.setCurrentItem(tabPosition, true)
         }
     }

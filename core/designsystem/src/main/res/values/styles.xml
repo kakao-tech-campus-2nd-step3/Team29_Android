@@ -2,6 +2,10 @@
 <resources>
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/blue_90</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
         <!-- Primary colors -->
         <item name="notaiColorPrimary">@color/blue_90</item> <!-- 메인 포인트 컬러 (일부 버튼)-->
         <item name="notaiColorPrimaryVariant">@color/blue_10</item> <!-- 연하늘색 컴포넌트 배경  -->
@@ -57,6 +61,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ExtraBold24">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Bold36">
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">@dimen/text_size_36</item>
@@ -84,6 +94,12 @@
     <style name="Bold14">
         <item name="android:fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Bold12">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -132,9 +148,23 @@
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
+    <style name="Regular7">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">@dimen/text_size_7</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
     <style name="Regular6">
         <item name="android:fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">@dimen/text_size_6</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <style name="Regular4">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">@dimen/text_size_4</item>
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>

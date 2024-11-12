@@ -3,11 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="96dp" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -34,20 +32,24 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/title_border_spacing"
         android:background="@android:color/darker_gray" />
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        android:background="@drawable/border_background"
+        android:layout_margin="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:paddingTop="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="16dp">
 
             <ImageView
                 android:layout_width="70dp"
@@ -61,23 +63,21 @@
                 android:layout_height="150dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
+                android:gravity="center_vertical"
                 android:layout_marginStart="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="로그인 된 계정"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical"/>
+                    style="@style/Bold12" />
 
                 <TextView
                     android:id="@+id/mail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="사용자 정보를 불러올 수 없습니다."
-                    android:textSize="13sp"
-                    android:layout_gravity="center_vertical"/>
+                    style="@style/Regular9" />
 
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                     style="@style/Regular8" />
             </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -122,21 +122,24 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/title_border_spacing"
         android:background="@android:color/darker_gray" />
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
+        android:gravity="center"
+        android:background="@drawable/border_background">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:text="결제 내역이 없습니다."
             android:padding="16dp"
-            android:textSize="14sp" />
-    </androidx.cardview.widget.CardView>
+            style="@style/Regular9" />
+    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

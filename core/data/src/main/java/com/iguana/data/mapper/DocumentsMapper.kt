@@ -5,15 +5,8 @@ import com.iguana.domain.model.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-// DTO to Domain
-fun DocumentDto.toDomain() = Document(
-    id = id,
-    folderId = folderId,
-    name = name,
-    url = url,
-    pageCount = pageCount,
-    updatedAt = updatedAt ?: SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
-)
+fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, System.currentTimeMillis().toString())
+
 
 fun FolderContentDto.toDomain() = FolderContentItem(
     type = when {

@@ -64,6 +64,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/title_border_spacing"
         android:background="@android:color/darker_gray" />
 
     <androidx.recyclerview.widget.RecyclerView
