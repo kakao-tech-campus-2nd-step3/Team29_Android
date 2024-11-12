@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="문서"
                 android:textColor="@android:color/black"
-                style="@style/Bold24"
+                style="@style/BoldHeadingSmall"
                 app:layout_constraintStart_toEndOf="@id/btnBack"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/title_border_spacing"
+        android:layout_marginTop="@dimen/spacing_title_border"
         android:background="@android:color/darker_gray" />
 
     <androidx.recyclerview.widget.RecyclerView

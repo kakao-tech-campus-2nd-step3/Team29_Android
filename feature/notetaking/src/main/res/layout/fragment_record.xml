@@ -27,7 +27,7 @@
             <!-- 박스 안에 텍스트를 표시하는 TextView -->
             <TextView
                 android:id="@+id/recordPageTextView"
-                style="@style/Regular6"
+                style="@style/RegularCaptionExtraSmall"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -69,7 +69,7 @@
 
                 <TextView
                     android:id="@+id/recordContentTextView"
-                    style="@style/Regular8"
+                    style="@style/RegularCaptionMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

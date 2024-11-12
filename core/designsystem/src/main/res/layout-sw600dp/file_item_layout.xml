@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="DeepLearning (1)"
             android:textStyle="bold"
-            style="@style/Regular8"
+            style="@style/RegularCaptionMedium"
             android:textColor="@android:color/black"
             android:maxLines="1"
             android:ellipsize="end" /> <!-- 줄이 넘치면 ... 표시 -->
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24.09.04.15:20"
-            style="@style/Regular6"
+            style="@style/RegularCaptionExtraSmall"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
 

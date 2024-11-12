@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/file_width"
-    android:layout_height="@dimen/file_height"
+    android:layout_width="@dimen/size_file_width"
+    android:layout_height="@dimen/size_file_height"
     android:layout_margin="10dp"
     android:background="@drawable/file_item_background"
     android:clipChildren="true"
@@ -41,7 +41,7 @@
         <!-- 제목 텍스트, 줄이 넘치면 '...' 표시 -->
         <TextView
             android:id="@+id/fileName"
-            style="@style/Regular8"
+            style="@style/RegularCaptionMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -53,7 +53,7 @@
         <!-- 타임스탬프 텍스트 -->
         <TextView
             android:id="@+id/fileTimestamp"
-            style="@style/Regular6"
+            style="@style/RegularCaptionExtraSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24.09.04.15:20"

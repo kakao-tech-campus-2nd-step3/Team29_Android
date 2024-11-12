@@ -49,7 +49,7 @@
                             android:layout_height="wrap_content"
                             android:text="더보기"
                             android:textColor="@color/white"
-                            style="@style/Regular8" />
+                            style="@style/RegularCaptionMedium" />
                     </LinearLayout>
                 </LinearLayout>
 

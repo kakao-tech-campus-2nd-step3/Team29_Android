@@ -20,5 +20,5 @@
         android:layout_height="wrap_content"
         android:text="AI 요약하기"
         android:textColor="@android:color/white"
-        style="@style/Regular8" />
+        style="@style/RegularCaptionMedium" />
 </LinearLayout>

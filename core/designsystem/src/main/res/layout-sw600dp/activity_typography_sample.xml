@@ -7,22 +7,22 @@
     android:padding="16dp">
 
     <TextView
-        style="@style/ExtraBold56"
+        style="@style/ExtraBoldHeadingLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ExtraBold 56"
+        android:text="ExtraBoldHeadingLarge"
         android:textColor="@color/black" />
 
 
     <TextView
-        style="@style/Bold56"
+        style="@style/BoldHeadingLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bold 56"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Bold36"
+        style="@style/BoldHeadingMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bold 36"
@@ -30,35 +30,35 @@
 
 
     <TextView
-        style="@style/SemiBold24"
+        style="@style/SemiBoldHeadingSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SemiBold 24"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Medium24"
+        style="@style/MediumHeadingSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium 24"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Light24"
+        style="@style/LightHeadingSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Light 24"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/ExtraLight24"
+        style="@style/ExtraLightHeadingSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ExtraLight 24"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Thin24"
+        style="@style/ThinHeadingSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thin 24"
@@ -66,21 +66,21 @@
 
 
     <TextView
-        style="@style/Medium16"
+        style="@style/MediumBodyMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium 16"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Medium14"
+        style="@style/MediumBodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium 14"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Regular12"
+        style="@style/RegularBodyExtraSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Regular 12"
@@ -88,14 +88,14 @@
 
 
     <TextView
-        style="@style/Regular9"
+        style="@style/RegularCaptionLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Regular 9"
         android:textColor="@color/black" />
 
     <TextView
-        style="@style/Regular8"
+        style="@style/RegularCaptionMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Regular 8 " />
