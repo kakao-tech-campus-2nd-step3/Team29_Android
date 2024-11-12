@@ -32,8 +32,17 @@ object NetworkModule {
         sharedPreferencesHelper: SharedPreferencesHelper,
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
+
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
+            .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
             .addInterceptor(logging)
             // 연결 타임아웃 설정 (예: 30초)

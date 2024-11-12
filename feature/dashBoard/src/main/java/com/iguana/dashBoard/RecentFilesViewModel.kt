@@ -119,7 +119,7 @@ class RecentFilesViewModel @Inject constructor(
                 }
             }
         }
-
+     
 
     // PDF 메타데이터 가져오기
     private fun getPdfMetadata(context: Context, uri: Uri) {

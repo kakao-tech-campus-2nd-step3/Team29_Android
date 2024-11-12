@@ -23,23 +23,10 @@ interface DocumentApi {
         @Part("documentSaveRequest") documentSaveRequest: RequestBody
     ): DocumentDto
 
-    @GET("/api/folders")
-    suspend fun getRootFolderContents(
-        @Query("parentFolderId") parentFolderId: Long? = null,
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 20,
-        @Query("sortBy") sortBy: String = "updatedAt",
-        @Query("sortDirection") sortDirection: String = "DESC"
-    ): List<FolderContentDto>
-
-    @GET("/api/folders")
+    @GET("/api/folders/{id}")
     suspend fun getFolderContents(
-        @Query("parentFolderId") parentFolderId: Long,
-        @Query("page") page: Int = 0,
-        @Query("size") size: Int = 20,
-        @Query("sortBy") sortBy: String = "updatedAt",
-        @Query("sortDirection") sortDirection: String = "DESC"
-    ): List<FolderContentDto>
+        @Path("id") folderId: Long
+    ): List<FolderContentResponseDto>
 
     @GET("/api/folders/{folderId}/documents")
     suspend fun getDocuments(
@@ -47,10 +34,11 @@ interface DocumentApi {
         @Query("documentIds") documentIds: List<Long>
     ): Response<List<DocumentDto>>
 
-    @GET("/api/documents/{documentId}")
-    suspend fun getDocumentDetails(@Path("documentId") documentId: Long): DocumentDto
-    @DELETE("/api/documents/{documentId}")
-    suspend fun deleteDocument(@Path("documentId") documentId: Long)
+    @DELETE("/api/folders/{folderId}/documents/{id}")
+    suspend fun deleteDocument(
+        @Path("folderId") folderId: Long,
+        @Path("id") documentId: Long
+    ): Response<Unit>
 
     @POST("/api/folders")
     suspend fun createFolder(
@@ -68,4 +56,11 @@ interface DocumentApi {
         @Path("id") id: Long,
         @Body request: Map<String, String>
     ): CreateFolderResponseDto
+
+    @PUT("/api/folders/{folderId}/documents/{documentId}")
+    suspend fun updateDocumentName(
+        @Path("folderId") folderId: Long,
+        @Path("documentId") documentId: Long,
+        @Body request: Map<String, String>
+    ): DocumentDto
 }

@@ -24,34 +24,57 @@ class DocumentsAdapter(
         items.addAll(newItems)
         notifyDataSetChanged()
         Log.d("DocumentsAdapter", "Items updated: ${items.size} items")
+        items.forEach { item ->
+            Log.d("DocumentsAdapter", "Item: ${when(item) {
+                is DocumentItem.FolderItem -> "Folder - ${item.name}"
+                is DocumentItem.PdfItem -> "PDF - ${item.title}"
+            }}")
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_FOLDER -> FolderViewHolder(
-                ItemDocumentsFolderBinding.inflate(inflater, parent, false),
-                onItemClick,
-                onItemLongClick
-            )
-            VIEW_TYPE_PDF -> PdfViewHolder(
-                ItemDocumentsPdfBinding.inflate(inflater, parent, false),
-                onItemClick,
-                onItemLongClick
-            )
-            else -> throw IllegalArgumentException("Invalid view type")
+            VIEW_TYPE_FOLDER -> {
+                val binding = ItemDocumentsFolderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+                FolderViewHolder(
+                    binding = binding,
+                    onItemClick = onItemClick,
+                    onItemLongClick = onItemLongClick
+                )
+            }
+            VIEW_TYPE_PDF -> {
+                val binding = ItemDocumentsPdfBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+                PdfViewHolder(
+                    binding = binding,
+                    onItemClick = onItemClick,
+                    onItemLongClick = onItemLongClick
+                )
+            }
+            else -> throw IllegalArgumentException("Unknown view type")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
-            is FolderViewHolder -> holder.bind(item as DocumentItem.FolderItem)
-            is PdfViewHolder -> holder.bind(item as DocumentItem.PdfItem)
+            is FolderViewHolder -> {
+                if (item is DocumentItem.FolderItem) {
+                    holder.bind(item)
+                }
+            }
+            is PdfViewHolder -> {
+                if (item is DocumentItem.PdfItem) {
+                    holder.bind(item)
+                }
+            }
         }
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
@@ -113,6 +136,7 @@ sealed class DocumentItem {
         val id: Long,
         val title: String,
         val timestamp: String,
-        val isBookmarked: Boolean
+        val isBookmarked: Boolean,
+        val url: String? = null
     ) : DocumentItem()
 }

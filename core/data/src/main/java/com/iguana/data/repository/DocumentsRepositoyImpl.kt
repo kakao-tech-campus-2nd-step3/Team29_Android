@@ -29,12 +29,11 @@ class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
     override suspend fun getAllDocuments(): Result<FolderContent> = try {
-        val response = api.getRootFolderContents(
-            page = 0,
-            size = 20,
-            sortBy = "updatedAt",
-            sortDirection = "DESC"
-        )
+        val response = api.getFolderContents(-1)
+        Logger.d(TAG, "루트 폴더 응답 - 아이템 개수: ${response.size}")
+        response.forEach { item ->
+            Logger.d(TAG, "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}")
+        }
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
@@ -60,20 +59,12 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.failure(e)
     }
 
-    override suspend fun getFolderContents(
-        folderId: Long,
-        page: Int,
-        size: Int,
-        sortBy: String,
-        sortDirection: String
-    ): Result<FolderContent> = try {
-        val response = api.getFolderContents(
-            parentFolderId = folderId,
-            page = page,
-            size = size,
-            sortBy = sortBy,
-            sortDirection = sortDirection
-        )
+    override suspend fun getFolderContents(folderId: Long): Result<FolderContent> = try {
+        val response = api.getFolderContents(folderId)
+        Logger.d(TAG, "폴더($folderId) 응답 - 아이템 개수: ${response.size}")
+        response.forEach { item ->
+            Logger.d(TAG, "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}")
+        }
         Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
@@ -82,27 +73,19 @@ class DocumentsRepositoryImpl @Inject constructor(
 
     override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>> = try {
         val response = api.getDocuments(folderId, documentIds)
-        if (response.isSuccessful) {
-            Result.success(response.body()?.map { it.toDomain() } ?: emptyList())
-        } else {
-            Result.failure(Exception("문서 조회 실패"))
-        }
+        Result.success(response.body()?.map { it.toDomain() } ?: emptyList())
     } catch (e: Exception) {
         Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
-    override suspend fun getDocumentDetails(documentId: Long): Result<Document> = try {
-        val response = api.getDocumentDetails(documentId)
-        Result.success(response.toDomain())
-    } catch (e: Exception) {
-        Logger.e(TAG, "문서 상세 정보 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
-    }
-
-    override suspend fun deleteDocument(documentId: Long): Result<Unit> = try {
-        api.deleteDocument(documentId)
-        Result.success(Unit)
+    override suspend fun deleteDocument(folderId: Long, documentId: Long): Result<Unit> = try {
+        val response = api.deleteDocument(folderId, documentId)
+        if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(HttpException(response))
+        }
     } catch (e: Exception) {
         Logger.e(TAG, "문서 삭제 중 예외 발생: ${e.message}", e)
         Result.failure(e)
@@ -154,6 +137,15 @@ class DocumentsRepositoryImpl @Inject constructor(
         Result.success(folderContentItem)
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)
+        Result.failure(e)
+    }
+
+    override suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Result<Document> = try {
+        val request = mapOf("name" to newName)
+        val response = api.updateDocumentName(folderId, documentId, request)
+        Result.success(response.toDomain())
+    } catch (e: Exception) {
+        Logger.e(TAG, "문서 제목 업데이트 중 예외 발생: ${e.message}", e)
         Result.failure(e)
     }
 
