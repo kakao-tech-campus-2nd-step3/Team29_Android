@@ -27,6 +27,8 @@ class PdfViewerViewModel @Inject constructor(
     private val _currentPageNumber = MutableLiveData<Int>() // 페이지 번호를 LiveData로 관리
     val currentPageNumber: LiveData<Int> get() = _currentPageNumber
 
+    private var totalPageCount: Int? = null // 전체 페이지 수 저장
+
 
     // PDF 파일의 특정 페이지를 렌더링
     suspend fun renderPage(uri: Uri, pageIdx: Int): Bitmap? {
@@ -41,6 +43,7 @@ class PdfViewerViewModel @Inject constructor(
             val pageCount = withContext(Dispatchers.IO) {
                 pdfRendererHelper.getPageCount(uri)
             }
+            totalPageCount = pageCount
             callback(pageCount)
         }
     }
@@ -50,12 +53,12 @@ class PdfViewerViewModel @Inject constructor(
         _currentPageNumber.value = page
     }
 
-    // 주석 데이터 및 캐시된 PDF 파일 삭제
+    // 주석 데이터 삭제
     fun clearCache() {
         Log.d("testt", "(ViewModel) clearCache 호출")
         try {
             // 메인 스레드에서 PDF 캐시를 삭제하기 위해 동기적으로 호출
-            pdfRendererHelper.clearCache()
+//            pdfRendererHelper.clearCache()
             viewModelScope.launch(Dispatchers.IO) {
                 clearAnnotationsUseCase()
             }
@@ -66,8 +69,12 @@ class PdfViewerViewModel @Inject constructor(
 
     // 모든 주석을 서버에서 가져와 로컬에 캐시하는 메서드
     fun loadAllAnnotations(documentId: Long) {
-        viewModelScope.launch {
-            cacheAnnotationsToLocalUseCase(documentId)
+        totalPageCount?.let { pageCount ->
+            val allPageNumbers = (0 until pageCount).toList()
+
+            viewModelScope.launch {
+                cacheAnnotationsToLocalUseCase(documentId, allPageNumbers)
+            }
         }
     }
 }

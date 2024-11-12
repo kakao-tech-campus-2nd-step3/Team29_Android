@@ -11,7 +11,7 @@
         android:id="@+id/titleTextView2"
         android:layout_height="wrap_content"
         android:layout_width="500dp"
-        style="@style/ExtraBold56"
+        style="@style/ExtraBoldHeadingLarge"
         android:text="폰트 적용 테스트 ExtraBold56"
         />
 
@@ -20,7 +20,7 @@
         android:id="@+id/titleTextView"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        style="@style/Bold24"
+        style="@style/BoldHeadingSmall"
         android:text="폰트 적용 테스트 Bold24"
         />
 
@@ -29,7 +29,7 @@
         android:id="@+id/titleTextView3"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        style="@style/Light24"
+        style="@style/LightHeadingSmall"
         android:text="폰트 적용 테스트 Light24"
         />
 
@@ -38,7 +38,7 @@
         android:id="@+id/titleTextView4"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        style="@style/Regular8"
+        style="@style/RegularCaptionMedium"
         android:text="폰트 적용 테스트 Regular 8"
         />
 
@@ -47,7 +47,7 @@
         android:id="@+id/descriptionTextView"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        style="@style/Regular12"
+        style="@style/RegularBodyExtraSmall"
         android:textColor="@color/blue_90"
         android:text="색상 적용 테스트"
         />
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="AI 요약하기"
-            style="@style/Regular9" />
+            style="@style/RegularCaptionLarge" />
     </LinearLayout>
 
     <!-- 커스텀이 필요하지 않다면 이렇게 사용 가능 -->

@@ -26,12 +26,21 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
         PDFBoxResourceLoader.init(context)
     }
 
-    // 캐시 디렉토리와 캐시 파일 이름 정의
+    // 캐시 디렉토리정의
     private val cacheDir: File = context.cacheDir
-    private val cacheFileName = "downloaded_pdf.pdf"
-    private val cachedPdfFile: File = File(cacheDir, cacheFileName)
 
+    // 파일 이름을 URL이나 documentId 기반으로 생성
+    private fun generateCacheFileName(url: String): String {
+        val fileName = url.substringAfterLast('/') // URL의 마지막 부분을 파일 이름으로 사용
+        return if (fileName.endsWith(".pdf")) {
+            "pdf_cache_$fileName" // 이미 .pdf로 끝나면 추가 확장자 없이 사용
+        } else {
+            "pdf_cache_$fileName.pdf" // 확장자가 없으면 .pdf를 추가
+        }
+    }
     private suspend fun downloadPdfToLocal(fileUrl: String): File? {
+        val cachedPdfFile = File(cacheDir, generateCacheFileName(fileUrl))
+
         return withContext(Dispatchers.IO) {
             if (cachedPdfFile.exists()) {
                 // 캐시된 파일이 존재하면 다운로드를 생략하고 반환
@@ -46,15 +55,13 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
                 connection.connect()
 
                 val responseCode = connection.responseCode
-                Log.d("PdfRendererHelper", "HTTP 응답 코드: $responseCode")
                 if (responseCode != HttpURLConnection.HTTP_OK) {
                     val errorStream =
                         connection.errorStream?.bufferedReader()?.use { it.readText() }
                 }
 
                 val inputStream: InputStream = connection.inputStream
-                val file = File(context.cacheDir, "downloaded_pdf.pdf")
-                val outputStream = FileOutputStream(file)
+                val outputStream = FileOutputStream(cachedPdfFile)
 
                 val buffer = ByteArray(1024)
                 var length: Int
@@ -66,8 +73,8 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
                 inputStream.close()
                 connection.disconnect()
 
-                Log.d("PdfRendererHelper", "파일 다운로드 성공: ${file.absolutePath}")
-                file
+                Log.d("PdfRendererHelper", "파일 다운로드 성공: ${cachedPdfFile.absolutePath}")
+                cachedPdfFile
             } catch (e: IOException) {
                 Log.e("PdfRendererHelper", "IOException 발생: ${e.message}")
                 e.printStackTrace()
@@ -127,10 +134,13 @@ class PdfRendererHelper @Inject constructor(@ApplicationContext private val cont
 
     // 캐시된 파일을 삭제하는 함수
     fun clearCache() {
-        if (cachedPdfFile.exists() && cachedPdfFile.delete()) {
-            Log.d("PdfRendererHelper", "캐시 파일 삭제 성공: ${cachedPdfFile.absolutePath}")
-        } else {
-            Log.e("PdfRendererHelper", "캐시 파일 삭제 실패")
+        val files = cacheDir.listFiles { file -> file.name.startsWith("pdf_cache_") }
+        files?.forEach { file ->
+            if (file.delete()) {
+                Log.d("PdfRendererHelper", "캐시 파일 삭제 성공: ${file.absolutePath}")
+            } else {
+                Log.e("PdfRendererHelper", "캐시 파일 삭제 실패")
+            }
         }
     }
 }

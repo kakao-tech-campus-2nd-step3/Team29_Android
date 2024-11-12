@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="정보"
             android:textColor="@android:color/black"
-            style="@style/Bold24" />
+            style="@style/BoldHeadingSmall" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,7 +31,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/title_border_spacing"
+        android:layout_marginTop="@dimen/spacing_title_border"
         android:background="@android:color/darker_gray" />
 
     <androidx.cardview.widget.CardView
@@ -102,7 +102,7 @@
                     android:layout_marginStart="8dp"
                     android:text="로그아웃"
                     android:textColor="@color/white"
-                    style="@style/Regular8" />
+                    style="@style/RegularCaptionMedium" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -112,14 +112,14 @@
         android:layout_height="wrap_content"
         android:text="결제"
         android:textColor="@android:color/black"
-        style="@style/Bold24"
+        style="@style/BoldHeadingSmall"
         android:layout_marginTop="24dp"
         android:layout_marginStart="20dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/title_border_spacing"
+        android:layout_marginTop="@dimen/spacing_title_border"
         android:background="@android:color/darker_gray" />
 
     <androidx.cardview.widget.CardView

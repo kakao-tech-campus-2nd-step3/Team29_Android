@@ -104,7 +104,7 @@ class AiFragment : Fragment() {
                 getString(R.string.ai_in_progress)
             }
             status.isCompleted() -> {
-                binding.refreshButton.hide()
+                binding.aiStatus.hide()
                 getString(R.string.ai_completed)
             }
             status.isNotRequested() -> {

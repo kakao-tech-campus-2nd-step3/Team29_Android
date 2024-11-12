@@ -49,151 +49,120 @@
     </style>
 
     <!-- Bold typography -->
-    <style name="Bold56">
+    <style name="BoldHeadingLarge">
         <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_56</item>
+        <item name="android:textSize">@dimen/typography_heading_large</item>
         <item name="android:textStyle">bold</item>
     </style>
     <!-- Bold typography -->
-    <style name="ExtraBold56">
+    <style name="ExtraBoldHeadingLarge">
         <item name="android:fontFamily">@font/pretendard_extrabold</item>
-        <item name="android:textSize">@dimen/text_size_56</item>
+        <item name="android:textSize">@dimen/typography_heading_large</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ExtraBold24">
+
+    <style name="BoldHeadingMedium">
+        <item name="android:fontFamily">@font/pretendard_bold</item>vgd
+        <item name="android:textSize">@dimen/typography_heading_medium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ExtraBoldHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_extrabold</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Bold36">
+    <style name="BoldHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_36</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Bold24">
+    <style name="BoldBodyExtraSmall">
         <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Bold20">
-        <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_20</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Bold16">
-        <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_16</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Bold14">
-        <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_14</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Bold12">
-        <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:textSize">@dimen/typography_body_extra_small</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Medium typography -->
-    <style name="Medium24">
+    <style name="MediumHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_medium</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="Medium16">
+    <style name="MediumBodyMedium">
         <item name="android:fontFamily">@font/pretendard_medium</item>
-        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textSize">@dimen/typography_body_medium</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="Medium14">
+    <style name="MediumBodySmall">
         <item name="android:fontFamily">@font/pretendard_medium</item>
-        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textSize">@dimen/typography_body_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <!-- Regular typography -->
-    <style name="Regular16">
+    <style name="RegularBodyExtraSmall">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textSize">@dimen/typography_body_extra_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="Regular12">
+    <style name="RegularCaptionLarge">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:textSize">@dimen/typography_caption_large</item>
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="Regular9">
+    <style name="RegularCaptionMedium">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_9</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="Regular8">
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_8</item>
+        <item name="android:textSize">@dimen/typography_caption_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
-    <style name="Regular7">
+    <style name="RegularCaptionSmall">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_7</item>
+        <item name="android:textSize">@dimen/typography_caption_small</item>
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
-    <style name="Regular6">
+    <style name="RegularCaptionExtraSmall">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_6</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:lineSpacingExtra">4dp</item>
-    </style>
-
-    <style name="Regular4">
-        <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">@dimen/text_size_4</item>
+        <item name="android:textSize">@dimen/typography_caption_extra_small</item>
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingExtra">4dp</item>
     </style>
 
     <!-- 그 외 -->
-    <style name="Thin24">
+    <style name="ThinHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_thin</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <!-- ExtraLight typography -->
-    <style name="ExtraLight24">
+    <style name="ExtraLightHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_extralight</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <!-- Light typography -->
-    <style name="Light24">
+    <style name="LightHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_light</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <!-- SemiBold typography -->
-    <style name="SemiBold24">
+    <style name="SemiBoldHeadingSmall">
         <item name="android:fontFamily">@font/pretendard_semibold</item>
-        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textSize">@dimen/typography_heading_small</item>
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -47,13 +47,16 @@ class PdfViewerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val pdfUriString = arguments?.getString(ARG_PDF_URI)
-        viewModel.loadAllAnnotations(sharedViewModel.documentId) // 모든 주석 데이터를 로드
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)
+
             // 전체 PDF 페이지 수를 가져와 어댑터에 설정
             viewModel.getPdfPageCount(pdfUri) { pageCount ->
                 binding.pdfViewPager.adapter = PdfPageAdapter(this, pdfUri, pageCount)
+
+                // 페이지 수가 설정된 후에 주석 데이터를 로컬에 캐싱
+                viewModel.loadAllAnnotations(sharedViewModel.documentId)
             }
 
             // ViewPager2의 페이지 변경 리스너 설정
@@ -76,9 +79,8 @@ class PdfViewerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Log.d("testt", "PdfViewerFragment onDestroyView")
         super.onDestroyView()
-        viewModel.clearCache() // 캐시된 파일 및 주석 삭제
+        viewModel.clearCache() // 캐시된 주석 삭제
         _binding = null
     }
 
