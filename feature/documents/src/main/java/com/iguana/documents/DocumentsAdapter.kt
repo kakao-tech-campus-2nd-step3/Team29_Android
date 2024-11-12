@@ -2,6 +2,7 @@ package com.iguana.documents
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.iguana.documents.databinding.ItemDocumentsFolderBinding
@@ -9,7 +10,7 @@ import com.iguana.documents.databinding.ItemDocumentsPdfBinding
 
 class DocumentsAdapter(
     private val onItemClick: (DocumentItem) -> Unit,
-    private val onItemLongClick: (DocumentItem) -> Unit
+    private val onItemLongClick: (DocumentItem, View) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<DocumentItem>()
@@ -86,7 +87,7 @@ class DocumentsAdapter(
     class FolderViewHolder(
         private val binding: ItemDocumentsFolderBinding,
         private val onItemClick: (DocumentItem) -> Unit,
-        private val onItemLongClick: (DocumentItem) -> Unit
+        private val onItemLongClick: (DocumentItem, View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DocumentItem.FolderItem) {
             binding.fileName.text = item.name
@@ -97,7 +98,7 @@ class DocumentsAdapter(
             )
             binding.root.setOnClickListener { onItemClick(item) }
             binding.root.setOnLongClickListener { 
-                onItemLongClick(item)
+                onItemLongClick(item, binding.root)
                 true
             }
         }
@@ -106,7 +107,7 @@ class DocumentsAdapter(
     class PdfViewHolder(
         private val binding: ItemDocumentsPdfBinding,
         private val onItemClick: (DocumentItem) -> Unit,
-        private val onItemLongClick: (DocumentItem) -> Unit
+        private val onItemLongClick: (DocumentItem, View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DocumentItem.PdfItem) {
             binding.fileName.text = item.title
@@ -117,7 +118,7 @@ class DocumentsAdapter(
             )
             binding.root.setOnClickListener { onItemClick(item) }
             binding.root.setOnLongClickListener { 
-                onItemLongClick(item)
+                onItemLongClick(item, binding.root)
                 true
             }
         }

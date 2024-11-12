@@ -33,6 +33,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.iguana.notetaking.NotetakingActivity
 import kotlinx.coroutines.flow.StateFlow
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import com.iguana.documents.databinding.DialogAddOptionsBinding
+import android.app.Dialog
+import android.widget.Button
+import android.view.WindowManager
+import com.iguana.documents.databinding.DialogEditNameBinding
+import android.os.Build
+import android.view.Window
 
 @AndroidEntryPoint
 class DocumentsFragment : Fragment() {
@@ -77,7 +88,7 @@ class DocumentsFragment : Fragment() {
                     }
                 }
             },
-            onItemLongClick = { item -> showEditDeleteDialog(item) }
+            onItemLongClick = { item, view -> showEditDeleteDialog(item, view) }
         )
         binding.recyclerView.adapter = adapter
     }
@@ -98,15 +109,62 @@ class DocumentsFragment : Fragment() {
     }
 
     private fun showAddOptionsDialog() {
-        val options = arrayOf("파일 업로드", "폴더 추가")
-        AlertDialog.Builder(requireContext())
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> openPdfLauncher.launch(arrayOf("application/pdf"))
-                    1 -> showCreateFolderDialog()
-                }
+        val rootView = requireActivity().window.decorView.findViewById<ViewGroup>(android.R.id.content)
+        val dimView = View(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(Color.parseColor("#E6000000"))
+            alpha = 0f
+            translationX = rootView.width.toFloat()
+            translationY = -rootView.height.toFloat()
+        }
+
+        rootView.addView(dimView)
+
+        dimView.animate()
+            .alpha(1f)
+            .translationX(0f)
+            .translationY(0f)
+            .setDuration(300)
+            .start()
+
+        val dialogBinding = DialogAddOptionsBinding.inflate(layoutInflater)
+
+        val dialog = PopupWindow(
+            dialogBinding.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            elevation = 10f
+
+            setOnDismissListener {
+                dimView.animate()
+                    .alpha(0f)
+                    .translationX(rootView.width.toFloat())
+                    .translationY(-rootView.height.toFloat())
+                    .setDuration(300)
+                    .withEndAction {
+                        rootView.removeView(dimView)
+                    }
+                    .start()
             }
-            .show()
+        }
+
+        dialogBinding.uploadFileLayout.setOnClickListener {
+            dialog.dismiss()
+            openPdfLauncher.launch(arrayOf("application/pdf"))
+        }
+
+        dialogBinding.createFolderLayout.setOnClickListener {
+            dialog.dismiss()
+            showCreateFolderDialog()
+        }
+
+        dialog.showAsDropDown(binding.btnAdd)
     }
 
     private fun observeViewModel() {
@@ -180,22 +238,70 @@ class DocumentsFragment : Fragment() {
         dialog.show(parentFragmentManager, "CreateFolderDialog")
     }
 
-    private fun showEditDeleteDialog(item: DocumentItem) {
-        val options = arrayOf("수정", "삭제")
-        AlertDialog.Builder(requireContext())
-            .setTitle("옵션 선택")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showEditNameDialog(item)
-                    1 -> showDeleteConfirmationDialog(item)
-                }
+    private fun showEditDeleteDialog(item: DocumentItem, anchorView: View) {
+        val rootView = requireActivity().window.decorView.findViewById<ViewGroup>(android.R.id.content)
+        val dimView = View(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(Color.parseColor("#80000000"))
+            alpha = 0f
+        }
+        
+        rootView.addView(dimView)
+        
+        dimView.animate()
+            .alpha(1f)
+            .setDuration(200)
+            .start()
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_edit_options, null)
+        val dialog = PopupWindow(
+            dialogView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            elevation = 10f
+            
+            setOnDismissListener {
+                dimView.animate()
+                    .alpha(0f)
+                    .setDuration(200)
+                    .withEndAction {
+                        rootView.removeView(dimView)
+                    }
+                    .start()
             }
-            .show()
+        }
+
+        // 옵션 클릭 리스너 설정
+        dialogView.findViewById<LinearLayout>(R.id.editNameLayout).setOnClickListener {
+            dialog.dismiss()
+            showEditNameDialog(item)
+        }
+        
+        dialogView.findViewById<LinearLayout>(R.id.deleteLayout).setOnClickListener {
+            dialog.dismiss()
+            showDeleteConfirmationDialog(item)
+        }
+
+        // 선택된 아이템 위치 기준으로 팝업 표시
+        val location = IntArray(2)
+        anchorView.getLocationInWindow(location)
+        dialog.showAtLocation(
+            anchorView,
+            android.view.Gravity.NO_GRAVITY,
+            location[0],
+            location[1] + (anchorView.height / 2)
+        )
     }
 
     private fun showDeleteConfirmationDialog(item: DocumentItem) {
         AlertDialog.Builder(requireContext())
-            .setTitle("삭제 확인")
+            .setTitle("")
             .setMessage("정말로 이 ${if (item is DocumentItem.FolderItem) "폴더" else "파일"}를 삭제하시겠습니까?")
             .setPositiveButton("삭제") { _, _ ->
                 when (item) {
@@ -216,39 +322,68 @@ class DocumentsFragment : Fragment() {
     }
 
     private fun showEditNameDialog(item: DocumentItem) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_create_folder, null)
-        val editText = dialogView.findViewById<EditText>(R.id.editTextFolderName)
-        val iconView = dialogView.findViewById<ImageView>(R.id.folderImg)
+        val dialog = Dialog(requireContext())
+        val dialogBinding = DialogEditNameBinding.inflate(layoutInflater)
+        
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dialogBinding.root)
+        
+        // 다이얼로그를 전체 화면으로 설정
+        dialog.window?.let { window ->
+            window.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            
+            // 플래그 설정
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            
+            // 배경 설정
+            window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#CC000000")))
+            
+            // 상태바 설정
+            window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or 
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            )
+            
+            // 상태바 투명하게
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.statusBarColor = Color.TRANSPARENT
+            }
+        }
 
-        editText.setText(when (item) {
+        dialogBinding.editTextFolderName.setText(when (item) {
             is DocumentItem.FolderItem -> item.name
             is DocumentItem.PdfItem -> item.title
         })
 
-        // 아이템 타입에 따라 아이콘 설정
-        iconView.setImageResource(when (item) {
-            is DocumentItem.FolderItem -> com.iguana.designsystem.R.drawable.folder_item_background
-            is DocumentItem.PdfItem -> com.iguana.designsystem.R.drawable.folder_item_background
+        dialogBinding.folderImg.setImageResource(when (item) {
+            is DocumentItem.FolderItem -> com.iguana.designsystem.R.drawable.ic_folder_large
+            is DocumentItem.PdfItem -> com.iguana.designsystem.R.drawable.ic_file_large
         })
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("이름 변경")
-            .setView(dialogView)
-            .setPositiveButton("확인") { _, _ ->
-                val newName = editText.text.toString()
-                when (item) {
-                    is DocumentItem.FolderItem -> {
-                        viewModel.updateFolderName(item.id, newName)
-                        Log.d("DocumentsFragment", "폴더 이름 변경 요청: ${item.id}, 새 이름: $newName")
-                    }
-                    is DocumentItem.PdfItem -> {
-                        viewModel.updateDocumentName(viewModel.currentFolderId, item.id, newName)
-                        Log.d("DocumentsFragment", "문서 이름 변경 요청: ${item.id}, 새 이름: $newName")
-                    }
+        dialogBinding.btnConfirm.setOnClickListener {
+            val newName = dialogBinding.editTextFolderName.text.toString()
+            when (item) {
+                is DocumentItem.FolderItem -> {
+                    viewModel.updateFolderName(item.id, newName)
+                    Log.d("DocumentsFragment", "폴더 이름 변경 요청: ${item.id}, 새 이름: $newName")
+                }
+                is DocumentItem.PdfItem -> {
+                    viewModel.updateDocumentName(viewModel.currentFolderId, item.id, newName)
+                    Log.d("DocumentsFragment", "문서 이름 변경 요청: ${item.id}, 새 이름: $newName")
                 }
             }
-            .setNegativeButton("취소", null)
-            .show()
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onResume() {
