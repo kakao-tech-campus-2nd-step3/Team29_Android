@@ -1,21 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/size_file_width"
     android:layout_height="@dimen/size_file_height"
-    android:layout_marginVertical="12dp"
+    android:layout_margin="10dp"
     android:background="@drawable/file_item_background"
-    android:elevation="4dp"
+    android:clipChildren="true"
+    android:elevation="1dp"
     android:orientation="vertical"
     tools:ignore="MissingDefaultResource">
 
     <!-- 상단 색상 및 책갈피 아이콘 -->
     <LinearLayout
+        android:id="@+id/cardColor"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="end"
         android:background="@drawable/default_card_background"
+        android:gravity="end"
         android:orientation="horizontal">
 
         <ImageView
@@ -56,8 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24.09.04.15:20"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>
+
 </LinearLayout>
