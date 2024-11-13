@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="20dp" />
 
-    <include layout="@layout/stt_box_layout" />
 
     <Space
         android:layout_width="match_parent"
