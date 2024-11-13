@@ -73,6 +73,18 @@ object NetworkModule {
             .build()
     }
 
+
+    @TokenApi
+    @Provides
+    fun provideTokenApiRetrofit(): LoginApi {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().build())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(LoginApi::class.java)
+    }
+
     @Provides
     @Singleton
     fun provideLoginApi(retrofit: Retrofit): LoginApi {

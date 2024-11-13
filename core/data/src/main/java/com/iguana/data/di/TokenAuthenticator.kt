@@ -1,5 +1,6 @@
 package com.iguana.data.di
 
+import android.util.Log
 import com.iguana.data.BuildConfig
 import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.TokenRefreshRequest
@@ -14,18 +15,16 @@ import okhttp3.Route
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
+import javax.inject.Qualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class TokenApi
 
 class TokenAuthenticator @Inject constructor(
-    private val sharedPreference: SharedPreferencesHelper
+    private val sharedPreference: SharedPreferencesHelper,
+    @TokenApi private val tokenApi: LoginApi
 ) : Authenticator {
-
-    // 토큰 갱신용 별도 Retrofit 인스턴스 생성
-    private val tokenApi = Retrofit.Builder()
-        .baseUrl(BuildConfig.API_BASE_URL)
-        .client(OkHttpClient.Builder().build())
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(LoginApi::class.java)
 
     override fun authenticate(route: Route?, response: Response): Request? {
         // 이미 재시도했다면 null 반환
@@ -39,7 +38,8 @@ class TokenAuthenticator @Inject constructor(
             try {
                 val tokenResponse = tokenApi.refreshToken(TokenRefreshRequest(refreshToken))
                 if (tokenResponse.isSuccessful) {
-                    tokenResponse.body()?.let { loginResponse ->
+                    val loginResponse = tokenResponse.body()
+                    if (loginResponse != null) {
                         sharedPreference.saveTokens(
                             loginResponse.accessToken,
                             loginResponse.refreshToken
@@ -50,6 +50,8 @@ class TokenAuthenticator @Inject constructor(
                             .header("Authorization", "Bearer ${loginResponse.accessToken}")
                             .header("Retry-With-New-Token", "true")
                             .build()
+                    } else {
+                        null
                     }
                 } else {
                     null
@@ -59,4 +61,4 @@ class TokenAuthenticator @Inject constructor(
             }
         }
     }
-} 
+}

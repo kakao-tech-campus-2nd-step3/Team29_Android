@@ -11,9 +11,5 @@ class NotaiApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         KakaoSdk.init(this, getString(R.string.kakao_native_key))
-
-        // 키해시를 구해서 로그에 출력
-        val keyHash = Utility.getKeyHash(this)
-        Log.d("KeyHash", "KeyHash: $keyHash")
     }
 }
