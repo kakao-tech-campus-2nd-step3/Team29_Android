@@ -10,6 +10,8 @@ fun GetSTTResultResponseDto.toDomain(documentId: Long): SttResult {
         sttContents = contents.map {
             it.content
         },
+        sttStartTime = contents.map { it.startTime },
+        sttEndTime = contents.map { it.endTime },
         receivedTime = System.currentTimeMillis()
     )
 }
