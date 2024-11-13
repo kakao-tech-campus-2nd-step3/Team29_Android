@@ -9,13 +9,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.iguana.domain.model.ai.AIStatusResultByPage
 import com.iguana.notetaking.NotetakingViewModel
+import com.iguana.notetaking.R
 import com.iguana.notetaking.ai.AiFragment
 import com.iguana.notetaking.databinding.FragmentRecordBinding
+import com.iguana.notetaking.util.hide
+import com.iguana.notetaking.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,7 +80,14 @@ class RecordFragment() : Fragment() {
         sharedViewModel.pageNumber.observe(viewLifecycleOwner) { pageNumber ->
             viewModel.setPageNumber(pageNumber)
         }
+        binding.sttRefreshButton.setOnClickListener {
+            Toast.makeText(requireContext(), "STT 상태를 새로고침합니다.", Toast.LENGTH_SHORT).show()
+            Log.d("testt", "sttStausButton clicked")
+            viewModel.fetchSttStatus()
+        }
     }
+
+
 
     // Fragment 화면에 표시되며, 입력을 받을 수 있는 상태
     override fun onResume() {
@@ -112,4 +124,6 @@ class RecordFragment() : Fragment() {
             if (isActive) startRecording(requireContext()) else stopRecording(requireContext())
         }
     }
+
+
 }

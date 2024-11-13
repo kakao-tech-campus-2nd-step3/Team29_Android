@@ -48,7 +48,7 @@
             android:text="@string/is_not_recording"
             android:layout_gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" 
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/boxView"/>
 
         <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
@@ -73,7 +73,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/boxView"/>
-            
+
             <!--공백-->
             <TextView
                 android:layout_width="wrap_content"
@@ -134,9 +134,9 @@
                     style="@style/RegularCaptionMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/stt_box_background"
                     android:layout_gravity="center"
                     android:text="Record Content"
-                    android:background="@drawable/stt_box_background"
                     android:textColor="@color/grey_20" />
             </LinearLayout>
         </ScrollView>

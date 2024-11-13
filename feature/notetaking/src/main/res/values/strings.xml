@@ -14,5 +14,6 @@
     <string name="no_problem_available">문제 데이터가 없습니다.</string>
     <string name="default_file_name">무제</string>
     <string name="is_not_recording">녹음 중이 아닙니다.</string>
+    <string name="no_stt_available">STT 데이터가 없습니다.</string>
     <string name="is_recording">녹음 중..</string>
 </resources>

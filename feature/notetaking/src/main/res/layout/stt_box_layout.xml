@@ -29,5 +29,4 @@
         <include layout="@layout/small_button_blue_layout" />
 
     </LinearLayout>
-
 </LinearLayout>
