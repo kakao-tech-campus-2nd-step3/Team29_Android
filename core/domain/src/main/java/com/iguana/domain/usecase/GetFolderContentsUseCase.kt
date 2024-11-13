@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetFolderContentsUseCase @Inject constructor(
     private val repository: DocumentsRepository
 ) {
-    suspend operator fun invoke(folderId: Long): Result<FolderContent> {
+    suspend operator fun invoke(folderId: Long): FolderContent {
         return repository.getFolderContents(folderId)
     }
 }

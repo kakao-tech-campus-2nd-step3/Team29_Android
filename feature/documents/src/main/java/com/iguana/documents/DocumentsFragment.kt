@@ -84,6 +84,7 @@ class DocumentsFragment : Fragment() {
                             putExtra("PDF_TITLE", item.title)
                             putExtra("DOCUMENT_ID", item.id)
                         }
+                        Log.d("DocumentsFragment", "Document ID: ${item.id}, PDF URI: ${item.url}, PDF Title: ${item.title}")
                         startActivity(intent)
                     }
                 }
@@ -181,31 +182,31 @@ class DocumentsFragment : Fragment() {
         }
     }
 
-    private fun updateUI(folderContent: List<FolderContentItem>) {
-        val items = folderContent.map { item ->
-            when (item.type.uppercase()) {
-                "FOLDER" -> DocumentItem.FolderItem(
-                    id = item.id,
-                    name = item.name,
-                    fileCount = item.totalElements,
-                    isBookmarked = false
-                )
-                "DOCUMENT" -> DocumentItem.PdfItem(
-                    id = item.id,
-                    title = item.name,
-                    timestamp = item.updatedAt,
-                    isBookmarked = false
-                )
-                else -> DocumentItem.PdfItem(
-                    id = item.id,
-                    title = item.name,
-                    timestamp = item.updatedAt,
-                    isBookmarked = false
-                )
-            }
-        }
-        adapter.setItems(items)
-    }
+//    private fun updateUI(folderContent: List<FolderContentItem>) {
+//        val items = folderContent.map { item ->
+//            when (item.type.uppercase()) {
+//                "FOLDER" -> DocumentItem.FolderItem(
+//                    id = item.id,
+//                    name = item.name,
+//                    fileCount = item.totalElements,
+//                    isBookmarked = false
+//                )
+//                "DOCUMENT" -> DocumentItem.PdfItem(
+//                    id = item.id,
+//                    title = item.name,
+//                    timestamp = item.updatedAt,
+//                    isBookmarked = false,
+//                )
+//                else -> DocumentItem.PdfItem(
+//                    id = item.id,
+//                    title = item.name,
+//                    timestamp = item.updatedAt,
+//                    isBookmarked = false,
+//                )
+//            }
+//        }
+//        adapter.setItems(items)
+//    }
 
     private fun onItemClick(item: DocumentItem) {
         when (item) {
@@ -391,30 +392,30 @@ class DocumentsFragment : Fragment() {
         viewModel.refreshCurrentFolder()
     }
 
-    private fun mapToDocumentItems(folderContent: FolderContent): List<DocumentItem> {
-        return folderContent.map { item ->
-            when (item.type.uppercase()) {
-                "FOLDER" -> DocumentItem.FolderItem(
-                    id = item.id,
-                    name = item.name,
-                    fileCount = item.totalElements,
-                    isBookmarked = false
-                )
-                "DOCUMENT" -> DocumentItem.PdfItem(
-                    id = item.id,
-                    title = item.name,
-                    timestamp = item.updatedAt,
-                    isBookmarked = false
-                )
-                else -> DocumentItem.PdfItem(
-                    id = item.id,
-                    title = item.name,
-                    timestamp = item.updatedAt,
-                    isBookmarked = false
-                )
-            }
-        }
-    }
+//    private fun mapToDocumentItems(folderContent: FolderContent): List<DocumentItem> {
+//        return folderContent.map { item ->
+//            when (item.type.uppercase()) {
+//                "FOLDER" -> DocumentItem.FolderItem(
+//                    id = item.id,
+//                    name = item.name,
+//                    fileCount = item.totalElements,
+//                    isBookmarked = false
+//                )
+//                "DOCUMENT" -> DocumentItem.PdfItem(
+//                    id = item.id,
+//                    title = item.name,
+//                    timestamp = item.updatedAt,
+//                    isBookmarked = false
+//                )
+//                else -> DocumentItem.PdfItem(
+//                    id = item.id,
+//                    title = item.name,
+//                    timestamp = item.updatedAt,
+//                    isBookmarked = false
+//                )
+//            }
+//        }
+//    }
 
 }
 

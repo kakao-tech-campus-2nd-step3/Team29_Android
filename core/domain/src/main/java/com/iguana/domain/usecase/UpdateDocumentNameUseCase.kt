@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UpdateDocumentNameUseCase @Inject constructor(
     private val documentsRepository: DocumentsRepository
 ) {
-    suspend operator fun invoke(folderId: Long, documentId: Long, newName: String): Result<Document> {
+    suspend operator fun invoke(folderId: Long, documentId: Long, newName: String): Document {
         return documentsRepository.updateDocumentName(folderId, documentId, newName)
     }
 } 

@@ -1,60 +1,94 @@
 package com.iguana.data.mapper
 
+import android.util.Log
 import com.iguana.data.remote.model.*
 import com.iguana.domain.model.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, System.currentTimeMillis().toString())
 
+// GetFolderContentResponseDto -> FolderContentItem
+fun GetFolderContentResponseDto.toDomain(): FolderContentItem? {
+    val response = this.response
+    return when (folderAndDocumentResponseType) {
+        "FOLDER" -> {
+            val folder = response as? FolderResponseDto ?: return null  // response가 null이면 null 반환
+            Log.d("testt", "Folder response: $response")
+            FolderContentItem(
+                type = folderAndDocumentResponseType ?: "FOLDER",
+                id = folder.id,
+                name = folder.name,
+                updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+                totalElements = -1,
+                url = null
+            )
+        }
+        "DOCUMENT" -> {
+            val document = response as? DocumentResponseDto ?: return null  // response가 null이면 null 반환
+            Log.d("testt", "Document response: $response")
+            FolderContentItem(
+                type = folderAndDocumentResponseType ?: "DOCUMENT",
+                id = document.id,
+                name = document.name,
+                updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+                totalElements = -1,
+                url = document.url
+            )
+        }
+        else -> null
+    }
+}
 
-fun FolderContentDto.toDomain() = FolderContentItem(
-    type = when {
-        type?.uppercase() == "FOLDER" -> "FOLDER"
-        type?.uppercase() == "DOCUMENT" -> "DOCUMENT"  // PDF 파일은 DOCUMENT로 처리
-        else -> "DOCUMENT"  // 기본값도 DOCUMENT로 설정
-    },
-    id = id,
-    name = name,
-    updatedAt = updatedAt ?: SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
-    totalElements = totalElements
-)
-
-fun CreateFolderResponseDto.toDomain() = Folder(id, parentId, name)
-
-fun FolderContentItemDto.toDomain(): FolderContentItem {
-    return FolderContentItem(
-        type = type,            // String
-        id = id,               // Long
-        name = name,           // String
-        updatedAt = updatedAt, // String
-        totalElements = totalElements  // Int
+// CreateFolderResponseDto -> Folder
+fun CreateFolderResponseDto.toDomain(): Folder {
+    return Folder(
+        id = id,
+        parentId = parentId,
+        name = name
     )
 }
 
-fun FolderContentResponseDto.toDomain(): FolderContentItem {
-    return FolderContentItem(
-        type = folderAndDocumentResponseType,
-        id = response?.id ?: -1L,
-        name = response?.name ?: "",
-        updatedAt = response?.updatedAt ?: SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
-        totalElements = response?.totalElements ?: -1
+// GetDocumentsResponseDto -> Document
+fun GetDocumentsResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
     )
 }
 
-// Domain to DTO
-fun Document.toDto() = DocumentDto(id, folderId, name, url, pageCount, updatedAt)
+// UpdateDocumentNameResponseDto -> Document
+fun UpdateDocumentNameResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+    )
+}
 
-fun Folder.toCreateFolderRequestDto(parentFolderId: Long) = CreateFolderRequestDto(name, parentFolderId)
+// MoveItemsRequest -> MoveFolderRequestDto
+fun MoveItemsRequest.toDto(): MoveFolderRequestDto {
+    return MoveFolderRequestDto(
+        documentIds = documentIds,
+        folderIds = folderIds,
+        destinationFolderId = destinationFolderId
+    )
+}
 
-fun MoveItemsRequest.toDto() = MoveFolderRequestDto(documentIds, folderIds, destinationFolderId)
-
-fun FolderContentItem.toDto(): FolderContentItemDto {
-    return FolderContentItemDto(
-        type = type,            // String
-        id = id,               // Long
-        name = name,           // String
-        updatedAt = updatedAt, // String
-        totalElements = totalElements  // Int
+// CreateDocumentResponseDto -> Document
+fun CreateDocumentResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
     )
 }

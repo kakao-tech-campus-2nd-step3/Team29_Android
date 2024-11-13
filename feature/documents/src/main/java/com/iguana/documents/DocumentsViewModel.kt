@@ -1,6 +1,7 @@
 package com.iguana.documents
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.net.http.HttpException
 import android.provider.OpenableColumns
@@ -11,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.iguana.domain.model.FolderContent
 import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.usecase.*
+import com.iguana.notetaking.NotetakingActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +34,8 @@ class DocumentsViewModel @Inject constructor(
     private val deleteFileUseCase: DeleteFileUseCase,
     private val saveFileInLocalUsecase: SaveFileInLocalUsecase,
     private val saveFileInRemoteUsecase: SaveFileInRemoteUsecase,
-    private val updateDocumentNameUseCase: UpdateDocumentNameUseCase
+    private val updateDocumentNameUseCase: UpdateDocumentNameUseCase,
+    private val saveRecentFileUsecase: SaveRecentFileUsecase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<List<FolderContentItem>>(emptyList())
@@ -56,17 +59,16 @@ class DocumentsViewModel @Inject constructor(
     fun loadAllDocuments() {
         viewModelScope.launch {
             try {
-                val result = getAllDocumentsUseCase()
-                result.onSuccess { rootContent ->
-                    currentFolderId = -1L
-                    _documents.value = rootContent
-                    _currentFolderName.value = "문서"
-                    currentFolder = null
-                    updateUI(rootContent)
-                    Log.d("DocumentsViewModel", "루트 폴더 문서 로딩 완료 - 폴더: ${rootContent.count { it.type == "FOLDER" }}, 문서: ${rootContent.count { it.type == "DOCUMENT" }}")
-                }.onFailure { e ->
-                    Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
-                }
+                val rootContent = getAllDocumentsUseCase()
+                currentFolderId = -1L
+                _documents.value = rootContent
+                _currentFolderName.value = "문서"
+                currentFolder = null
+                updateUI(rootContent)
+                Log.d(
+                    "DocumentsViewModel",
+                    "루트 폴더 문서 로딩 완료 - 폴더: ${rootContent.count { it.type == "FOLDER" }}, 문서: ${rootContent.count { it.type == "DOCUMENT" }}"
+                )
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
             }
@@ -76,21 +78,23 @@ class DocumentsViewModel @Inject constructor(
     fun loadFolderContents(folderId: Long, folderName: String, newParent: FolderNode? = null) {
         viewModelScope.launch {
             try {
-                val result = getFolderContentsUseCase(folderId)
-                result.onSuccess { folderContent ->
-                    _documents.value = folderContent
-                    _currentFolderName.value = folderName
-                    
-                    currentFolder = FolderNode(
-                        id = folderId,
-                        name = folderName,
-                        parent = if (folderId != -1L) newParent else null
-                    )
-                    
-                    currentFolderId = folderId
-                    updateUI(folderContent)
-                    Log.d("DocumentsViewModel", "폴더 이동 - 현재: $folderName, 부모: ${currentFolder?.parent?.name}")
-                }
+                val folderContent = getFolderContentsUseCase(folderId)
+
+                _documents.value = folderContent
+                _currentFolderName.value = folderName
+
+                currentFolder = FolderNode(
+                    id = folderId,
+                    name = folderName,
+                    parent = if (folderId != -1L) newParent else null
+                )
+
+                currentFolderId = folderId
+                updateUI(folderContent)
+                Log.d(
+                    "DocumentsViewModel",
+                    "폴더 이동 - 현재: $folderName, 부모: ${currentFolder?.parent?.name}"
+                )
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "폴더 내용 로딩 중 예외 발생", e)
             }
@@ -104,6 +108,7 @@ class DocumentsViewModel @Inject constructor(
                 // 부모가 없으면 루트로 이동
                 loadAllDocuments()
             }
+
             else -> {
                 // 부모 폴더가 있으면 해당 폴더로 이동
                 currentFolder?.parent?.let { parentFolder ->
@@ -117,68 +122,67 @@ class DocumentsViewModel @Inject constructor(
 
     fun createFolder(folderName: String) {
         viewModelScope.launch {
-            createFolderUsecase.execute(currentFolderId, folderName).onSuccess { newFolder ->
-                // 폴더 생성 후 현재 폴더 내용을 새로고침
-                refreshCurrentFolder()
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "폴더 생성 실패", error)
-            }
+            createFolderUsecase.execute(currentFolderId, folderName)
+            // 폴더 생성 후 현재 폴더 내용을 새로고침
+            refreshCurrentFolder()
         }
     }
 
     fun updateFolderName(folderId: Long, newName: String) {
         viewModelScope.launch {
-            updateFolderNameUseCase(folderId, newName).onSuccess { updatedFolder ->
-                // 폴더 이름 변경 후 현재 폴더 내용을 새로고침
-                refreshCurrentFolder()
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "폴더 이름 변경 실패", error)
-            }
+            updateFolderNameUseCase(folderId, newName)
+            // 폴더 이름 변경 후 현재 폴더 내용을 새로고침
+            refreshCurrentFolder()
         }
     }
 
     fun deleteFolder(folderId: Long) {
         viewModelScope.launch {
-            deleteFolderUseCase(folderId).onSuccess {
-                // 폴더 삭제 후 현재 폴더 내용을 새로고침
-                refreshCurrentFolder()
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "폴더 삭제 실패", error)
-            }
+            deleteFolderUseCase(folderId)
+            // 폴더 삭제 후 현재 폴더 내용을 새로고침
+            refreshCurrentFolder()
         }
     }
 
     fun deleteFile(fileId: Long) {
         viewModelScope.launch {
-            deleteFileUseCase(currentFolderId, fileId).onSuccess {
-                refreshCurrentFolder()
-                Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "파일 삭제 실패", error)
-            }
+            deleteFileUseCase(currentFolderId, fileId)
+            refreshCurrentFolder()
+            Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
         }
     }
 
     fun uploadPdf(uri: Uri?, context: Context) {
         if (uri != null) {
             val fileName = getFileName(context, uri)
-            
+
             viewModelScope.launch {
                 try {
                     // 1. 로컬에 파일 저장
                     val internalUri = saveFileInLocalUsecase.execute(uri, fileName)
-                    
+
                     if (internalUri != null) {
                         // 2. 서버에 파일 업로드 (현재 폴더 ID 사용)
-                        val result = saveFileInRemoteUsecase.execute(currentFolderId, internalUri, fileName)
-                        result.onSuccess { document ->
-                            // 3. 현재 폴더 내용을 새로고침하여 정렬된 상태로 표시
-                            refreshCurrentFolder()
-                        }.onFailure {
-                            Toast.makeText(context, "파일 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        val document = saveFileInRemoteUsecase.execute(currentFolderId, internalUri, fileName)
+                        // 3. 현재 폴더 내용을 새로고침하여 정렬된 상태로 표시
+                        refreshCurrentFolder()
+                        // 4. Room 데이터베이스에 저장 (내부 URI 사용)
+                        if (document != null) {
+                            document.url?.let {
+                                saveRecentFileUsecase.invoke(
+                                    document.id,
+                                    fileName,
+                                    it
+                                )
+                            }
+                            // 4. 선택된 파일을 NotetakingActivity로 전달
+                            val intent = Intent(context, NotetakingActivity::class.java).apply {
+                                putExtra("PDF_URI", document.url)
+                                putExtra("PDF_TITLE", fileName)
+                                putExtra("DOCUMENT_ID", document.id)
+                            }
+                            context.startActivity(intent)
                         }
-                    } else {
-                        Toast.makeText(context, "파일 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
@@ -193,7 +197,8 @@ class DocumentsViewModel @Inject constructor(
             val cursor = context.contentResolver.query(uri, null, null, null, null)
             try {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    result =
+                        cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             } finally {
                 cursor?.close()
@@ -218,23 +223,30 @@ class DocumentsViewModel @Inject constructor(
                     fileCount = item.totalElements,
                     isBookmarked = false
                 )
+
                 "DOCUMENT" -> DocumentItem.PdfItem(  // DOCUMENT 타입을 PdfItem으로 매핑
                     id = item.id,
                     title = item.name,
                     timestamp = item.updatedAt,
-                    isBookmarked = false
+                    isBookmarked = false,
+                    url = item.url!!
                 )
+
                 else -> DocumentItem.PdfItem(  // 기본값도 PdfItem으로
                     id = item.id,
                     title = item.name,
                     timestamp = item.updatedAt,
-                    isBookmarked = false
+                    isBookmarked = false,
+                    url = item.url!!
                 )
             }
         }
         _documentItems.value = items
-        
-        Log.d("DocumentsViewModel", "UI 업데이트 - 전체: ${items.size}, 폴더: ${items.count { it is DocumentItem.FolderItem }}, 문서: ${items.count { it is DocumentItem.PdfItem }}")
+
+        Log.d(
+            "DocumentsViewModel",
+            "UI 업데이트 - 전체: ${items.size}, 폴더: ${items.count { it is DocumentItem.FolderItem }}, 문서: ${items.count { it is DocumentItem.PdfItem }}"
+        )
     }
 
     // 현재 폴더의 내용을 새로고침하는 함수 추가
@@ -242,17 +254,13 @@ class DocumentsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if (currentFolderId == -1L) {
-                    // 루트 폴더인 경우
-                    getAllDocumentsUseCase().onSuccess { content ->
-                        _documents.value = content
-                        updateUI(content)
-                    }
+                    val content = getAllDocumentsUseCase()
+                    _documents.value = content
+                    updateUI(content)
                 } else {
-                    // 특정 폴더인 경우
-                    getFolderContentsUseCase(currentFolderId).onSuccess { content ->
-                        _documents.value = content
-                        updateUI(content)
-                    }
+                    val content = getFolderContentsUseCase(currentFolderId)
+                    _documents.value = content
+                    updateUI(content)
                 }
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "폴더 내용 새로고침 실패", e)
@@ -262,12 +270,9 @@ class DocumentsViewModel @Inject constructor(
 
     fun updateDocumentName(folderId: Long, documentId: Long, newName: String) {
         viewModelScope.launch {
-            updateDocumentNameUseCase(folderId, documentId, newName).onSuccess { updatedDocument ->
-                // 문서 제목 변경 후 현재 폴더 내용을 새로고침
-                refreshCurrentFolder()
-            }.onFailure { error ->
-                Log.e("DocumentsViewModel", "문서 제목 변경 실패", error)
-            }
+            updateDocumentNameUseCase(folderId, documentId, newName)
+            // 문서 제목 변경 후 현재 폴더 내용을 새로고침
+            refreshCurrentFolder()
         }
     }
 

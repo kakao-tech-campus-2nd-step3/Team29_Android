@@ -1,6 +1,10 @@
 package com.iguana.data.di
 
+
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.iguana.data.BuildConfig
+import com.iguana.data.mapper.FolderOrDocumentResponseDtoAdapter
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.api.LoginApi
@@ -54,13 +58,17 @@ object NetworkModule {
             .build()
     }
 
+    var customGson = GsonBuilder()
+        .registerTypeAdapter(Result::class.java, FolderOrDocumentResponseDtoAdapter())
+        .create()
+
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()
     }
 

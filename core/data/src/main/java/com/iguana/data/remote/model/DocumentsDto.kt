@@ -1,33 +1,31 @@
 package com.iguana.data.remote.model
 
-data class DocumentDto(
-    val id: Long,
-    val folderId: Long?,
-    val name: String,
-    val url: String?,
-    val pageCount: Int?,
-    val updatedAt: String?
+import com.google.gson.annotations.JsonAdapter
+import com.iguana.data.mapper.FolderOrDocumentResponseDtoAdapter
+
+
+@JsonAdapter(FolderOrDocumentResponseDtoAdapter::class)
+data class GetFolderContentResponseDto(
+    val response: FolderOrDocumentResponseDto?,
+    val folderAndDocumentResponseType: String? // nullable로 설정
 )
 
-data class FolderContentDto(
-    val type: String?,
+// FolderOrDocumentResponseDto 정의
+sealed class FolderOrDocumentResponseDto
+
+data class FolderResponseDto(
+    val id: Long,
+    val parentId: Long?,
+    val name: String
+) : FolderOrDocumentResponseDto()
+
+
+data class DocumentResponseDto(
     val id: Long,
     val name: String,
-    val updatedAt: String?,
-    val totalElements: Int
-)
+    val url: String
+) : FolderOrDocumentResponseDto()
 
-data class FolderContentResponseDto(
-    val response: ResponseDto?,
-    val folderAndDocumentResponseType: String
-)
-
-data class ResponseDto(
-    val id: Long,
-    val name: String,
-    val updatedAt: String?,
-    val totalElements: Int = -1
-)
 
 data class CreateFolderRequestDto(
     val name: String,
@@ -54,6 +52,35 @@ data class FolderContentItemDto(
     val totalElements: Int
 )
 
-data class UpdateFolderNameRequestDto(
+data class UpdateContentNameRequestDto(
+    val name: String
+)
+
+data class UpdateDocumentNameResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class CreateDocumentResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class GetDocumentsResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class MoveFolderResponseDto(
+    val id: Long,
+    val name: String
+)
+
+data class UpdateFolderNameResponseDto(
+    val id: Long,
+    val parentId: Long,
     val name: String
 )

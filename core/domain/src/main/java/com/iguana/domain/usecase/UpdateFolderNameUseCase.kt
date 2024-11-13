@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UpdateFolderNameUseCase @Inject constructor(
     private val documentsRepository: DocumentsRepository
 ) {
-    suspend operator fun invoke(folderId: Long, newName: String): Result<FolderContentItem> {
+    suspend operator fun invoke(folderId: Long, newName: String): FolderContentItem? {
         return documentsRepository.updateFolderName(folderId, newName)
     }
 }

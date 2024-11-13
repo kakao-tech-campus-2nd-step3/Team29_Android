@@ -1,6 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/light_blue_90"/> <!-- 배경색 설정 -->
-
+    <solid android:color="@color/grey_50"/> <!-- 배경색 설정 -->
     <!-- 모서리 설정: 상단만 둥글게 -->
     <corners
         android:topLeftRadius="6dp"
