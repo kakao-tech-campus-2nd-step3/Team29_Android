@@ -1,11 +1,13 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.utils.Logger
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toDto
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.data.remote.model.UpdateContentNameRequestDto
+import com.iguana.data.utils.parseGetFolderContentResponseDtoList
 import com.iguana.domain.model.Document
 import com.iguana.domain.model.Folder
 import com.iguana.domain.model.FolderContent
@@ -25,19 +27,27 @@ class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
     override suspend fun getAllDocuments(): FolderContent = try {
+        // JSON 응답을 문자열로 받아 파싱
         val response = api.getFolderContents(-1)
+
         Logger.d(TAG, "루트 폴더 응답 - 아이템 개수: ${response.size}")
         response.forEach { item ->
-            Logger.d(
-                TAG,
-                "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}, 아이디: ${item.response?.id}"
-            )
+            if (item.response == null) {
+                Logger.e(
+                    TAG,
+                    "response가 null입니다. folderAndDocumentResponseType: ${item.folderAndDocumentResponseType}"
+                )
+            } else {
+                Logger.d(TAG, "response 처리: ${item.response}")
+            }
         }
-        response.map { it.toDomain() }
+
+        response.mapNotNull { it.toDomain() }
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
         emptyList()
     }
+
 
     override suspend fun uploadDocument(
         folderId: Long,
@@ -69,10 +79,10 @@ class DocumentsRepositoryImpl @Inject constructor(
         response.forEach { item ->
             Logger.d(
                 TAG,
-                "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.name}"
+                "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.toString()}"
             )
         }
-        response.map { it.toDomain() }
+        response.mapNotNull { it.toDomain() }
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
         emptyList()
@@ -106,7 +116,7 @@ class DocumentsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteFolder(folderId: Long) = try {
-        val response = api.deleteFolder(folderId)
+        api.deleteFolder(folderId)
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
     }
@@ -127,7 +137,8 @@ class DocumentsRepositoryImpl @Inject constructor(
             id = response.id,
             name = response.name,
             updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
-            totalElements = 0
+            totalElements = 0,
+            url = null
         )
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)

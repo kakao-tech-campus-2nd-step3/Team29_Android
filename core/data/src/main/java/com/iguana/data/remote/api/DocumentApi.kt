@@ -3,6 +3,7 @@ package com.iguana.data.remote.api
 import com.iguana.data.remote.model.CreateDocumentResponseDto
 import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.data.remote.model.CreateFolderResponseDto
+import com.iguana.data.remote.model.FolderOrDocumentResponseDto
 import com.iguana.data.remote.model.GetDocumentsResponseDto
 import com.iguana.data.remote.model.GetFolderContentResponseDto
 import com.iguana.data.remote.model.MoveFolderRequestDto

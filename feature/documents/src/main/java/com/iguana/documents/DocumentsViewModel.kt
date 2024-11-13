@@ -228,14 +228,16 @@ class DocumentsViewModel @Inject constructor(
                     id = item.id,
                     title = item.name,
                     timestamp = item.updatedAt,
-                    isBookmarked = false
+                    isBookmarked = false,
+                    url = item.url!!
                 )
 
                 else -> DocumentItem.PdfItem(  // 기본값도 PdfItem으로
                     id = item.id,
                     title = item.name,
                     timestamp = item.updatedAt,
-                    isBookmarked = false
+                    isBookmarked = false,
+                    url = item.url!!
                 )
             }
         }

@@ -16,7 +16,8 @@ data class FolderContentItem(
     val id: Long,
     val name: String,
     val updatedAt: String,
-    val totalElements: Int
+    val totalElements: Int,
+    val url: String?
 )
 
 data class Folder(

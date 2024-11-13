@@ -137,6 +137,6 @@ sealed class DocumentItem {
         val title: String,
         val timestamp: String,
         val isBookmarked: Boolean,
-        val url: String? = null
+        val url: String
     ) : DocumentItem()
 }
