@@ -44,6 +44,7 @@ import android.view.WindowManager
 import com.iguana.documents.databinding.DialogEditNameBinding
 import android.os.Build
 import android.view.Window
+import androidx.activity.OnBackPressedCallback
 
 @AndroidEntryPoint
 class DocumentsFragment : Fragment() {
@@ -416,6 +417,17 @@ class DocumentsFragment : Fragment() {
 //            }
 //        }
 //    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // 뒤로가기 콜백 등록 (true는 콜백을 즉시 활성화한다는 의미)
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Toast.makeText(requireContext(), "뒤로가기가 비활성화 되어있습니다", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
 }
 
