@@ -1,5 +1,6 @@
 package com.iguana.notetaking.util
 
+import android.util.Log
 import android.view.View
 
 fun View.hide() {
@@ -8,6 +9,7 @@ fun View.hide() {
 
 fun View.show() {
     visibility = View.VISIBLE
+    Log.d("UI Debug", "View ${this.id} is now VISIBLE")
 }
 
 fun View.isVisible(): Boolean {

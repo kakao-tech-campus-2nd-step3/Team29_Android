@@ -9,6 +9,7 @@ import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.RecordApi
+import com.iguana.data.remote.api.SttApi
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.domain.repository.SharedPreferencesHelper
 import dagger.Module
@@ -100,5 +101,11 @@ object NetworkModule {
     @Singleton
     fun provideRecordApi(retrofit: Retrofit): RecordApi {
         return retrofit.create(RecordApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSttApi(retrofit: Retrofit): SttApi {
+        return retrofit.create(SttApi::class.java)
     }
 }

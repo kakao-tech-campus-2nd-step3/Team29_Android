@@ -7,7 +7,6 @@ import com.iguana.data.mapper.toDto
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.model.CreateFolderRequestDto
 import com.iguana.data.remote.model.UpdateContentNameRequestDto
-import com.iguana.data.utils.parseGetFolderContentResponseDtoList
 import com.iguana.domain.model.Document
 import com.iguana.domain.model.Folder
 import com.iguana.domain.model.FolderContent

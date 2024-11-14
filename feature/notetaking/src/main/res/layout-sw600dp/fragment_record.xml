@@ -44,11 +44,11 @@
             android:id="@+id/recordStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:text="@string/is_not_recording"
             android:layout_gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" 
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/boxView"/>
 
         <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
@@ -59,9 +59,9 @@
             android:layout_marginTop="100dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/recordStatusTextView">
 
             <TextView
@@ -71,10 +71,8 @@
                 android:layout_marginTop="50dp"
                 android:text="@string/stt_empty_message"
                 android:layout_gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/boxView"/>
-            
+                android:visibility="gone" />
+
             <!--공백-->
             <TextView
                 android:layout_width="wrap_content"
@@ -90,8 +88,8 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingHorizontal="12dp"
                 android:visibility="gone"
+                android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp">
 
                 <!-- 아이콘 (좌측) -->
@@ -112,16 +110,20 @@
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
+            android:background="@drawable/stt_box_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/stt_box_background"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginHorizontal="20dp"
             app:layout_constraintTop_toBottomOf="@id/sttStatus"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

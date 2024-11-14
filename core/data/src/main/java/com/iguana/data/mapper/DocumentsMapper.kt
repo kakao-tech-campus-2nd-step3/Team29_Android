@@ -15,7 +15,7 @@ fun GetFolderContentResponseDto.toDomain(): FolderContentItem? {
             val folder = response as? FolderResponseDto ?: return null  // response가 null이면 null 반환
             Log.d("testt", "Folder response: $response")
             FolderContentItem(
-                type = folderAndDocumentResponseType ?: "FOLDER",
+                type = folderAndDocumentResponseType,
                 id = folder.id,
                 name = folder.name,
                 updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
@@ -27,7 +27,7 @@ fun GetFolderContentResponseDto.toDomain(): FolderContentItem? {
             val document = response as? DocumentResponseDto ?: return null  // response가 null이면 null 반환
             Log.d("testt", "Document response: $response")
             FolderContentItem(
-                type = folderAndDocumentResponseType ?: "DOCUMENT",
+                type = folderAndDocumentResponseType,
                 id = document.id,
                 name = document.name,
                 updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),

@@ -6,12 +6,14 @@ import com.iguana.data.repository.DocumentsRepositoryImpl
 import com.iguana.data.repository.LoginRepositoryImpl
 import com.iguana.data.repository.RecentFileRepositoryImpl
 import com.iguana.data.repository.RecordRepositoryImpl
+import com.iguana.data.repository.SttRepositoryImpl
 import com.iguana.domain.repository.AIRepository
 import com.iguana.domain.repository.AnnotationRepository
 import com.iguana.domain.repository.DocumentsRepository
 import com.iguana.domain.repository.LoginRepository
 import com.iguana.domain.repository.RecentFileRepository
 import com.iguana.domain.repository.RecordRepository
+import com.iguana.domain.repository.SttRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -56,5 +58,11 @@ abstract class RepositoryModule {
     abstract fun bindRecordingRepository(
         recordRepositoryImpl: RecordRepositoryImpl
     ): RecordRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSttRepository(
+        sttRepositoryImpl: SttRepositoryImpl
+    ): SttRepository
 
 }

@@ -10,6 +10,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/aengzu/AndroidStudioProjects/NOTAI_android/app/key.jks")
+            storePassword = "rhaxod0820"
+            keyAlias = "key0"
+            keyPassword = "rhaxod0820"
+        }
+    }
     compileSdk = 34
 
     namespace = "com.iguana.notai"
@@ -29,6 +37,7 @@ android {
     defaultConfig {
         val apiBaseUrl: String = getApiBaseUrl()
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        signingConfig = signingConfigs.getByName("release")
     }
 
     packaging {
