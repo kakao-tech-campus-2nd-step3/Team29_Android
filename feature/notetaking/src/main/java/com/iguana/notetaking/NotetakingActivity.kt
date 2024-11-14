@@ -102,7 +102,6 @@ class NotetakingActivity : AppCompatActivity() {
             llTextFormatIcons.ivItalic.setOnClickListener { showServicePreparingDialog() }
             llTextFormatIcons.ivUnderline.setOnClickListener { showServicePreparingDialog() }
             llTextFormatIcons.ivStrikeThrough.setOnClickListener { showServicePreparingDialog() }
-            llTextFormatIcons.llTextColorDropdown.setOnClickListener { showServicePreparingDialog() }
         }
     }
 
