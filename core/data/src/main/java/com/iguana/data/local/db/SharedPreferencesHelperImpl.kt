@@ -40,4 +40,12 @@ class SharedPreferencesHelperImpl @Inject constructor(
     override fun isLoggedIn(): Boolean {
         return getAccessToken() != null
     }
+
+    override fun clearTokens() {
+        sharedPreferences.edit().apply {
+            remove(KEY_ACCESS_TOKEN)
+            remove(KEY_REFRESH_TOKEN)
+            apply()
+        }
+    }
 }
