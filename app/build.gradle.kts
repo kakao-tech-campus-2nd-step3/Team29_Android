@@ -8,14 +8,22 @@ plugins {
     id("iguana.android.hilt")
     id("iguana.kotlin.hilt")
 }
+fun getLocalProperty(key: String, defaultValue: String = ""): String {
+    val localProperties = project.rootProject.file("local.properties")
+    if (localProperties.exists()) {
+        val properties = Properties().apply { load(localProperties.inputStream()) }
+        return properties.getProperty(key, defaultValue)
+    }
+    return defaultValue
+}
 
 android {
     signingConfigs {
         create("release") {
             storeFile = file("/Users/aengzu/AndroidStudioProjects/NOTAI_android/app/key.jks")
-            storePassword = "rhaxod0820"
-            keyAlias = "key0"
-            keyPassword = "rhaxod0820"
+            storePassword = getLocalProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = getLocalProperty("RELEASE_KEY_ALIAS")
+            keyPassword = getLocalProperty("RELEASE_KEY_PASSWORD")
         }
     }
     compileSdk = 34

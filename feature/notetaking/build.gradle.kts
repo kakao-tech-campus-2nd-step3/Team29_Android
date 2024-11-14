@@ -37,5 +37,4 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.kotlin.test)
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }
