@@ -123,10 +123,13 @@ class RecordFragment() : Fragment() {
     // Fragment 화면에 표시되며, 입력을 받을 수 있는 상태
     override fun onResume() {
         super.onResume()
-        // 브로드캐스트 등록
+        // 브로드캐스트 등록 시 커스텀 권한을 추가하여 외부 앱의 접근을 제한
+        val filter = IntentFilter(BROADCAST_RECORDING_FINISHED)
         requireContext().registerReceiver(
             recordingReceiver,
-            IntentFilter(BROADCAST_RECORDING_FINISHED)
+            filter,
+            "com.iguana.notetaking.PERMISSION_RECEIVE_BROADCAST", // 커스텀 권한 추가
+            null
         )
     }
 
@@ -135,6 +138,7 @@ class RecordFragment() : Fragment() {
         super.onPause()
         // BroadcastReceiver 해제
         requireContext().unregisterReceiver(recordingReceiver)
+
     }
 
     override fun onDestroyView() {

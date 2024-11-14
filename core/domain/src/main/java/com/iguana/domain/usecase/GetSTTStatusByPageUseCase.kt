@@ -10,6 +10,6 @@ class GetSTTStatusByPageUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(documentId: Long, pageNumber: Int): SttStatusResultByPage {
         // TODO: 아래 데이터는 임시 데이터로 서버 구현 시 변경 필요
-        return SttStatusResultByPage(SttStatus.COMPLETED)
+        return SttStatusResultByPage(SttStatus.NOT_REQUESTED)
     }
 }

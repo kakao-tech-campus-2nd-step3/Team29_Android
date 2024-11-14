@@ -1,21 +1,35 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# com.iguana.notetaking 패키지 전체 보존
+-keep class com.iguana.notetaking.** { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# PhotoView 라이브러리 보존
+-keep class com.github.chrisbanes.photoview.** { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# RichEditor 라이브러리 보존
+-keep class jp.wasabeef.richeditor.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# pdfbox 라이브러리 보존
+-keep class org.apache.pdfbox.** { *; }
+-dontwarn org.apache.pdfbox.**
+
+# AndroidX와 Android Support 라이브러리 예외
+-keep class androidx.** { *; }
+-dontwarn androidx.**
+
+# 뷰 바인딩 및 데이터 바인딩 보존
+-keep class **.databinding.* { *; }
+-keepclassmembers class **.databinding.* { *; }
+-keepattributes *Annotation*
+
+# Hilt 관련 예외 (Hilt는 주입 관련 코드가 Proguard에 의해 제거되지 않도록 함)
+-keep class dagger.hilt.internal.** { *; }
+-keep class dagger.hilt.android.internal.** { *; }
+-keep class dagger.hilt.** { *; }
+-dontwarn dagger.hilt.**
+
+# Android 기본 클래스 유지
+-keep class * extends android.app.Activity
+-keep class * extends android.app.Application
+-keep class * extends android.app.Service
+-keep class * extends android.content.BroadcastReceiver
+-keep class * extends android.content.ContentProvider
+
