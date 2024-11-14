@@ -19,10 +19,12 @@ android {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.designsystem)
+    implementation(projects.core.navigation)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.fragment.ktx)
     implementation("com.kakao.sdk:v2-user:2.20.6")
 
     // Test dependencies

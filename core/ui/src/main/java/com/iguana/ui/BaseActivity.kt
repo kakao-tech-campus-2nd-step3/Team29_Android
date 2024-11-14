@@ -1,5 +1,6 @@
 package com.iguana.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -9,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.documents.DocumentsFragment
 import com.iguana.favorites.FavoritesFragment
+import com.iguana.navigation.LoginNavigator
 import com.iguana.settings.SettingsFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
 import com.iguana.userinfo.UserInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BaseActivity : AppCompatActivity() {
+class BaseActivity : AppCompatActivity(), LoginNavigator {
     private lateinit var binding: ActivityBaseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,5 +63,12 @@ class BaseActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_frame, FavoritesFragment())
             .commit()
+    }
+
+    override fun navigateToLogin() {
+        val intent = Intent(this, Class.forName("com.iguana.login.LoginActivity"))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

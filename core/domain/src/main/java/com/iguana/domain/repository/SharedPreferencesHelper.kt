@@ -5,4 +5,5 @@ interface SharedPreferencesHelper {
     fun getAccessToken(): String?
     fun getRefreshToken(): String?
     fun isLoggedIn(): Boolean
+    fun clearTokens()
 }
