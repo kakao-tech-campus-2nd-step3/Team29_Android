@@ -1,13 +1,16 @@
 package com.iguana.notetaking
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.StatusBarManager
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -93,7 +96,14 @@ class NotetakingActivity : AppCompatActivity() {
                 }, 300)
             }
         }
-        binding.textEditBar.llTextFormatIcons.ivDelete.setOnClickListener { onDeleteAnnotationClick() }
+        binding.textEditBar.apply {
+            llTextFormatIcons.ivDelete.setOnClickListener { onDeleteAnnotationClick() }
+            llTextFormatIcons.ivBold.setOnClickListener { showServicePreparingDialog() }
+            llTextFormatIcons.ivItalic.setOnClickListener { showServicePreparingDialog() }
+            llTextFormatIcons.ivUnderline.setOnClickListener { showServicePreparingDialog() }
+            llTextFormatIcons.ivStrikeThrough.setOnClickListener { showServicePreparingDialog() }
+            llTextFormatIcons.llTextColorDropdown.setOnClickListener { showServicePreparingDialog() }
+        }
     }
 
     // 타이틀바 설정
@@ -230,5 +240,20 @@ class NotetakingActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "녹음 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showServicePreparingDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(com.iguana.designsystem.R.layout.dialog_service_preparing, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialogView)
+
+        val dialog = builder.create()
+
+        // "확인" 버튼 클릭 시 다이얼로그 닫기
+        dialogView.findViewById<Button>(com.iguana.designsystem.R.id.btnClose).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
