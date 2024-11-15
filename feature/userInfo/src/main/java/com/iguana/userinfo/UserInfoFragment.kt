@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.iguana.userinfo.databinding.FragmentUserinfoBinding
 import com.kakao.sdk.user.UserApiClient
-import kotlin.system.exitProcess
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class UserInfoFragment : Fragment() {
 
     private var _binding: FragmentUserinfoBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,9 +29,9 @@ class UserInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUserInfo()
         setupLogoutButton()
+        observeLogoutEvent()
     }
 
     private fun setupUserInfo() {
@@ -43,10 +47,13 @@ class UserInfoFragment : Fragment() {
 
     private fun setupLogoutButton() {
         binding.logout?.setOnClickListener {
-            UserApiClient.instance.logout { error ->
-                    requireActivity().finishAffinity() // 모든 액티비티 종료
-                    exitProcess(0) // 앱 프로세스 종료
-            }
+
+        }
+    }
+
+    private fun observeLogoutEvent() {
+        viewLifecycleOwner.lifecycleScope.launch {
+
         }
     }
 

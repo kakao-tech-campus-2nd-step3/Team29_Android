@@ -1,30 +1,31 @@
 package com.iguana.data.remote.model
 
-data class DocumentDto(
-    val id: Long,
-    val folderId: Long?,
-    val name: String,
-    val url: String?,
-    val pageCount: Int?,
-    val updatedAt: String?
+import com.google.gson.annotations.JsonAdapter
+import com.iguana.data.mapper.FolderOrDocumentResponseDtoAdapter
+
+
+@JsonAdapter(FolderOrDocumentResponseDtoAdapter::class)
+data class GetFolderContentResponseDto(
+    val response: FolderOrDocumentResponseDto?,
+    val folderAndDocumentResponseType: String? // nullable로 설정
 )
 
-data class FolderContentDto(
-    val type: String?,
+// FolderOrDocumentResponseDto 정의
+sealed class FolderOrDocumentResponseDto
+
+data class FolderResponseDto(
+    val id: Long,
+    val parentId: Long?,
+    val name: String
+) : FolderOrDocumentResponseDto()
+
+
+data class DocumentResponseDto(
     val id: Long,
     val name: String,
-    val updatedAt: String?,
-    val totalElements: Int
-)
+    val url: String
+) : FolderOrDocumentResponseDto()
 
-data class FolderContentResponseDto(
-    val content: List<FolderContentDto>,
-    val totalElements: Int,
-    val currentPage: Int,
-    val totalPages: Int,
-    val sortBy: String,
-    val sortDirection: String
-)
 
 data class CreateFolderRequestDto(
     val name: String,
@@ -43,14 +44,35 @@ data class MoveFolderRequestDto(
     val destinationFolderId: Long
 )
 
-data class FolderContentItemDto(
-    val id: Long,
-    val name: String,
-    val type: String,
-    val totalElements: Int,
-    val updatedAt: String
+data class UpdateContentNameRequestDto(
+    val name: String
 )
 
-data class UpdateFolderNameRequestDto(
+data class UpdateDocumentNameResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class CreateDocumentResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class GetDocumentsResponseDto(
+    val id: Long,
+    val name: String,
+    val url: String
+)
+
+data class MoveFolderResponseDto(
+    val id: Long,
+    val name: String
+)
+
+data class UpdateFolderNameResponseDto(
+    val id: Long,
+    val parentId: Long,
     val name: String
 )

@@ -19,5 +19,5 @@
         android:layout_marginStart="8dp"
         android:text="녹음 종료"
         android:textColor="@color/white"
-        style="@style/Regular8" />
+        style="@style/RegularCaptionMedium" />
 </LinearLayout>

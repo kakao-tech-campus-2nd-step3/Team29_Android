@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.iguana.notetaking.ai.AiViewModel" />
@@ -27,7 +26,7 @@
             <!-- 박스 안에 텍스트를 표시하는 TextView -->
             <TextView
                 android:id="@+id/aiPageTextView"
-                style="@style/Regular6"
+                style="@style/RegularCaptionExtraSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,17 +38,63 @@
                 app:layout_constraintTop_toTopOf="@id/boxView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <TextView
-            android:id="@+id/aiStatusTextView"
+        <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
+        <LinearLayout
+            android:id="@+id/aiStatus"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="150dp"
-            android:layout_weight="1"
-            android:text="@string/ai_empty_message"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/boxView" />
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/boxView">
+
+            <TextView
+                android:id="@+id/aiStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/ai_empty_message" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="8dp"/>
+
+            <!-- 상태 확인 버튼을 상태 메시지 아래에 배치 -->
+            <LinearLayout
+                android:id="@+id/refreshButton"
+                android:layout_width="@dimen/size_refresh_button_width"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:background="@drawable/button1_background"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp">
+
+                <!-- 아이콘 (좌측) -->
+                <ImageView
+                    android:id="@+id/refreshIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_refresh_white" />
+
+                <!-- 텍스트 -->
+                <TextView
+                    android:id="@+id/refreshText"
+                    style="@style/RegularCaptionExtraSmall"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="서버 동기화" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <!-- 스크롤 가능한 영역 -->
         <ScrollView
@@ -61,7 +106,7 @@
             app:layout_constraintBottom_toTopOf="@id/aiButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aiStatusTextView">
+            app:layout_constraintTop_toBottomOf="@id/aiStatus">
 
 
             <!-- 요약 및 문제 결과 레이아웃 -->
@@ -78,7 +123,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="요약"
                     android:textColor="@color/black"
-                    style="@style/Bold12" />
+                    style="@style/BoldBodyExtraSmall" />
 
                 <!-- 요약 텍스트뷰 -->
                 <TextView
@@ -107,7 +152,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="연습 문제"
                     android:textColor="@color/black"
-                    style="@style/Bold12" />
+                    style="@style/BoldBodyExtraSmall" />
 
                 <!-- 문제 결과 텍스트뷰 -->
                 <TextView
@@ -148,7 +193,7 @@
             <!-- 텍스트 (AI 요약하기) -->
             <TextView
                 android:id="@+id/buttonText"
-                style="@style/Regular8"
+                style="@style/RegularCaptionMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

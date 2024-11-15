@@ -59,11 +59,13 @@ class PdfPageFragment : Fragment(), AnnotationListener {
 
         // 주석 로드
         pdfPageViewModel.loadAnnotations(sharedViewModel.documentId, pageIndex)
-
+        Log.d("testt", "(PageFragment) PageViewmodel 에 주석 넣기 완료 ${pdfPageViewModel.annotations.value}")
 
         pdfPageViewModel.annotations.observe(viewLifecycleOwner) { annotations ->
+            Log.d("testt", "(PageFragment) annotatino 옵저버 ${annotations}")
             displayAnnotations(annotations.filter { it.pageNumber == pageIndex })
         }
+
 
         if (pdfUriString != null) {
             val pdfUri = Uri.parse(pdfUriString)

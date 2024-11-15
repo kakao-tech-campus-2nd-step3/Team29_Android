@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 휴대폰 모드일 때 텍스트 크기 -->
 <resources>
-    <dimen name="text_size_56">42sp</dimen>
-    <dimen name="text_size_36">36sp</dimen>
-    <dimen name="text_size_24">20sp</dimen>
-    <dimen name="text_size_16">16sp</dimen>
-    <dimen name="text_size_14">14sp</dimen>
-    <dimen name="text_size_12">12sp</dimen>
-    <dimen name="text_size_9">9sp</dimen>
-    <dimen name="text_size_8">8sp</dimen>
-    <dimen name="text_size_7">7sp</dimen>
-    <dimen name="text_size_6">6sp</dimen>
-    <dimen name="title_border_spacing">8dp</dimen>
-    <dimen name="content_border_spacing">8dp</dimen>
-    <dimen name="file_width">70dp</dimen>
-    <dimen name="file_height">90dp</dimen>
+    <!-- 휴대폰 모드일 때 텍스트 크기 -->
+    <dimen name="typography_heading_large">42sp</dimen>
+    <dimen name="typography_heading_medium">36sp</dimen>
+    <dimen name="typography_heading_small">20sp</dimen>
+
+    <!-- 본문 텍스트 크기 -->
+    <dimen name="typography_body_large">16sp</dimen>
+    <dimen name="typography_body_medium">14sp</dimen>
+    <dimen name="typography_body_small">12sp</dimen>
+
+    <!-- 캡션 텍스트 크기 -->
+    <dimen name="typography_caption_large">9sp</dimen>
+    <dimen name="typography_caption_medium">8sp</dimen>
+    <dimen name="typography_caption_small">7sp</dimen>
+    <dimen name="typography_caption_extra_small">6sp</dimen>
+    <dimen name="typography_caption_extra_extra_small">4sp</dimen>
+
+    <!-- 여백 및 크기 관련 -->
+    <dimen name="spacing_title_border">8dp</dimen>
+    <dimen name="spacing_content_border">8dp</dimen>
+    <dimen name="size_file_width">70dp</dimen>
+    <dimen name="size_file_height">90dp</dimen>
+    <dimen name="size_refresh_button_width">60dp</dimen>
 </resources>

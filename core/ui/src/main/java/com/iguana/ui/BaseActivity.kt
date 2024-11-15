@@ -1,5 +1,6 @@
 package com.iguana.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -62,4 +63,5 @@ class BaseActivity : AppCompatActivity() {
             .replace(R.id.content_frame, FavoritesFragment())
             .commit()
     }
+
 }

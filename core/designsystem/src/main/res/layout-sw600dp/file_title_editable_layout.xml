@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:text="AI 히스토리"
             android:textColor="@android:color/black"
-            style="@style/Bold24" />
+            style="@style/BoldHeadingSmall" />
 
         <!-- 오른쪽에 위치할 버튼들 -->
         <ImageButton

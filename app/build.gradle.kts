@@ -1,3 +1,4 @@
+import guru.nidi.graphviz.attribute.Font.config
 import java.util.Properties
 
 plugins {
@@ -7,8 +8,24 @@ plugins {
     id("iguana.android.hilt")
     id("iguana.kotlin.hilt")
 }
+fun getLocalProperty(key: String, defaultValue: String = ""): String {
+    val localProperties = project.rootProject.file("local.properties")
+    if (localProperties.exists()) {
+        val properties = Properties().apply { load(localProperties.inputStream()) }
+        return properties.getProperty(key, defaultValue)
+    }
+    return defaultValue
+}
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/aengzu/AndroidStudioProjects/NOTAI_android/app/key.jks")
+            storePassword = getLocalProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = getLocalProperty("RELEASE_KEY_ALIAS")
+            keyPassword = getLocalProperty("RELEASE_KEY_PASSWORD")
+        }
+    }
     compileSdk = 34
 
     namespace = "com.iguana.notai"
@@ -28,16 +45,12 @@ android {
     defaultConfig {
         val apiBaseUrl: String = getApiBaseUrl()
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        signingConfig = signingConfigs.getByName("release")
     }
 
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
 

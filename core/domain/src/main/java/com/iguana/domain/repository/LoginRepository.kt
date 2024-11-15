@@ -9,4 +9,5 @@ interface LoginRepository {
     fun getAccessToken(): String?
     fun getRefreshToken(): String?
     fun isLoggedIn(): Boolean
+    suspend fun clearLoginState()
 }

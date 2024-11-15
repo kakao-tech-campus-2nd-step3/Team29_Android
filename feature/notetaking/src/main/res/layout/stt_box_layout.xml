@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:text="여기엔 STT 적힌 텍스트가 들어값니다. 실시간으로 텍스트가 적힐 것 같아요. "
-        style="@style/Regular8" />
+        style="@style/RegularCaptionMedium" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -29,5 +29,4 @@
         <include layout="@layout/small_button_blue_layout" />
 
     </LinearLayout>
-
 </LinearLayout>

@@ -1,10 +1,15 @@
 package com.iguana.data.di
 
+
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.iguana.data.BuildConfig
+import com.iguana.data.mapper.FolderOrDocumentResponseDtoAdapter
 import com.iguana.data.remote.api.AnnotationApi
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.api.LoginApi
 import com.iguana.data.remote.api.RecordApi
+import com.iguana.data.remote.api.SttApi
 import com.iguana.data.remote.api.SummarizeApi
 import com.iguana.domain.repository.SharedPreferencesHelper
 import dagger.Module
@@ -32,8 +37,17 @@ object NetworkModule {
         sharedPreferencesHelper: SharedPreferencesHelper,
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
+
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(sharedPreferencesHelper))
+            .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
             .addInterceptor(logging)
             // 연결 타임아웃 설정 (예: 30초)
@@ -45,14 +59,30 @@ object NetworkModule {
             .build()
     }
 
+    var customGson = GsonBuilder()
+        .registerTypeAdapter(Result::class.java, FolderOrDocumentResponseDtoAdapter())
+        .create()
+
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(customGson))
+            .build()
+    }
+
+
+    @TokenApi
+    @Provides
+    fun provideTokenApiRetrofit(): LoginApi {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.API_BASE_URL)
+            .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(LoginApi::class.java)
     }
 
     @Provides
@@ -83,5 +113,11 @@ object NetworkModule {
     @Singleton
     fun provideRecordApi(retrofit: Retrofit): RecordApi {
         return retrofit.create(RecordApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSttApi(retrofit: Retrofit): SttApi {
+        return retrofit.create(SttApi::class.java)
     }
 }
