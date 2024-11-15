@@ -80,7 +80,6 @@ class PdfViewerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.clearCache() // 캐시된 주석 삭제
         _binding = null
     }
 

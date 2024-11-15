@@ -1,6 +1,7 @@
 package com.iguana.notetaking.pdf
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,7 +28,9 @@ class PdfPageViewModel @Inject constructor(
     fun loadAnnotations(documentId: Long, pageNumber: Int) {
         viewModelScope.launch {
             val annotations = getAnnotationsByPageUseCase(documentId, pageNumber)
+            Log.d("testt", "(PageViewmodel loadAnnotation) annotations: $annotations")
             _annotations.postValue(annotations)
+            Log.d("testt", "(PageViewmodel loadAnnotation postvalue이후) annotations.value: ${_annotations.value}")
         }
     }
 
