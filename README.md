@@ -307,10 +307,12 @@
 | 페이지별 생성된 요약 정리 및 문제 조회 (client → server) | `/api/ai/llm/results/{documentId}/{pageNumber}` | GET | 완료 |  |
 | task 상태 확인 | `/api/ai/tasks/{taskId}` | GET | 완료 | 우선은 존재하지 않는 task로 요청하더라도 PENDING입니다 |
 
+<br>
 
 # ⚙️ 기술스택 
 ![image](https://github.com/user-attachments/assets/b001bb8b-950a-493a-900b-3e0094a60194)
 
+<br>
 
 # ☁️ 추후 개발예정 기능 ☁️
 1. 커뮤니티 기능 → 내가 만든 ai 문제를 공유하고 피드백 받을수 있게 !  ~ 금액과 연결지어서 사고파는 문제은행 
