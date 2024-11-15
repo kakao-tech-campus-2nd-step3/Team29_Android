@@ -44,6 +44,7 @@ import android.view.WindowManager
 import com.iguana.documents.databinding.DialogEditNameBinding
 import android.os.Build
 import android.view.Window
+import com.iguana.domain.model.RecentFile
 
 @AndroidEntryPoint
 class DocumentsFragment : Fragment() {
@@ -79,13 +80,8 @@ class DocumentsFragment : Fragment() {
                         viewModel.loadFolderContents(item.id, item.name)
                     }
                     is DocumentItem.PdfItem -> {
-                        val intent = Intent(requireContext(), NotetakingActivity::class.java).apply {
-                            putExtra("PDF_URI", item.url)
-                            putExtra("PDF_TITLE", item.title)
-                            putExtra("DOCUMENT_ID", item.id)
-                        }
-                        Log.d("DocumentsFragment", "Document ID: ${item.id}, PDF URI: ${item.url}, PDF Title: ${item.title}")
-                        startActivity(intent)
+                        val recentFile = RecentFile(item.id, item.title, item.url, System.currentTimeMillis(), 0)
+                        viewModel.openFile(recentFile, requireContext())
                     }
                 }
             },
@@ -182,31 +178,6 @@ class DocumentsFragment : Fragment() {
         }
     }
 
-//    private fun updateUI(folderContent: List<FolderContentItem>) {
-//        val items = folderContent.map { item ->
-//            when (item.type.uppercase()) {
-//                "FOLDER" -> DocumentItem.FolderItem(
-//                    id = item.id,
-//                    name = item.name,
-//                    fileCount = item.totalElements,
-//                    isBookmarked = false
-//                )
-//                "DOCUMENT" -> DocumentItem.PdfItem(
-//                    id = item.id,
-//                    title = item.name,
-//                    timestamp = item.updatedAt,
-//                    isBookmarked = false,
-//                )
-//                else -> DocumentItem.PdfItem(
-//                    id = item.id,
-//                    title = item.name,
-//                    timestamp = item.updatedAt,
-//                    isBookmarked = false,
-//                )
-//            }
-//        }
-//        adapter.setItems(items)
-//    }
 
     private fun onItemClick(item: DocumentItem) {
         when (item) {
@@ -232,7 +203,7 @@ class DocumentsFragment : Fragment() {
         _binding = null
     }
 
-    fun showCreateFolderDialog() {
+    private fun showCreateFolderDialog() {
         val dialog = CreateFolderDialogFragment { folderName ->
             viewModel.createFolder(folderName)
         }
@@ -391,31 +362,6 @@ class DocumentsFragment : Fragment() {
         super.onResume()
         viewModel.refreshCurrentFolder()
     }
-
-//    private fun mapToDocumentItems(folderContent: FolderContent): List<DocumentItem> {
-//        return folderContent.map { item ->
-//            when (item.type.uppercase()) {
-//                "FOLDER" -> DocumentItem.FolderItem(
-//                    id = item.id,
-//                    name = item.name,
-//                    fileCount = item.totalElements,
-//                    isBookmarked = false
-//                )
-//                "DOCUMENT" -> DocumentItem.PdfItem(
-//                    id = item.id,
-//                    title = item.name,
-//                    timestamp = item.updatedAt,
-//                    isBookmarked = false
-//                )
-//                else -> DocumentItem.PdfItem(
-//                    id = item.id,
-//                    title = item.name,
-//                    timestamp = item.updatedAt,
-//                    isBookmarked = false
-//                )
-//            }
-//        }
-//    }
 
 }
 
