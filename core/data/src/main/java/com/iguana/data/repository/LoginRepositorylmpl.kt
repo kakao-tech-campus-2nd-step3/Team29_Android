@@ -91,6 +91,10 @@ class LoginRepositoryImpl @Inject constructor(
         return sharedPreferencesHelper.isLoggedIn()
     }
 
+    override suspend fun clearLoginState() {
+        sharedPreferencesHelper.clearTokens()
+    }
+
     companion object {
         private const val TAG = "LoginRepositoryImpl"
     }
