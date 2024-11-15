@@ -16,7 +16,6 @@ android {
 dependencies {
     implementation(libs.androidx.appcompat)
     implementation(projects.core.designsystem)
-    implementation(projects.core.navigation)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
