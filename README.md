@@ -3,15 +3,15 @@
 ![image](https://github.com/user-attachments/assets/b3d84499-a30d-4649-abfc-e4599f2594b2)
 
 ## 목차
-- [🔹 NOTAI 를 소개합니다!](#-notai-를-소개합니다-)
-- [👥 팀원 ](#-팀원-)
-- [💼 핵심 기능 ](#-핵심-기능-)
-- [🔗 링크 모음 ](#-링크-모음)
-- [📁 파일구조 ](#-파일구조-)
-- [💠 ERD ](#-erd-)
-- [📄 API 모아보기 ](#-api-모아보기)
-- [⚙️ 기술스택 ](#%EF%B8%8F-기술스택-%EF%B8%8F)
-- [☁️ 추후 개발예정 기능 ](#%EF%B8%8F-추후-개발예정-기능-%EF%B8%8F)
+- [🔹 NOTAI 를 소개합니다!](#-🔹-NOTAI-소개)
+- [👥 팀원 ](#-👥-팀원)
+- [💼 핵심 기능 ](#-📌-핵심-기능)
+- [🔗 링크 모음 ](#-🖇️-링크-모음)
+- [📁 파일구조 ](#-📁-파일구조)
+- [💠 ERD ](#-💠-ERD)
+- [📄 API 모아보기 ](#-📄-API-모아보기)
+- [⚙️ 기술스택 ](#-🛠️-기술스택-🛠️)
+- [☁️ 각 트랙별 코드 설명 ](#-☁️-각-트랙별-코드-설명)
 
 <br>
 <br>
@@ -26,35 +26,35 @@
 ## 제공 서비스
 
 **1️. 동기화된 강의 자료 3-TYPE**
-   - 한눈에 보이는
-      - 강의 녹음 → PDF 파일 — 사용자 필기
+- 한눈에 보이는
+    - 강의 녹음 → PDF 파일 — 사용자 필기
 
 
- > <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Old%20Key.png" alt="Old Key" width="20" height="20" /> **흩어진 강의자료, 확인하기 불편하셨죠? 강의 흐름에 꼭 맞춰 정리되는 자료로 더 편리하게 학습하세요!**
+> <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Old%20Key.png" alt="Old Key" width="20" height="20" /> **흩어진 강의자료, 확인하기 불편하셨죠? 강의 흐름에 꼭 맞춰 정리되는 자료로 더 편리하게 학습하세요!**
 
 **2️. AI 학습 보조 자료 3-STEP**
-   - 음성 필기
-      - 강의 녹음 파일을 STT (Speech to Text) 변환
+- 음성 필기
+    - 강의 녹음 파일을 STT (Speech to Text) 변환
 
-   - AI 요약
-      - 강의 자료 3가지를 통합한 요약본 제공
+- AI 요약
+    - 강의 자료 3가지를 통합한 요약본 제공
 
-   - AI 예상 문제
-      - 강의 자료 3가지를 통합한 예상 문제 생성
+- AI 예상 문제
+    - 강의 자료 3가지를 통합한 예상 문제 생성
 
 **3️. 해결하려는 문제점 및 기대효과**
 
-   | 문제점 BIG 3 | ➡️ | 기대효과 |
+| 문제점 BIG 3 | ➡️ | 기대효과 |
    |--------------|----|----------|
-   | 1. 필기하느라 수업을 놓친 흑우가 있다?! 🐂 | ➡️ | 1. **필기는 AI에게 맡겨요!**<br>강의 집중 UP 📈 |
-   | 2. 너무 긴 강의내용... 다 못 보게 되는데... 😅 | ➡️ | 2. **AI 요약으로 핵심만!**<br>학습 효율 UP 🔝 |
-   | 3. 이거 시험에는 어떻게 나올지 도저히 모르겠어!! 💢 | ➡️ | 3. **AI가 만들어주는 문제로**<br>더 완벽한 시험대비 💯 |
+| 1. 필기하느라 수업을 놓친 흑우가 있다?! 🐂 | ➡️ | 1. **필기는 AI에게 맡겨요!**<br>강의 집중 UP 📈 |
+| 2. 너무 긴 강의내용... 다 못 보게 되는데... 😅 | ➡️ | 2. **AI 요약으로 핵심만!**<br>학습 효율 UP 🔝 |
+| 3. 이거 시험에는 어떻게 나올지 도저히 모르겠어!! 💢 | ➡️ | 3. **AI가 만들어주는 문제로**<br>더 완벽한 시험대비 💯 |
 
 
 
 <br>
 
-# 👥 팀원 
+# 👥 팀원
 
 **Backend**
 
@@ -82,17 +82,17 @@
 <br>
 
 # 🖇️ 링크 모음
-
-|구분 |  | 링크 |
-|--------------|----|----------|
-| 앱 다운로드(원스토어) 링크 | ➡️ | [앱 다운로드 링크 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone%20with%20Arrow.png" alt="Mobile Phone with Arrow" width="25" height="25" />](https://onesto.re/0000779576) |
-| 소개 자료 | ➡️ | [소개 자료 링크](https://www.canva.com/design/DAGWX39vH6w/nzAtcH09BaQlGldnBlVIfw/view?utm_content=DAGWX39vH6w&utm_campaign=designshare&utm_medium=link&utm_source=editor) |
-| ERD 설계서 | ➡️ | [ERD 설계서 링크](https://www.erdcloud.com/d/Tndj8pDGQq5sokaLs) |
-| Figma 기획 파일 | ➡️ | [Figma 기획 파일 링크](https://www.figma.com/design/Mq7XxiwzjEsm2HR0Z15lh/NOTAI_v2?node-id=1%3A8&t=4UGD4rPCtVzpqJa-1) |
-
+| 구분              |  | 링크                                                                                                                                                                                                                                                                                              |
+|-----------------|----|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 앱 다운로드(원스토어) 링크 | ➡️ | [앱 다운로드 링크 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone%20with%20Arrow.png" alt="Mobile Phone with Arrow" width="25" height="25" />](https://onesto.re/0000779576)                                                                            |
+| 소개 자료           | ➡️ | [소개 자료 링크](https://www.canva.com/design/DAGWX39vH6w/nzAtcH09BaQlGldnBlVIfw/view?utm_content=DAGWX39vH6w&utm_campaign=designshare&utm_medium=link&utm_source=editor)                                                                                                                             |
+| ERD 설계서         | ➡️ | [ERD 설계서 링크](https://www.erdcloud.com/d/Tndj8pDGQq5sokaLs)                                                                                                                                                                                                                                      |
+| Figma 기획 파일     | ➡️ | [Figma 기획 파일 링크](https://www.figma.com/design/Mq7XxiwzjEsm2HR0Z15lh/NOTAI_v2?node-id=1%3A8&t=4UGD4rPCtVzpqJa-1)                                                                                                                                                                                 |
+| 백엔드 서버 URL      | ➡️ | [http://121.183.242.176](http://121.183.242.176)                                                                                                                                                                                                                                                |
+| API 문서(Swagger) | ➡️ | [http://121.183.242.176/swagger-ui/index.html#/annotation-controller/getAnnotations](http://121.183.242.176/swagger-ui/index.html#/annotation-controller/getAnnotations)                                                                                                                        |
 <br>
 
-# 📁 파일구조 
+# 📁 파일구조
 
 ### Android
 
@@ -338,27 +338,27 @@
 - **Docker** 컨테이너 환경
 - **NGINX** → **Spring Boot** 서버
 - **주요 기능**
-  - **REST API** 제공
-  - **MySQL** DB 관리
-  - 사용자 관리: **Kakao OAuth** 기반 인증
-  - PDF/음성 파일 관리
-  - 실시간 필기 처리
-  - 폴더/문서 구조화
-  - 녹음/STT 관리:
-    - 페이지 전환 이벤트 기반 녹음 구간 태깅
-    - 페이지별 **STT** 결과 매핑
-    - **OCR** 처리: Tesseract 기반 비동기 OCR
+    - **REST API** 제공
+    - **MySQL** DB 관리
+    - 사용자 관리: **Kakao OAuth** 기반 인증
+    - PDF/음성 파일 관리
+    - 실시간 필기 처리
+    - 폴더/문서 구조화
+    - 녹음/STT 관리:
+        - 페이지 전환 이벤트 기반 녹음 구간 태깅
+        - 페이지별 **STT** 결과 매핑
+        - **OCR** 처리: Tesseract 기반 비동기 OCR
 
 #### 3. Flask AI 서버
 - **STT 처리**:
-  - **Whisper** 모델 활용
-  - 워커당 30% GPU VRAM 제한으로 3개 병렬 처리
-  - 음성 전처리 (노이즈 제거, 정규화)
+    - **Whisper** 모델 활용
+    - 워커당 30% GPU VRAM 제한으로 3개 병렬 처리
+    - 음성 전처리 (노이즈 제거, 정규화)
 - **LLM 처리**:
-  - **OpenAI API** 통합
-  - 강의 요약 및 시험문제 생성
+    - **OpenAI API** 통합
+    - 강의 요약 및 시험문제 생성
 - **작업 관리**:
-  - **Celery** + **Redis** 기반 비동기 큐
+    - **Celery** + **Redis** 기반 비동기 큐
 
 <br>
 
@@ -368,7 +368,7 @@
 <br>
 
 
-# 각 트랙별 코드 설명
+# ☁️ 각 트랙별 코드 설명
 
 ## Android
 
