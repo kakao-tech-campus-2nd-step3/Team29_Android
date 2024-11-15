@@ -3,20 +3,20 @@
 ![image](https://github.com/user-attachments/assets/b3d84499-a30d-4649-abfc-e4599f2594b2)
 
 ## 목차
-- [🔹 NOTAI 를 소개합니다!🔹](#-notai-를-소개합니다-)
-- [👥 팀원 👥](#-팀원-)
-- [💼 핵심 기능 💼](#-핵심-기능-)
-- [🔗 링크 모음 🔗](#-링크-모음)
-- [📁 파일구조 📁](#-파일구조-)
-- [💠 ERD 💠](#-erd-)
-- [📄 API 모아보기 📄](#-api-모아보기)
-- [⚙️ 기술스택 ⚙️](#%EF%B8%8F-기술스택-%EF%B8%8F)
-- [☁️ 추후 개발예정 기능 ☁️](#%EF%B8%8F-추후-개발예정-기능-%EF%B8%8F)
+- [🔹 NOTAI 를 소개합니다!](#-notai-를-소개합니다-)
+- [👥 팀원 ](#-팀원-)
+- [💼 핵심 기능 ](#-핵심-기능-)
+- [🔗 링크 모음 ](#-링크-모음)
+- [📁 파일구조 ](#-파일구조-)
+- [💠 ERD ](#-erd-)
+- [📄 API 모아보기 ](#-api-모아보기)
+- [⚙️ 기술스택 ](#%EF%B8%8F-기술스택-%EF%B8%8F)
+- [☁️ 추후 개발예정 기능 ](#%EF%B8%8F-추후-개발예정-기능-%EF%B8%8F)
 
 <br>
 <br>
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Light%20Blue%20Heart.png" alt="Light Blue Heart" width="25" height="25" /> NOTAI 를 소개합니다! 
+# 🔹 NOTAI 소개
 
 ## 타겟층 및 제작 목적
 **NOTE + AI**를 의미하는 **NOTAI**는 **대학생을 주 타깃**으로 하여 <br> 효율적이고 효과적인 **강의 학습** 및 **시험 대비**를 도와주는<br> **안드로이드 태블릿에 최적화**된 애플리케이션입니다.
@@ -54,7 +54,7 @@
 
 <br>
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Hear-No-Evil%20Monkey.png" alt="Hear-No-Evil Monkey" width="30" height="30" /> 팀원 
+# 👥 팀원 
 
 **Backend**
 
@@ -69,8 +69,7 @@
 | Android | Android |
 
 <br>
-
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bookmark.png" alt="Bookmark" width="30" height="30" /> 핵심 기능
+# 📌 핵심 기능
 | 기능 사진 | 기능 설명 |
 |--------|---------------------|
 | <img src="https://github.com/user-attachments/assets/d5a05573-fdfb-4c69-bd73-5ac7eb8bf5b1" width="300" alt="노트 앱 기능">  | <b>기본적인 노트 앱 기능</b><div style="margin: 5px 0;"><hr></div> <ul><li>PDF 파일 조회 및 텍스트 주석을 통한 기본 필기 기능</li><li>슬라이더를 통한 유연한 화면 구성 제공</li></ul> |
@@ -80,7 +79,7 @@
 
 <br>
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Link.png" alt="Link" width="30" height="30" /> 링크 모음
+# 🖇️ 링크 모음
 
 |구분 |  | 링크 |
 |--------------|----|----------|
@@ -91,7 +90,7 @@
 
 <br>
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20File%20Box.png" alt="Card File Box" width="30" height="30" /> 파일구조 
+# 📁 파일구조 
 
 ### Android
 
@@ -239,10 +238,10 @@
                 └── 📁stt
 ```
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Package.png" alt="Package" width="30" height="30" /> ERD
+# 💠 ERD
 ![image](https://github.com/user-attachments/assets/e0e18ad0-c6f1-4514-bb49-8e75860d4259)
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Magnifying%20Glass%20Tilted%20Left.png" alt="Magnifying Glass Tilted Left" width="30" height="30" /> API 모아보기
+# 📄 API 모아보기
 
 **회원 API**
 
@@ -303,7 +302,7 @@
 | task 상태 확인 | `/api/ai/tasks/{taskId}` | GET | 완료 | 우선은 존재하지 않는 task로 요청하더라도 PENDING입니다 |
 
 
-# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Wrench.png" alt="Wrench" width="30" height="30" /> 기술스택 
+# ⚙️ 기술스택 
 ![image](https://github.com/user-attachments/assets/b001bb8b-950a-493a-900b-3e0094a60194)
 
 
