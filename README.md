@@ -3,8 +3,7 @@
 ![image](https://github.com/user-attachments/assets/b3d84499-a30d-4649-abfc-e4599f2594b2)
 
 ## 목차
-- [🔵 NOTAI 를 소개합니다! 🔵](#-notai-를-소개합니다-)
-- [📹 시연영상 📹](#-시연영상-)
+- [🔹 NOTAI 를 소개합니다!🔹](#-notai-를-소개합니다-)
 - [👥 팀원 👥](#-팀원-)
 - [💼 핵심 기능 💼](#-핵심-기능-)
 - [🔗 링크 모음 🔗](#-링크-모음)
@@ -14,57 +13,62 @@
 - [⚙️ 기술스택 ⚙️](#%EF%B8%8F-기술스택-%EF%B8%8F)
 - [☁️ 추후 개발예정 기능 ☁️](#%EF%B8%8F-추후-개발예정-기능-%EF%B8%8F)
 
+<br>
+<br>
 
-# 🔵 NOTAI 를 소개합니다! 🔵
+# 🔹 NOTAI 를 소개합니다! 🔹
 
-## 1. 타깃층 및 제작 목적
+## 타깃층 및 제작 목적
 **NOTE + AI**를 의미하는 **NOTAI**는 **대학생을 주 타깃**으로 하여 <br> 효율적이고 효과적인 **강의 학습** 및 **시험 대비**를 도와주는<br> **안드로이드 태블릿에 최적화**된 애플리케이션입니다.
 
+<br>
 
-## 2. 제공 서비스
+## 제공 서비스
 
-### 1. 동기화된 강의 자료 3-TYPE
-- **한눈에 보이는**
-  - 강의 녹음 → PDF 파일 — 사용자 필기
-
-> 🔑 **흩어진 강의자료, 확인하기 불편하셨죠? 강의 흐름에 꼭 맞춰 정리되는 자료로 더 편리하게 학습하세요!**
-
-### 2. AI 학습 보조 자료 3-STEP
-- **음성 필기**
-  - 강의 녹음 파일을 STT (Speech to Text) 변환
-
-- **AI 요약**
-  - 강의 자료 3가지를 통합한 요약본 제공
-
-- **AI 예상 시험 문제**
-  - 강의 자료 3가지를 통합한 시험 예상 문제 생성
-
-### 3. 해결하려는 문제점 및 기대효과
-
-| 문제점 BIG 3 | ➡️ | 기대효과 |
-|--------------|----|----------|
-| 1. 필기하느라 수업을 놓친 흑우가 있다?! 🐂 | ➡️ | 1. **필기는 AI에게 맡겨요!**<br>강의 집중 UP 📈 |
-| 2. 너무 긴 강의내용... 다 못 보게 되는데... 😅 | ➡️ | 2. **AI 요약으로 핵심만!**<br>학습 효율 UP 🔝 |
-| 3. 이거 시험에는 어떻게 나올지 도저히 모르겠어!! 💢 | ➡️ | 3. **AI가 만들어주는 문제로**<br>더 완벽한 시험대비 💯 |
+**1️. 동기화된 강의 자료 3-TYPE**
+   - 한눈에 보이는
+      - 강의 녹음 → PDF 파일 — 사용자 필기
 
 
-# 📹 시연영상 📹
-(영상업로드 예정) 
+ > <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Old%20Key.png" alt="Old Key" width="20" height="20" /> **흩어진 강의자료, 확인하기 불편하셨죠? 강의 흐름에 꼭 맞춰 정리되는 자료로 더 편리하게 학습하세요!**
+
+**2️. AI 학습 보조 자료 3-STEP**
+   - 음성 필기
+      - 강의 녹음 파일을 STT (Speech to Text) 변환
+
+   - AI 요약
+      - 강의 자료 3가지를 통합한 요약본 제공
+
+   - AI 예상 문제
+      - 강의 자료 3가지를 통합한 예상 문제 생성
+
+**3️. 해결하려는 문제점 및 기대효과**
+
+   | 문제점 BIG 3 | ➡️ | 기대효과 |
+   |--------------|----|----------|
+   | 1. 필기하느라 수업을 놓친 흑우가 있다?! 🐂 | ➡️ | 1. **필기는 AI에게 맡겨요!**<br>강의 집중 UP 📈 |
+   | 2. 너무 긴 강의내용... 다 못 보게 되는데... 😅 | ➡️ | 2. **AI 요약으로 핵심만!**<br>학습 효율 UP 🔝 |
+   | 3. 이거 시험에는 어떻게 나올지 도저히 모르겠어!! 💢 | ➡️ | 3. **AI가 만들어주는 문제로**<br>더 완벽한 시험대비 💯 |
+
+
+
+<br>
 
 # 👥 팀원 👥
-### Backend
+
+**Backend**
 
 | <img src="https://github.com/hynseoj.png" width="80"> <br/> [hynseoj](https://github.com/hynseoj) | <img src="https://github.com/rladbrua0207.png" width="80"> <br/> [rladbrua0207](https://github.com/rladbrua0207) | <img src="https://github.com/mingjuu.png" width="80"> <br/> [mingjuu](https://github.com/mingjuu) | <img src="https://github.com/Shsin9797.png" width="80"> <br/> [Shsin9797](https://github.com/Shsin9797) | <img src="https://github.com/yunjunghun0116.png" width="80"> <br/> [yunjunghun0116](https://github.com/yunjunghun0116) |
 |:-:|:-:|:-:|:-:|:-:|
 | Backend | Backend | Backend | Backend | Backend |
 
-### Frontend (Android)
+**Frontend (Android)**
 
 | <img src="https://github.com/aengzu.png" width="80"> <br/> [aengzu](https://github.com/aengzu) | <img src="https://github.com/Kjamm.png" width="80"> <br/> [Kjamm](https://github.com/Kjamm) |
 |:-:|:-:|
 | Android | Android |
 
-
+<br>
 
 # 💼 핵심 기능 💼
 | 기능 사진 | 기능 설명 |
@@ -74,27 +78,24 @@
 | <img src="https://github.com/user-attachments/assets/dc047197-578f-4206-83c4-deaf947b15b0" width="300" alt="녹음 변환 기능">  | <b>AI 를 통한 녹음 변환(STT) 기능</b><div style="margin: 5px 0;"><hr></div><ul><li>녹음 도중 페이지 이동 이벤트를 기록해 각 페이지마다 STT 조회 가능</li></ul> |
 | <img src="https://github.com/user-attachments/assets/db6b163e-6cf6-41fc-b133-7f6bc7866201" width="300" alt="페이지 요약 기능">  | <b>AI를 통한 페이지 요약 및 문제 생성 기능</b><div style="margin: 5px 0;"><hr></div><ul><li>강의 자료 외에도 기록된 녹음을 바탕으로 AI 요약 및 문제 생성</li></ul>|
 
-
+<br>
 
 # 🔗 링크 모음
 
-### 앱 다운로드
-[앱 다운로드 링크](https://onesto.re/0000779576)
+|구분 |  | 링크 |
+|--------------|----|----------|
+| 앱 다운로드(원스토어) 링크 | ➡️ | [앱 다운로드 링크 <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone%20with%20Arrow.png" alt="Mobile Phone with Arrow" width="25" height="25" />](https://onesto.re/0000779576) |
+| 소개 자료 | ➡️ | [소개 자료 링크](https://www.canva.com/design/DAGWX39vH6w/nzAtcH09BaQlGldnBlVIfw/view?utm_content=DAGWX39vH6w&utm_campaign=designshare&utm_medium=link&utm_source=editor) |
+| ERD 설계서 | ➡️ | [ERD 설계서 링크](https://www.erdcloud.com/d/Tndj8pDGQq5sokaLs) |
+| Figma 기획 파일 | ➡️ | [Figma 기획 파일 링크](https://www.figma.com/design/Mq7XxiwzjEsm2HR0Z15lh/NOTAI_v2?node-id=1%3A8&t=4UGD4rPCtVzpqJa-1) |
 
-
-### 소개 자료 (ppt)
-[소개 자료 링크](https://www.canva.com/design/DAGWX39vH6w/nzAtcH09BaQlGldnBlVIfw/view?utm_content=DAGWX39vH6w&utm_campaign=designshare&utm_medium=link&utm_source=editor)
-
-### 프로젝트 관련 문서
-- **ERD 설계서**: [ERD 설계서 링크](https://www.erdcloud.com/d/Tndj8pDGQq5sokaLs)
-- **Figma 기획 파일**: [Figma 기획 파일 링크](https://www.figma.com/design/Mq7XxiwzjEsm2HR0Z15lh/NOTAI_v2?node-id=1%3A8&t=4UGD4rPCtVzpqJa-1)
-
+<br>
 
 # 📁 파일구조 📁
 
-## Android
+### Android
 
-### 클린아키텍처 & MVVM & 멀티모듈
+클린아키텍처 & MVVM & 멀티모듈
 - 클린 아키텍처를 통해 비즈니스 로직, 데이터 처리, ui 명확히 분리
 - 멀티모듈 구조를 통해 공통 기능을 별도의 모듈로 분리하여 각 부분의 독립성을 높임
 - MVVM을 통해 테스트와 유지보수가 용이해짐
@@ -152,9 +153,9 @@
     └───📂userInfo
 ```
 
-## Backend
+### Backend
 
-### CQRS 패턴 & Command 패턴
+CQRS 패턴 & Command 패턴
 - 데이터 변경과 조회 작업을 분리하여 최적화된 작업 수행 가능
 - 추후 데이터 저장소를 분리하여 효율을 높일 수 있음
 - presentation 계층과 application 계층의 요청을 분리하여 독립성 보장
@@ -243,7 +244,7 @@
 
 # 📄 API 모아보기
 
-### 회원 API
+**회원 API**
 
 | 기능               | URL                                  | Method | Status | 설명 |
 |------------------|--------------------------------------|--------|--------|------|
@@ -252,7 +253,7 @@
 | 본인 프로필 조회   | `/api/members/me`                   | GET    | 완료   |      |
 
 
-### Document API
+**Document API**
 
 | 기능                       | URL                                                     | Method | Status | 설명 |
 |--------------------------|---------------------------------------------------------|--------|--------|------|
@@ -267,7 +268,7 @@
 | 폴더 삭제                  | `/api/folders/{folderId}`                              | DELETE | 완료   |      |
 | 속해있는 폴더 변경(위치변경) | `/api/folders/{folderId}/move`                         | POST   | 완료   |      |
 
-### Annotation API
+**Annotation API**
 
 | 기능           | URL                                                   | Method | Status | 설명 |
 |----------------|-------------------------------------------------------|--------|--------|------|
@@ -278,7 +279,7 @@
 
 
 
-### Record API
+**Record API**
 
 | 기능 | URL | Method | Status | 설명 |
 |------|-----|--------|--------|------|
@@ -287,7 +288,7 @@
 | STT 결과 업로드 X (서버에서 처리) | `/api/documents/{documentId}/recordings/{recordingId}/stt-results` | POST | 완료 | |
 
 
-### Summarize API
+**Summarize API**
 
 | 기능 | URL | Method | Status | 설명 |
 |------|-----|--------|--------|------|
