@@ -9,7 +9,15 @@ data class Document(
     val updatedAt: String
 )
 
-typealias FolderContent = List<FolderContentItem>
+// FolderContent 데이터 클래스 정의
+data class FolderContent(
+    val items: List<FolderContentItem>,
+    val folderCount: Int,
+    val documentCount: Int
+)
+
+// FolderContentItem 리스트에 대한 타입 별칭
+typealias FolderContentList = List<FolderContentItem>
 
 data class FolderContentItem(
     val type: String,

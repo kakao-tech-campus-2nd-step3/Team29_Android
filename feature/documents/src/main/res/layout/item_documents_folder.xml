@@ -46,19 +46,11 @@
                 android:layout_height="wrap_content"
                 android:text="DeepLearning (1)"
                 android:textStyle="bold"
-                style="@style/RegularCaptionExtraSmall"
+                style="@style/RegularCaptionSmall"
                 android:textColor="@android:color/black"
                 android:maxLines="1"
                 android:ellipsize="end" /> <!-- 줄이 넘치면 ... 표시 -->
 
-            <!-- 타임스탬프 텍스트 -->
-            <TextView
-                android:id="@+id/fileTimestamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="30 files"
-                style="@style/RegularCaptionExtraSmall"
-                android:textColor="@android:color/darker_gray" />
         </LinearLayout>
 
 

@@ -29,22 +29,24 @@ class DocumentsRepositoryImpl @Inject constructor(
         // JSON 응답을 문자열로 받아 파싱
         val response = api.getFolderContents(-1)
 
-        Logger.d(TAG, "루트 폴더 응답 - 아이템 개수: ${response.size}")
+        var folderCount = 0
+        var documentCount = 0
+
         response.forEach { item ->
-            if (item.response == null) {
-                Logger.e(
-                    TAG,
-                    "response가 null입니다. folderAndDocumentResponseType: ${item.folderAndDocumentResponseType}"
-                )
-            } else {
-                Logger.d(TAG, "response 처리: ${item.response}")
+            when (item.folderAndDocumentResponseType) {
+                "FOLDER" -> folderCount++
+                "DOCUMENT" -> documentCount++
             }
         }
 
-        response.mapNotNull { it.toDomain() }
+        FolderContent(
+            items = response.mapNotNull { it.toDomain() },
+            folderCount = folderCount,
+            documentCount = documentCount
+        )
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
-        emptyList()
+        FolderContent(emptyList(), 0, 0)
     }
 
 
@@ -94,10 +96,15 @@ class DocumentsRepositoryImpl @Inject constructor(
                 "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.toString()}"
             )
         }
-        response.mapNotNull { it.toDomain() }
+
+        FolderContent(
+            items = response.mapNotNull { it.toDomain() },
+            folderCount = folderCount,
+            documentCount = documentCount
+        )
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
-        emptyList()
+        FolderContent(emptyList(), 0, 0)
     }
 
     override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): List<Document> =
