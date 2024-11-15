@@ -3,7 +3,8 @@
 
     <application>
         <activity
-            android:name="com.iguana.dashBoard.DashBoradFragment"
+            android:name=".DashBoardFragment"
+            android:screenOrientation="landscape"
             android:exported="false" />
     </application>
 
