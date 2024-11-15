@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iguana.domain.model.FolderContent
 import com.iguana.domain.model.FolderContentItem
+import com.iguana.domain.model.RecentFile
 import com.iguana.domain.usecase.*
 import com.iguana.notetaking.NotetakingActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,6 +56,19 @@ class DocumentsViewModel @Inject constructor(
     init {
         loadAllDocuments()
     }
+
+    fun openFile(recentFile: RecentFile, context: Context) {
+        viewModelScope.launch {
+            saveRecentFileUsecase.invoke(recentFile.id, recentFile.fileName, recentFile.fileUri)
+        }
+        val intent = Intent(context, NotetakingActivity::class.java).apply {
+            putExtra("PDF_URI", recentFile.fileUri)
+            putExtra("PDF_TITLE", recentFile.fileName)
+            putExtra("DOCUMENT_ID", recentFile.id)
+        }
+        context.startActivity(intent)
+    }
+
 
     fun loadAllDocuments() {
         viewModelScope.launch {

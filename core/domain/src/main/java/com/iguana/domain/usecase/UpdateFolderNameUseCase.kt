@@ -1,6 +1,6 @@
 package com.iguana.domain.usecase
 
-import com.iguana.domain.model.DocumentItem
+
 import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.repository.DocumentsRepository
 import javax.inject.Inject
