@@ -208,6 +208,7 @@ class RecordFragment() : Fragment() {
         // RecyclerView 표시
         binding.recyclerView.visibility = View.VISIBLE
         binding.sttStatus.visibility = View.GONE
+        binding.sttStatusTextView.hide()
     }
 
 }

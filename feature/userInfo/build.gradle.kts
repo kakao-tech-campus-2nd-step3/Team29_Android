@@ -19,7 +19,6 @@ android {
 dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.designsystem)
-    implementation(projects.core.navigation)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -32,4 +31,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.kotlin.test)
+
 }

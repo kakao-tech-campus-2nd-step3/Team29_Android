@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.iguana.navigation.LoginNavigator
 import com.iguana.userinfo.databinding.FragmentUserinfoBinding
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,8 +16,7 @@ class UserInfoFragment : Fragment() {
 
     private var _binding: FragmentUserinfoBinding? = null
     private val binding get() = _binding!!
-    
-    private val viewModel: UserInfoViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,15 +47,13 @@ class UserInfoFragment : Fragment() {
 
     private fun setupLogoutButton() {
         binding.logout?.setOnClickListener {
-            viewModel.logout()
+
         }
     }
 
     private fun observeLogoutEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.logoutEvent.collect {
-                (requireActivity() as? LoginNavigator)?.navigateToLogin()
-            }
+
         }
     }
 
