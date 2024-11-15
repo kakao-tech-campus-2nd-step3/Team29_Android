@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.iguana.dashBoard.DashBoardFragment
 import com.iguana.documents.DocumentsFragment
 import com.iguana.favorites.FavoritesFragment
-import com.iguana.navigation.LoginNavigator
 import com.iguana.settings.SettingsFragment
 import com.iguana.ui.databinding.ActivityBaseBinding
 import com.iguana.userinfo.UserInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BaseActivity : AppCompatActivity(), LoginNavigator {
+class BaseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBaseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +64,4 @@ class BaseActivity : AppCompatActivity(), LoginNavigator {
             .commit()
     }
 
-    override fun navigateToLogin() {
-        val intent = Intent(this, Class.forName("com.iguana.login.LoginActivity"))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
-    }
 }
