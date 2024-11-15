@@ -240,8 +240,12 @@
                 └── 📁stt
 ```
 
+<br>
+
 # 💠 ERD
 ![image](https://github.com/user-attachments/assets/e0e18ad0-c6f1-4514-bb49-8e75860d4259)
+
+<br>
 
 # 📄 API 모아보기
 
