@@ -69,7 +69,9 @@
 | Android | Android |
 
 <br>
+
 # 📌 핵심 기능
+
 | 기능 사진 | 기능 설명 |
 |--------|---------------------|
 | <img src="https://github.com/user-attachments/assets/d5a05573-fdfb-4c69-bd73-5ac7eb8bf5b1" width="300" alt="노트 앱 기능">  | <b>기본적인 노트 앱 기능</b><div style="margin: 5px 0;"><hr></div> <ul><li>PDF 파일 조회 및 텍스트 주석을 통한 기본 필기 기능</li><li>슬라이더를 통한 유연한 화면 구성 제공</li></ul> |
