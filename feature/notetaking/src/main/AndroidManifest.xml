@@ -6,7 +6,10 @@
         <activity
             android:name=".NotetakingActivity"
             android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="false" />
+        <activity android:name=".pdf.PdfPageFragment" android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".pdf.PdfViewerFragment" android:windowSoftInputMode="adjustNothing"/>
         <service
             android:name=".recording.RecordingService"
             android:foregroundServiceType="microphone"

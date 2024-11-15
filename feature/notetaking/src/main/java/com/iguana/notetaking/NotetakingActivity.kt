@@ -98,10 +98,6 @@ class NotetakingActivity : AppCompatActivity() {
         }
         binding.textEditBar.apply {
             llTextFormatIcons.ivDelete.setOnClickListener { onDeleteAnnotationClick() }
-            llTextFormatIcons.ivBold.setOnClickListener { showServicePreparingDialog() }
-            llTextFormatIcons.ivItalic.setOnClickListener { showServicePreparingDialog() }
-            llTextFormatIcons.ivUnderline.setOnClickListener { showServicePreparingDialog() }
-            llTextFormatIcons.ivStrikeThrough.setOnClickListener { showServicePreparingDialog() }
         }
     }
 

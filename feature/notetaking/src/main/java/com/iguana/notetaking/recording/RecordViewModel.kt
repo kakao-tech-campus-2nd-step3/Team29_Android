@@ -83,6 +83,10 @@ class RecordViewModel @Inject constructor(
     private fun fetchSttStatus(pageNumber: Int) {
         viewModelScope.launch {
             try {
+                if (documentId == -1L) {
+                    Log.e("RecordViewModel", "documentId가 설정되지 않았습니다.")
+                    return@launch
+                }
                 val status = getSTTStatusByPageUseCase(documentId, pageNumber)
                 _sttStatus.value = status
                 // STT 상태가 완료된 경우에만 결과 가져오기
