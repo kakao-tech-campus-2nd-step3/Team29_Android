@@ -91,7 +91,6 @@ class DocumentsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DocumentItem.FolderItem) {
             binding.fileName.text = item.name
-            binding.fileTimestamp.text = "${item.fileCount} files"
             binding.bookmarkIcon.setImageResource(
                 if (item.isBookmarked) com.iguana.designsystem.R.drawable.ic_file_saved_active
                 else com.iguana.designsystem.R.drawable.ic_file_saved_inactive

@@ -45,11 +45,14 @@ class DocumentsViewModel @Inject constructor(
     private val _currentFolderName = MutableStateFlow("문서")
     val currentFolderName: StateFlow<String> = _currentFolderName
 
-    private var currentFolder: FolderNode? = null
+    var currentFolder: FolderNode? = null
     var currentFolderId: Long = -1L
 
     private val _documentItems = MutableStateFlow<List<DocumentItem>>(emptyList())
     val documentItems: StateFlow<List<DocumentItem>> = _documentItems
+
+    private val _currentFolderCount = MutableStateFlow(Pair(0, 0)) // 폴더 수와 파일 수 저장
+    val currentFolderCount: StateFlow<Pair<Int, Int>> = _currentFolderCount.asStateFlow()
 
     private var currentParentFolderId: Long = -1L
 
@@ -75,13 +78,13 @@ class DocumentsViewModel @Inject constructor(
             try {
                 val rootContent = getAllDocumentsUseCase()
                 currentFolderId = -1L
-                _documents.value = rootContent
+                _documents.value = rootContent.items
                 _currentFolderName.value = "문서"
                 currentFolder = null
                 updateUI(rootContent)
                 Log.d(
                     "DocumentsViewModel",
-                    "루트 폴더 문서 로딩 완료 - 폴더: ${rootContent.count { it.type == "FOLDER" }}, 문서: ${rootContent.count { it.type == "DOCUMENT" }}"
+                    "루트 폴더 문서 로딩 완료 - 폴더: ${rootContent.folderCount}, 문서: ${rootContent.documentCount}"
                 )
             } catch (e: Exception) {
                 Log.e("DocumentsViewModel", "문서 로딩 중 오류 발생", e)
@@ -94,13 +97,15 @@ class DocumentsViewModel @Inject constructor(
             try {
                 val folderContent = getFolderContentsUseCase(folderId)
 
-                _documents.value = folderContent
+                _documents.value = folderContent.items
                 _currentFolderName.value = folderName
 
                 currentFolder = FolderNode(
                     id = folderId,
                     name = folderName,
-                    parent = if (folderId != -1L) newParent else null
+                    parent = if (folderId != -1L) newParent else null,
+                    folderCount = folderContent.folderCount,
+                    fileCount = folderContent.documentCount
                 )
 
                 currentFolderId = folderId
@@ -209,13 +214,11 @@ class DocumentsViewModel @Inject constructor(
         var result: String? = null
         if (uri.scheme == "content") {
             val cursor = context.contentResolver.query(uri, null, null, null, null)
-            try {
+            cursor.use { cursor ->
                 if (cursor != null && cursor.moveToFirst()) {
                     result =
                         cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
-            } finally {
-                cursor?.close()
             }
         }
         if (result == null) {
@@ -229,7 +232,7 @@ class DocumentsViewModel @Inject constructor(
     }
 
     private fun updateUI(folderContent: FolderContent) {
-        val items = folderContent.map { item ->
+        val items = folderContent.items.map { item ->
             when (item.type.uppercase()) {
                 "FOLDER" -> DocumentItem.FolderItem(
                     id = item.id,
@@ -256,10 +259,11 @@ class DocumentsViewModel @Inject constructor(
             }
         }
         _documentItems.value = items
+        _currentFolderCount.value = Pair(folderContent.folderCount, folderContent.documentCount) // 폴더/파일 수 업데이트
 
         Log.d(
             "DocumentsViewModel",
-            "UI 업데이트 - 전체: ${items.size}, 폴더: ${items.count { it is DocumentItem.FolderItem }}, 문서: ${items.count { it is DocumentItem.PdfItem }}"
+            "UI 업데이트 - 전체: ${items.size}, 폴더: ${folderContent.folderCount}, 문서: ${folderContent.documentCount}"
         )
     }
 
@@ -269,11 +273,11 @@ class DocumentsViewModel @Inject constructor(
             try {
                 if (currentFolderId == -1L) {
                     val content = getAllDocumentsUseCase()
-                    _documents.value = content
+                    _documents.value = content.items
                     updateUI(content)
                 } else {
                     val content = getFolderContentsUseCase(currentFolderId)
-                    _documents.value = content
+                    _documents.value = content.items
                     updateUI(content)
                 }
             } catch (e: Exception) {
@@ -299,5 +303,7 @@ class DocumentsViewModel @Inject constructor(
 data class FolderNode(
     val id: Long,
     val name: String,
-    val parent: FolderNode?
+    val parent: FolderNode?,
+    val folderCount: Int = 0,
+    val fileCount: Int = 0
 )

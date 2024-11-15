@@ -5,41 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.app.AlertDialog
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import com.iguana.documents.databinding.FragmentDocumentsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Stack
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.graphics.Rect
 import android.util.Log
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.iguana.domain.model.FolderContent
 import kotlinx.coroutines.launch
-import com.iguana.documents.R
-import com.iguana.documents.DocumentsViewModel
-import com.iguana.domain.model.FolderContentItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import com.iguana.notetaking.NotetakingActivity
-import kotlinx.coroutines.flow.StateFlow
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.iguana.documents.databinding.DialogAddOptionsBinding
 import android.app.Dialog
-import android.widget.Button
 import android.view.WindowManager
 import com.iguana.documents.databinding.DialogEditNameBinding
 import android.os.Build
@@ -177,6 +159,13 @@ class DocumentsFragment : Fragment() {
                 updateToolbarTitle(folderName)
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentFolderCount.collect { count ->
+                Log.d("DocumentsFragment", "현재 폴더 아이템 개수: $count")
+                binding.tvFolderCount.text = "폴더 ${count.first}개 / 파일 ${count.second}개"
+            }
+        }
     }
 
 
@@ -221,9 +210,9 @@ class DocumentsFragment : Fragment() {
             setBackgroundColor(Color.parseColor("#80000000"))
             alpha = 0f
         }
-        
+
         rootView.addView(dimView)
-        
+
         dimView.animate()
             .alpha(1f)
             .setDuration(200)
@@ -238,7 +227,7 @@ class DocumentsFragment : Fragment() {
         ).apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             elevation = 10f
-            
+
             setOnDismissListener {
                 dimView.animate()
                     .alpha(0f)
@@ -255,7 +244,7 @@ class DocumentsFragment : Fragment() {
             dialog.dismiss()
             showEditNameDialog(item)
         }
-        
+
         dialogView.findViewById<LinearLayout>(R.id.deleteLayout).setOnClickListener {
             dialog.dismiss()
             showDeleteConfirmationDialog(item)
@@ -297,30 +286,30 @@ class DocumentsFragment : Fragment() {
     private fun showEditNameDialog(item: DocumentItem) {
         val dialog = Dialog(requireContext())
         val dialogBinding = DialogEditNameBinding.inflate(layoutInflater)
-        
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(dialogBinding.root)
-        
+
         // 다이얼로그를 전체 화면으로 설정
         dialog.window?.let { window ->
             window.setLayout(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT
             )
-            
+
             // 플래그 설정
             window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            
+
             // 배경 설정
             window.setBackgroundDrawable(ColorDrawable(Color.parseColor("#CC000000")))
-            
+
             // 상태바 설정
             window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or 
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            )
-            
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    )
+
             // 상태바 투명하게
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.statusBarColor = Color.TRANSPARENT
