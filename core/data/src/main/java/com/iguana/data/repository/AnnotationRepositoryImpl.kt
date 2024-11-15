@@ -39,6 +39,9 @@ class AnnotationRepositoryImpl @Inject constructor(
     ): Long {
         val requestDto = annotation.toCreateAnnotationRequestDto(pageNumber)
         val responseDto = annotationApi.createAnnotation(documentId, requestDto)
+        // 서버 저장 성공 후 SYNCED 상태로 업데이트
+        updateSyncStatus(annotation.id, SyncStatus.SYNCED)
+
         return responseDto.id
     }
 
@@ -57,9 +60,9 @@ class AnnotationRepositoryImpl @Inject constructor(
             val remoteAnnotations = responseDto.toDomain()
 
             // 로컬 DB에 서버에서 받은 ID로 주석 저장
-            remoteAnnotations.forEach { annotation ->
-                annotationDao.insertAnnotation(annotation.toEntity(documentId, annotation.pageNumber))
-            }
+            val annotationEntities = remoteAnnotations.map { it.toEntity(documentId, it.pageNumber) }
+            annotationDao.insertAllAnnotations(annotationEntities)
+
 
             remoteAnnotations
         } catch (e: Exception) {

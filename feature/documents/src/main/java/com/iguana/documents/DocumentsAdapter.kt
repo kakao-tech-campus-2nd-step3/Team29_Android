@@ -2,6 +2,7 @@ package com.iguana.documents
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.iguana.documents.databinding.ItemDocumentsFolderBinding
@@ -9,7 +10,7 @@ import com.iguana.documents.databinding.ItemDocumentsPdfBinding
 
 class DocumentsAdapter(
     private val onItemClick: (DocumentItem) -> Unit,
-    private val onItemLongClick: (DocumentItem) -> Unit
+    private val onItemLongClick: (DocumentItem, View) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<DocumentItem>()
@@ -24,34 +25,57 @@ class DocumentsAdapter(
         items.addAll(newItems)
         notifyDataSetChanged()
         Log.d("DocumentsAdapter", "Items updated: ${items.size} items")
+        items.forEach { item ->
+            Log.d("DocumentsAdapter", "Item: ${when(item) {
+                is DocumentItem.FolderItem -> "Folder - ${item.name}"
+                is DocumentItem.PdfItem -> "PDF - ${item.title}"
+            }}")
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_FOLDER -> FolderViewHolder(
-                ItemDocumentsFolderBinding.inflate(inflater, parent, false),
-                onItemClick,
-                onItemLongClick
-            )
-            VIEW_TYPE_PDF -> PdfViewHolder(
-                ItemDocumentsPdfBinding.inflate(inflater, parent, false),
-                onItemClick,
-                onItemLongClick
-            )
-            else -> throw IllegalArgumentException("Invalid view type")
+            VIEW_TYPE_FOLDER -> {
+                val binding = ItemDocumentsFolderBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+                FolderViewHolder(
+                    binding = binding,
+                    onItemClick = onItemClick,
+                    onItemLongClick = onItemLongClick
+                )
+            }
+            VIEW_TYPE_PDF -> {
+                val binding = ItemDocumentsPdfBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+                PdfViewHolder(
+                    binding = binding,
+                    onItemClick = onItemClick,
+                    onItemLongClick = onItemLongClick
+                )
+            }
+            else -> throw IllegalArgumentException("Unknown view type")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
-            is FolderViewHolder -> holder.bind(item as DocumentItem.FolderItem)
-            is PdfViewHolder -> holder.bind(item as DocumentItem.PdfItem)
+            is FolderViewHolder -> {
+                if (item is DocumentItem.FolderItem) {
+                    holder.bind(item)
+                }
+            }
+            is PdfViewHolder -> {
+                if (item is DocumentItem.PdfItem) {
+                    holder.bind(item)
+                }
+            }
         }
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = items.size
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
@@ -63,18 +87,17 @@ class DocumentsAdapter(
     class FolderViewHolder(
         private val binding: ItemDocumentsFolderBinding,
         private val onItemClick: (DocumentItem) -> Unit,
-        private val onItemLongClick: (DocumentItem) -> Unit
+        private val onItemLongClick: (DocumentItem, View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DocumentItem.FolderItem) {
             binding.fileName.text = item.name
-            binding.fileTimestamp.text = "${item.fileCount} files"
             binding.bookmarkIcon.setImageResource(
                 if (item.isBookmarked) com.iguana.designsystem.R.drawable.ic_file_saved_active
                 else com.iguana.designsystem.R.drawable.ic_file_saved_inactive
             )
             binding.root.setOnClickListener { onItemClick(item) }
             binding.root.setOnLongClickListener { 
-                onItemLongClick(item)
+                onItemLongClick(item, binding.root)
                 true
             }
         }
@@ -83,7 +106,7 @@ class DocumentsAdapter(
     class PdfViewHolder(
         private val binding: ItemDocumentsPdfBinding,
         private val onItemClick: (DocumentItem) -> Unit,
-        private val onItemLongClick: (DocumentItem) -> Unit
+        private val onItemLongClick: (DocumentItem, View) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DocumentItem.PdfItem) {
             binding.fileName.text = item.title
@@ -94,7 +117,7 @@ class DocumentsAdapter(
             )
             binding.root.setOnClickListener { onItemClick(item) }
             binding.root.setOnLongClickListener { 
-                onItemLongClick(item)
+                onItemLongClick(item, binding.root)
                 true
             }
         }
@@ -113,6 +136,7 @@ sealed class DocumentItem {
         val id: Long,
         val title: String,
         val timestamp: String,
-        val isBookmarked: Boolean
+        val isBookmarked: Boolean,
+        val url: String
     ) : DocumentItem()
 }

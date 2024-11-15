@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.fragment.ktx)
     implementation("com.kakao.sdk:v2-user:2.20.6")
 
     // Test dependencies
@@ -30,4 +31,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.kotlin.test)
+
 }

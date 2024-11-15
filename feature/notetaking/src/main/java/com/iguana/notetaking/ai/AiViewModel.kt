@@ -42,11 +42,18 @@ class AiViewModel @Inject constructor(
         fetchAiStatus(pageNumber)
     }
 
+    // AI 상태 가져오는 메서드 (Fragment에서 호출)
+    fun fetchAiStatus() {
+        fetchAiStatus(pageNumber = pageNumber.value!!)
+        Log.d("testt", "fetchAiStatus: ${pageNumber.value} ${_aiStatus.value}")
+    }
+
 
     // AI 상태를 가져오는 메서드
     private fun fetchAiStatus(pageNumber: Int) {
         viewModelScope.launch {
             try {
+                Log.d("testt", "(Ser) fetchAiStatus: $pageNumber")
                 val status = getAIStatusByPageUseCase(documentId, pageNumber)
                 _aiStatus.value = status
                 // AI 상태가 완료된 경우에만 결과 가져오기

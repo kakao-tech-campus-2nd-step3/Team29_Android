@@ -19,6 +19,7 @@ android {
 }
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.feature.notetaking)
     implementation(projects.core.designsystem)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -26,6 +27,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(project(":feature:notetaking"))
 
     // Test dependencies
     androidTestImplementation(libs.androidx.test.ext)

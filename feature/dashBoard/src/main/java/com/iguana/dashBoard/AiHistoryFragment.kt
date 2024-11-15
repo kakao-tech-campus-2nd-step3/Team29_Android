@@ -1,9 +1,11 @@
 package com.iguana.dashBoard
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.iguana.dashBoard.databinding.FragmentAiHistoryBinding
@@ -24,6 +26,10 @@ class AiHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        binding.moreButton.setOnClickListener {
+            // 더보기 버튼 클릭 시 이벤트 처리
+            showServicePreparingDialog()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -47,6 +53,21 @@ class AiHistoryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showServicePreparingDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(com.iguana.designsystem.R.layout.dialog_service_preparing, null)
+        val builder = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+
+        val dialog = builder.create()
+
+        // "확인" 버튼 클릭 시 다이얼로그 닫기
+        dialogView.findViewById<Button>(com.iguana.designsystem.R.id.btnClose).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
 

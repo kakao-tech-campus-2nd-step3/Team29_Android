@@ -14,7 +14,7 @@
         android:background="@drawable/right_border">
 
         <TextView
-            style="@style/Bold24"
+            style="@style/BoldHeadingSmall"
             android:textColor="@color/black"
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <TextView
-                style="@style/Regular9"
+                style="@style/RegularCaptionLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="대시보드"
@@ -61,7 +61,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <TextView
-                style="@style/Regular9"
+                style="@style/RegularCaptionLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="문서"
@@ -83,7 +83,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <TextView
-                style="@style/Regular9"
+                style="@style/RegularCaptionLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="즐겨찾기"
@@ -105,7 +105,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <TextView
-                style="@style/Regular9"
+                style="@style/RegularCaptionLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="내 정보"
@@ -127,7 +127,7 @@
                 android:layout_marginLeft="20dp"/>
 
             <TextView
-                style="@style/Regular9"
+                style="@style/RegularCaptionLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="설정"

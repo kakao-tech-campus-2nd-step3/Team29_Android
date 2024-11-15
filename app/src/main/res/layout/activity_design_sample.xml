@@ -10,7 +10,7 @@
         android:id="@+id/titleTextView"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        style="@style/Bold24"
+        style="@style/BoldHeadingSmall"
         android:text="폰트 적용 테스트"
     />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="AI 요약하기"
-            style="@style/Regular9" />
+            style="@style/RegularCaptionLarge" />
     </LinearLayout>
 
 

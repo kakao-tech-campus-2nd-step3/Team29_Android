@@ -5,9 +5,9 @@ import com.iguana.domain.repository.DocumentsRepository
 import javax.inject.Inject
 
 class GetFolderContentsUseCase @Inject constructor(
-    private val documentsRepository: DocumentsRepository
+    private val repository: DocumentsRepository
 ) {
-    suspend operator fun invoke(folderId: Long, page: Int, size: Int, sortBy: String, sortDirection: String): Result<FolderContent> {
-        return documentsRepository.getFolderContents(folderId, page, size, sortBy, sortDirection)
+    suspend operator fun invoke(folderId: Long): FolderContent {
+        return repository.getFolderContents(folderId)
     }
 }

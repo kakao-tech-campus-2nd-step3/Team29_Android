@@ -1,5 +1,6 @@
-package com.iguana.domain.repository
+package com.iguana.domain.usecase
 
+import com.iguana.domain.repository.AnnotationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data></data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/sttTimeStampTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_50"
+            style="@style/RegularCaptionExtraSmall"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="00:00 ~ 00:00" />
+
+        <TextView
+            android:id="@+id/sttContentTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/RegularCaptionSmall"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/sttTimeStampTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="STT content goes here" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

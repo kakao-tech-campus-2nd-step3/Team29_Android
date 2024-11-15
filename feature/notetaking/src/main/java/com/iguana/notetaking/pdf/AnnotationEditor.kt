@@ -36,6 +36,8 @@ class AnnotationEditor(
     private var resizing = false // 크기 조절 중인지 여부 확인용 변수
     private lateinit var resizeHandle: View
 
+    private var isEditing: Boolean = false // 텍스트 편집 모드 여부
+
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup, x: Float? = null, y: Float? = null): EditText {
         val editText = createEditText()
@@ -96,6 +98,7 @@ class AnnotationEditor(
         var dY = 0
 
         editText.setOnTouchListener { view, event ->
+            view.parent.requestDisallowInterceptTouchEvent(true)
             // 우선적으로 GestureDetector 이벤트를 처리
             if (gestureDetector.onTouchEvent(event)) {
                 return@setOnTouchListener true
@@ -111,8 +114,21 @@ class AnnotationEditor(
                     dY = (view.y - event.rawY).roundToInt()
                     listener.onDrag(false)
                 }
-                MotionEvent.ACTION_MOVE -> handleMove(view, event, dX, dY)
-                MotionEvent.ACTION_UP -> handleActionUp()
+                MotionEvent.ACTION_MOVE -> {
+                    // 크기 조정 및 드래그 허용
+                    if (!resizing) {
+                        view.animate()
+                            .x((event.rawX + dX).toFloat())
+                            .y((event.rawY + dY).toFloat())
+                            .setDuration(0)
+                            .start()
+                        updateHandlePosition(view as EditText)
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    listener.onDrag(false)
+                    updateAnnotationInfo()
+                }
             }
             true
         }
@@ -147,8 +163,14 @@ class AnnotationEditor(
 
                 override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     Log.d("AnnotationEditor", "Single tap detected")
-                    enableTextBoxEditing(editText)
                     listener.onTextBoxClick(true)
+                    if (isEditing) {
+                        // 편집 모드일 때: 키패드와 커서 활성화
+                        enableTextBoxEditing(editText)
+                    } else {
+                        // 비편집 모드일 때: 편집 모드로 전환
+                        enterEditMode(editText)
+                    }
                     return true
                 }
 
@@ -171,7 +193,13 @@ class AnnotationEditor(
 
     // edit mode
     fun enterEditMode() {
+        isEditing = true
         currentEditText?.let { enableTextBoxEditing(it) }
+    }
+    fun enterEditMode(editText: EditText) {
+        isEditing = true
+        _currentEditText = editText
+        enableTextBoxEditing(editText)
     }
 
     // 편집 모드가 아닌 상태로 전환
@@ -195,6 +223,10 @@ class AnnotationEditor(
             requestFocus()
         }
         resizeHandle.visibility = View.VISIBLE // 핸들러 표시
+
+        // 키보드 강제 표시
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.showSoftInput(editText, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
     }
 
     // 편집 모드 테두리 설정 메서드
@@ -217,7 +249,7 @@ class AnnotationEditor(
 
 
     // 현재 편집 중인 EditText의 텍스트, 크기, 위치 정보를 반환하는 함수
-    fun getCurrentAnnotationInfo(): Annotation? {
+    private fun getCurrentAnnotationInfo(): Annotation? {
         currentEditText?.let { editText ->
             return Annotation(
                 id = editText.tag as? Long ?: 0,
@@ -243,7 +275,7 @@ class AnnotationEditor(
                 shape = GradientDrawable.OVAL
                 setColor(Color.GRAY)
             }
-            visibility = View.GONE
+            visibility = View.VISIBLE // 항상 표시
         }
 
         parentView.addView(resizeHandle)
@@ -258,6 +290,8 @@ class AnnotationEditor(
                 MotionEvent.ACTION_MOVE -> handleResize(editText, event)
                 MotionEvent.ACTION_UP -> {
                     handleResizeEnd()
+                    resizing = false
+                    updateAnnotationInfo()
                     parentView.requestDisallowInterceptTouchEvent(false)
                 }
             }

@@ -29,7 +29,10 @@ class RecordRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 // 3gp 파일을 mp3로 변환하고 저장
-                val mp3File = localStorage.convertAndSave3gpToMp3(recordingFile.filePath, "${recordingFile.documentName}.mp3")
+                val mp3File = localStorage.convertAndSave3gpToMp3(
+                    recordingFile.filePath,
+                    "${recordingFile.documentName}.mp3"
+                )
 
                 // 변환된 파일 경로로 RecordingFile 업데이트
                 val convertedRecordingFile = recordingFile.copy(filePath = mp3File.absolutePath)
@@ -74,7 +77,11 @@ class RecordRepositoryImpl @Inject constructor(
     }
 
     // 서버에 페이지 이동 이벤트 업로드
-    override suspend fun uploadPageTurnEvents(recordingId: Long, documentId: Long, events: List<PageTurnEvent>) {
+    override suspend fun uploadPageTurnEvents(
+        recordingId: Long,
+        documentId: Long,
+        events: List<PageTurnEvent>
+    ) {
         return withContext(Dispatchers.IO) {
             val requestDto = events.toPageTurnEventRequestDto(recordingId)  // 도메인 모델을 DTO로 변환
             Log.d("testt", "uploadPageTurnEvents: $requestDto")
@@ -92,7 +99,7 @@ class RecordRepositoryImpl @Inject constructor(
     // 로컬 스토리지에 페이지 이동 이벤트 저장
     override suspend fun savePageTurnEvents(documentId: Long, event: PageTurnEvent) {
         withContext(Dispatchers.IO) {
-                pageTurnEventDao.insert(event.toEntity(documentId))
+            pageTurnEventDao.insert(event.toEntity(documentId))
         }
     }
 

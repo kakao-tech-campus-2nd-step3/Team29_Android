@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,17 +15,17 @@
             android:id="@+id/ai_history_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp">
 
             <TextView
-                style="@style/Regular12"
+                style="@style/MediumBodySmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AI 요약" />
 
             <TextView
-                style="@style/Regular8"
+                style="@style/RegularCaptionMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -33,6 +34,7 @@
                 android:text="AI로 생성했던 노트 요약과 문제를 모아 볼 수 있습니다." />
 
             <LinearLayout
+                android:id="@+id/moreButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -44,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/buttonText"
-                    style="@style/Regular8"
+                    style="@style/RegularCaptionMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="더보기"
@@ -54,13 +56,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ai_history_recycler_view"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue_10"
+            android:layout_gravity="center"
             android:layout_marginTop="12dp"
-            android:paddingVertical="16dp"
+            android:background="@color/blue_10"
+            android:orientation="horizontal"
             android:paddingHorizontal="8dp"
-            android:orientation="horizontal" />
+            android:paddingVertical="16dp" />
     </LinearLayout>
 </layout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -38,22 +39,26 @@
                 android:layout_height="wrap_content"
                 android:text="문서"
                 android:textColor="@android:color/black"
-                style="@style/Bold24"
+                style="@style/BoldHeadingSmall"
                 app:layout_constraintStart_toEndOf="@id/btnBack"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="16dp"/>
 
-            <ImageButton
-                android:id="@+id/btnEdit"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_edit_selector"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintEnd_toStartOf="@id/btnAdd"
+                android:id="@+id/tvFolderCount"
+                android:textColor="@color/grey_50"
+                android:text="폴더 개수 ${folderCount}"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintStart_toEndOf="@id/tvTitle"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="16dp"/>
+                android:gravity="bottom"
+                android:layout_marginTop="10dp"
+                style="@style/RegularCaptionExtraSmall"/>
+
 
             <ImageButton
                 android:id="@+id/btnAdd"
@@ -74,16 +79,37 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/title_border_spacing"
+        android:layout_marginTop="@dimen/spacing_title_border"
         android:background="@android:color/darker_gray" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="wrap_content"
-        android:maxWidth="1700dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/dimBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#66000000"
+            android:visibility="gone"
+            android:alpha="0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="wrap_content"
+            android:maxWidth="1700dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="6"
+            tools:ignore="MissingConstraints" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

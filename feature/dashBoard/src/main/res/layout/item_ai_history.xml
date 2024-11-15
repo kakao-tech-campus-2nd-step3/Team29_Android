@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        style="@style/Regular6" />
+        style="@style/RegularCaptionExtraSmall" />
 
     <View
         android:layout_width="0.8dp"
@@ -29,7 +29,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        style="@style/Regular7"
+        style="@style/RegularCaptionSmall"
         android:maxLines="1"
         android:ellipsize="end"
         android:textStyle="bold" />

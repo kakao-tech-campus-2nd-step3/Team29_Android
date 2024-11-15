@@ -4,7 +4,8 @@
     <application>
         <activity
             android:name=".BaseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

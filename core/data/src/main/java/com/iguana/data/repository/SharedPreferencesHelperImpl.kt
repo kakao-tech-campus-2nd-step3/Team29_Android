@@ -2,6 +2,8 @@ package com.iguana.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.system.Os.remove
+import com.iguana.data.local.db.SharedPreferencesHelperImpl
 import com.iguana.domain.repository.SharedPreferencesHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,6 +14,7 @@ class SharedPreferencesHelperImpl @Inject constructor(
 ) : SharedPreferencesHelper {
 
     private val prefs: SharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
 
     override fun saveTokens(accessToken: String, refreshToken: String) {
         prefs.edit()
@@ -30,5 +33,8 @@ class SharedPreferencesHelperImpl @Inject constructor(
 
     override fun isLoggedIn(): Boolean {
         return getAccessToken() != null
+    }
+
+    override fun clearTokens() {
     }
 }

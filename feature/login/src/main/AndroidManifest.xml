@@ -5,10 +5,8 @@
 
     <application>
         <activity
-            android:name=".TestActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
+            android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

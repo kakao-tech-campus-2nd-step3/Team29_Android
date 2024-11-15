@@ -1,26 +1,27 @@
 package com.iguana.notetaking.recording
 
-import android.content.BroadcastReceiver
+
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.media.MediaRecorder
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iguana.domain.model.record.SttResult
+import com.iguana.domain.model.record.SttStatus
+import com.iguana.domain.model.record.SttStatusResultByPage
 import com.iguana.domain.usecase.DeletePageTurnEventsUseCase
 import com.iguana.domain.usecase.DeleteRecordingUseCase
+import com.iguana.domain.usecase.GetSTTResultByPageUseCase
+import com.iguana.domain.usecase.GetSTTStatusByPageUseCase
 import com.iguana.domain.usecase.SavePageTurnEventUseCase
 import com.iguana.domain.usecase.UploadPageTurnEventsUseCase
 import com.iguana.domain.usecase.UploadRecordingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Provider
 
 
 @HiltViewModel
@@ -31,11 +32,13 @@ class RecordViewModel @Inject constructor(
     private val savePageTurnEventUseCase: SavePageTurnEventUseCase,
     private val deletePageTurnEventsUseCase: DeletePageTurnEventsUseCase,
     private val deleteRecordingUseCase: DeleteRecordingUseCase,
+    private val getSTTStatusByPageUseCase: GetSTTStatusByPageUseCase,
+    private val getSTTResultByPageUseCase: GetSTTResultByPageUseCase
 ) : ViewModel() {
     var documentId: Long = -1L
 
-    private val _recordingStatus = MutableLiveData<Boolean>()
-    private val recordingStatus: LiveData<Boolean> get() = _recordingStatus
+    private val _recordingStatus = MutableLiveData<RecordingStatus>(RecordingStatus.NOT_STARTED)
+    val recordingStatus: LiveData<RecordingStatus> get() = _recordingStatus
 
     private var startTimeMillis: Long = 0L
 
@@ -44,6 +47,17 @@ class RecordViewModel @Inject constructor(
     val pageNumber: LiveData<Int> get() = _pageNumber
     private var filePath: String? = null
     private var fileName: String? = null
+
+    private val _sttStatus = MutableLiveData<SttStatusResultByPage?>(SttStatusResultByPage(SttStatus.NOT_REQUESTED))
+    val sttStatus: LiveData<SttStatusResultByPage?> get() = _sttStatus
+
+    private val _sttResult = MutableLiveData<SttResult?>()
+    val sttResult: LiveData<SttResult?> get() = _sttResult
+
+    init {
+        _recordingStatus.value = RecordingStatus.NOT_STARTED
+        fetchSttStatus(pageNumber=0)
+    }
 
 
     fun setPageNumber(pageNumber: Int) {
@@ -56,7 +70,49 @@ class RecordViewModel @Inject constructor(
         } else {
             Log.d("RecordViewModel", "녹음 상태가 아님, 저장하지 않음")
         }
+        fetchSttStatus()
     }
+
+    // stt 상태 가져오는 메서드 (Fragment에서 호출)
+    fun fetchSttStatus() {
+        fetchSttStatus(pageNumber = pageNumber.value!!)
+        Log.d("RecordViewModel", "fetchSttStatus: ${pageNumber.value} ${_sttStatus.value}")
+    }
+
+    // STT 상태를 가져오는 메서드
+    private fun fetchSttStatus(pageNumber: Int) {
+        viewModelScope.launch {
+            try {
+                if (documentId == -1L) {
+                    Log.e("RecordViewModel", "documentId가 설정되지 않았습니다.")
+                    return@launch
+                }
+                val status = getSTTStatusByPageUseCase(documentId, pageNumber)
+                _sttStatus.value = status
+                // STT 상태가 완료된 경우에만 결과 가져오기
+                if (status.isCompleted()) {
+                    fetchSttResult(pageNumber)
+                }
+            } catch (e: Exception) {
+                Log.d("RecordViewModel", "STT 상태 가져올 때 에러 발생: $e")
+                _sttStatus.value = null
+            }
+        }
+    }
+
+    // STT 결과를 가져오는 메서드
+    fun fetchSttResult(pageNumber: Int) {
+        viewModelScope.launch {
+            try {
+                val result = getSTTResultByPageUseCase(documentId, pageNumber)
+                _sttResult.value = result
+            } catch (e: Exception) {
+                Log.d("RecordViewModel", "STT 결과 가져올 때 에러 발생: $e")
+                _sttResult.value = null
+            }
+        }
+    }
+
 
     fun startRecording(context: Context) {
         try {
@@ -64,7 +120,7 @@ class RecordViewModel @Inject constructor(
                 action = ACTION_START_RECORDING
             }
             context.startService(intent)
-            _recordingStatus.value = true // 녹음 시작 전에 상태를 true로 설정
+            _recordingStatus.value = RecordingStatus.RECORDING
             startTimeMillis = System.currentTimeMillis()
         } catch (e: Exception) {
             Log.e("RecordViewModel", "녹음 시작 실패: ${e.message}")
@@ -73,7 +129,7 @@ class RecordViewModel @Inject constructor(
 
     fun stopRecording(context: Context) {
         sendStopIntent(context)
-        _recordingStatus.value = false
+        _recordingStatus.value = RecordingStatus.COMPLETED
     }
 
     private fun sendStopIntent(context: Context) {
@@ -111,7 +167,7 @@ class RecordViewModel @Inject constructor(
     }
 
     private fun isRecording(): Boolean {
-        return recordingStatus.value ?: false
+        return recordingStatus.value == RecordingStatus.RECORDING
     }
 
     // 파일 정보 설정

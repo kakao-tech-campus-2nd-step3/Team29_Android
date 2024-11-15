@@ -1,11 +1,12 @@
 package com.iguana.data.repository
 
+import android.util.Log
 import com.iguana.data.utils.Logger
 import com.iguana.data.mapper.toDomain
 import com.iguana.data.mapper.toDto
 import com.iguana.data.remote.api.DocumentApi
 import com.iguana.data.remote.model.CreateFolderRequestDto
-import com.iguana.data.remote.model.UpdateFolderNameRequestDto
+import com.iguana.data.remote.model.UpdateContentNameRequestDto
 import com.iguana.domain.model.Document
 import com.iguana.domain.model.Folder
 import com.iguana.domain.model.FolderContent
@@ -17,144 +18,166 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DocumentsRepositoryImpl @Inject constructor(
     private val api: DocumentApi
 ) : DocumentsRepository {
-    override suspend fun getAllDocuments(): Result<FolderContent> = try {
-        val response = api.getRootFolderContents(
-            page = 0,
-            size = 20,
-            sortBy = "updatedAt",
-            sortDirection = "DESC"
+    override suspend fun getAllDocuments(): FolderContent = try {
+        // JSON 응답을 문자열로 받아 파싱
+        val response = api.getFolderContents(-1)
+
+        var folderCount = 0
+        var documentCount = 0
+
+        response.forEach { item ->
+            when (item.folderAndDocumentResponseType) {
+                "FOLDER" -> folderCount++
+                "DOCUMENT" -> documentCount++
+            }
+        }
+
+        FolderContent(
+            items = response.mapNotNull { it.toDomain() },
+            folderCount = folderCount,
+            documentCount = documentCount
         )
-        Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "모든 문서 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        FolderContent(emptyList(), 0, 0)
     }
 
-    override suspend fun uploadDocument(folderId: Long, file: File, documentName: String): Result<Document> = try {
+
+    override suspend fun uploadDocument(
+        folderId: Long,
+        file: File,
+        documentName: String
+    ): Document? = try {
         // 1. 파일을 RequestBody로 변환
         val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
         val fileBody = MultipartBody.Part.createFormData("pdfFile", file.name, requestFile)
 
         // 2. JSON 데이터를 RequestBody로 변환
         val documentSaveRequestJson = "{\"name\":\"$documentName\"}"
-        val requestBodyJson = documentSaveRequestJson.toRequestBody("application/json".toMediaTypeOrNull())
+        val requestBodyJson =
+            documentSaveRequestJson.toRequestBody("application/json".toMediaTypeOrNull())
 
         // 3. Retrofit API 호출
         val response = api.uploadDocument(folderId, fileBody, requestBodyJson)
 
         // 4. 성공 시 도메인 모델로 변환
-        Result.success(response.toDomain())
+        response.toDomain()
     } catch (e: Exception) {
         Logger.e(TAG, "문서 업로드 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        null
     }
 
-    override suspend fun getFolderContents(
-        folderId: Long,
-        page: Int,
-        size: Int,
-        sortBy: String,
-        sortDirection: String
-    ): Result<FolderContent> = try {
-        val response = api.getFolderContents(
-            parentFolderId = folderId,
-            page = page,
-            size = size,
-            sortBy = sortBy,
-            sortDirection = sortDirection
+    override suspend fun getFolderContents(folderId: Long): FolderContent = try {
+        val response = api.getFolderContents(folderId)
+
+        // 폴더와 문서 아이템 개수 구하기
+        var folderCount = 0
+        var documentCount = 0
+
+        response.forEach { item ->
+            when (item.folderAndDocumentResponseType) {
+                "FOLDER" -> folderCount++
+                "DOCUMENT" -> documentCount++
+            }
+        }
+
+        Logger.d(TAG, "폴더($folderId) 응답 - 폴더 아이템 개수: $folderCount, 문서 아이템 개수: $documentCount")
+
+        response.forEach { item ->
+            Logger.d(
+                TAG,
+                "아이템 타입: ${item.folderAndDocumentResponseType}, 이름: ${item.response?.toString()}"
+            )
+        }
+
+        FolderContent(
+            items = response.mapNotNull { it.toDomain() },
+            folderCount = folderCount,
+            documentCount = documentCount
         )
-        Result.success(response.map { it.toDomain() })
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 내용 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        FolderContent(emptyList(), 0, 0)
     }
 
-    override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): Result<List<Document>> = try {
-        val response = api.getDocuments(folderId, documentIds)
-        if (response.isSuccessful) {
-            Result.success(response.body()?.map { it.toDomain() } ?: emptyList())
-        } else {
-            Result.failure(Exception("문서 조회 실패"))
+    override suspend fun getDocuments(folderId: Long, documentIds: List<Long>): List<Document> =
+        try {
+            val response = api.getDocuments(folderId, documentIds)
+            response.map { it.toDomain() }
+        } catch (e: Exception) {
+            Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
+            emptyList()
         }
-    } catch (e: Exception) {
-        Logger.e(TAG, "문서 목록 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
-    }
 
-    override suspend fun getDocumentDetails(documentId: Long): Result<Document> = try {
-        val response = api.getDocumentDetails(documentId)
-        Result.success(response.toDomain())
-    } catch (e: Exception) {
-        Logger.e(TAG, "문서 상세 정보 가져오기 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
-    }
-
-    override suspend fun deleteDocument(documentId: Long): Result<Unit> = try {
-        api.deleteDocument(documentId)
-        Result.success(Unit)
+    override suspend fun deleteDocument(folderId: Long, documentId: Long) = try {
+        api.deleteDocument(folderId, documentId)
     } catch (e: Exception) {
         Logger.e(TAG, "문서 삭제 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
     }
 
-    override suspend fun createFolder(parentFolderId: Long, name: String): Result<Folder> = try {
+    override suspend fun createFolder(parentFolderId: Long, name: String): Folder = try {
         Logger.d(TAG, "Creating folder with name: $name, parentFolderId: $parentFolderId")
         val request = CreateFolderRequestDto(
             name = name,
             parentFolderId = if (parentFolderId == -1L) null else parentFolderId
         )
-        val response = api.createFolder(request)
-        Result.success(response.toDomain())
+        api.createFolder(request).toDomain()
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 생성 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        Folder(id = -1, parentId = -1, name = "")
     }
 
-    override suspend fun deleteFolder(folderId: Long): Result<Unit> = try {
-        val response = api.deleteFolder(folderId)
-        if (response.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(HttpException(response))
-        }
+    override suspend fun deleteFolder(folderId: Long) = try {
+        api.deleteFolder(folderId)
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 삭제 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
     }
 
-    override suspend fun moveItems(request: MoveItemsRequest): Result<Unit> = try {
+    override suspend fun moveItems(request: MoveItemsRequest): Boolean = try {
         api.moveItems(request.toDto())
-        Result.success(Unit)
+        true
     } catch (e: Exception) {
         Logger.e(TAG, "항목 이동 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        false
     }
 
-    override suspend fun updateFolderName(folderId: Long, newName: String): Result<FolderContentItem> = try {
-        val request = mapOf("name" to newName)
+    override suspend fun updateFolderName(folderId: Long, newName: String): FolderContentItem? = try {
+        val request = UpdateContentNameRequestDto(name = newName)
         val response = api.updateFolderName(folderId, request)
-        val folderContentItem = FolderContentItem(
+        FolderContentItem(
             type = "FOLDER",
             id = response.id,
             name = response.name,
             updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
-            totalElements = 0
+            totalElements = 0,
+            url = null
         )
-        Result.success(folderContentItem)
     } catch (e: Exception) {
         Logger.e(TAG, "폴더 이름 업데이트 중 예외 발생: ${e.message}", e)
-        Result.failure(e)
+        null
+    }
+
+    override suspend fun updateDocumentName(folderId: Long, documentId: Long, newName: String): Document = try {
+        val request = UpdateContentNameRequestDto(name = newName)
+        val response = api.updateDocumentName(folderId, documentId, request)
+        response.toDomain()
+    } catch (e: Exception) {
+        Logger.e(TAG, "문서 제목 업데이트 중 예외 발생: ${e.message}", e)
+        Document(
+            id = documentId,
+            folderId = folderId,
+            name = newName,
+            url = null,
+            pageCount = null,
+            updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+        )
     }
 
     companion object {

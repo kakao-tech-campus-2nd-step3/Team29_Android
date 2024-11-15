@@ -1,34 +1,94 @@
 package com.iguana.data.mapper
 
+import android.util.Log
 import com.iguana.data.remote.model.*
 import com.iguana.domain.model.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-// DTO to Domain
-fun DocumentDto.toDomain() = Document(id, folderId, name, url, pageCount, System.currentTimeMillis().toString())
 
-fun FolderContentDto.toDomain() = FolderContentItem(
-    type = when {
-        type == null -> "FOLDER"  // type이 null이면 FOLDER로 설정
-        type.uppercase() in listOf("FILE", "PDF", "DOCUMENT") -> "FILE"  // 파일 타입들은 FILE로 통일
-        else -> type.uppercase()  // 그 외의 경우는 대문자로 변환
-    },
-    id = id,
-    name = name,
-    updatedAt = updatedAt ?: SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
-    totalElements = totalElements
-)
+// GetFolderContentResponseDto -> FolderContentItem
+fun GetFolderContentResponseDto.toDomain(): FolderContentItem? {
+    val response = this.response
+    return when (folderAndDocumentResponseType) {
+        "FOLDER" -> {
+            val folder = response as? FolderResponseDto ?: return null  // response가 null이면 null 반환
+            Log.d("testt", "Folder response: $response")
+            FolderContentItem(
+                type = folderAndDocumentResponseType,
+                id = folder.id,
+                name = folder.name,
+                updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+                totalElements = -1,
+                url = null
+            )
+        }
+        "DOCUMENT" -> {
+            val document = response as? DocumentResponseDto ?: return null  // response가 null이면 null 반환
+            Log.d("testt", "Document response: $response")
+            FolderContentItem(
+                type = folderAndDocumentResponseType,
+                id = document.id,
+                name = document.name,
+                updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date()),
+                totalElements = -1,
+                url = document.url
+            )
+        }
+        else -> null
+    }
+}
 
-fun CreateFolderResponseDto.toDomain() = Folder(id, parentId, name)
+// CreateFolderResponseDto -> Folder
+fun CreateFolderResponseDto.toDomain(): Folder {
+    return Folder(
+        id = id,
+        parentId = parentId,
+        name = name
+    )
+}
 
-fun FolderContentItemDto.toDomain() = FolderContentItem(type, id, name, updatedAt, totalElements)
+// GetDocumentsResponseDto -> Document
+fun GetDocumentsResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+    )
+}
 
-// Domain to DTO
-fun Document.toDto() = DocumentDto(id, folderId, name, url, pageCount, updatedAt)
+// UpdateDocumentNameResponseDto -> Document
+fun UpdateDocumentNameResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+    )
+}
 
-fun Folder.toCreateFolderRequestDto(parentFolderId: Long) = CreateFolderRequestDto(name, parentFolderId)
+// MoveItemsRequest -> MoveFolderRequestDto
+fun MoveItemsRequest.toDto(): MoveFolderRequestDto {
+    return MoveFolderRequestDto(
+        documentIds = documentIds,
+        folderIds = folderIds,
+        destinationFolderId = destinationFolderId
+    )
+}
 
-fun MoveItemsRequest.toDto() = MoveFolderRequestDto(documentIds, folderIds, destinationFolderId)
-
-fun FolderContentItem.toDto() = FolderContentItemDto(id, name, type, totalElements, updatedAt)
+// CreateDocumentResponseDto -> Document
+fun CreateDocumentResponseDto.toDomain(): Document {
+    return Document(
+        id = id,
+        folderId = null,  // folderId는 dto에 없으므로 null로 설정
+        name = name,
+        url = url,
+        pageCount = null, // pageCount가 dto에 없으므로 null로 설정
+        updatedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date())
+    )
+}

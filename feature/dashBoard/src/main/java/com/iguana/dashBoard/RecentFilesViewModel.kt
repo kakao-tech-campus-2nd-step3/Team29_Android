@@ -90,9 +90,10 @@ class RecentFilesViewModel @Inject constructor(
 
                     if (internalUri != null) {
                         // 2. 서버에 파일 업로드 - 서버 구현이 되면 주석 해제
-                        val result = saveFileInRemoteUseCase.execute(-1, internalUri, fileName)
-                        result.onSuccess { document ->
-                            // 3. Room 데이터베이스에 저장 (내부 URI 사용)
+                        val document = saveFileInRemoteUseCase.execute(-1, internalUri, fileName)
+
+                        // 3. Room 데이터베이스에 저장 (내부 URI 사용)
+                        if (document != null) {
                             document.url?.let {
                                 saveRecentFileUsecase.invoke(
                                     document.id,
@@ -107,18 +108,14 @@ class RecentFilesViewModel @Inject constructor(
                                 putExtra("DOCUMENT_ID", document.id)
                             }
                             context.startActivity(intent)
-                        }.onFailure {
-                            Toast.makeText(context, "파일 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        Toast.makeText(context, "파일 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                        Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
 
 
     // PDF 메타데이터 가져오기

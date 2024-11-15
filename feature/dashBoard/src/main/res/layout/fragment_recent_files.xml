@@ -9,8 +9,8 @@
 
         <LinearLayout
             android:id="@+id/loadFileButton"
-            android:layout_width="@dimen/file_width"
-            android:layout_height="@dimen/file_height"
+            android:layout_width="@dimen/size_file_width"
+            android:layout_height="@dimen/size_file_height"
             android:layout_margin="10dp"
             android:background="@drawable/file_item_background"
             android:clickable="true"
@@ -33,7 +33,7 @@
             <!-- 텍스트 정보 -->
             <TextView
                 android:id="@+id/loadLectureText"
-                style="@style/Regular8"
+                style="@style/RegularCaptionMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
