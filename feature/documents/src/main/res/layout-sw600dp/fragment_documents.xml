@@ -107,7 +107,8 @@
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="5"
-            tools:ignore="MissingConstraints"/>
+            tools:ignore="MissingConstraints"
+            android:paddingBottom="40dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

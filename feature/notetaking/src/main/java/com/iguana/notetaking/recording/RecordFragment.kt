@@ -111,11 +111,6 @@ class RecordFragment() : Fragment() {
             viewModel.setPageNumber(pageNumber)
         }
 
-        binding.sttRefreshButton.setOnClickListener {
-            Toast.makeText(requireContext(), "STT 상태를 새로고침합니다.", Toast.LENGTH_SHORT).show()
-            Log.d("testt", "sttStausButton clicked")
-            viewModel.fetchSttStatus()
-        }
     }
 
 
@@ -158,17 +153,10 @@ class RecordFragment() : Fragment() {
         }
     }
 
-    private fun showSTTContent() {
-        Log.d("RecordFragment", "showSTTContent() 호출됨")
-        binding.sttStatus.hide()
-        binding.recyclerView.show()
-    }
-
     private fun showSTTStatus() {
         Log.d("RecordFragment", "showSTTStatus() 호출됨")
         binding.sttStatus.show()
         binding.sttStatusTextView.show()
-        binding.sttRefreshButton.show()
         binding.recyclerView.hide()
     }
 
@@ -203,27 +191,10 @@ class RecordFragment() : Fragment() {
     private fun updateUiForSttStatus(status: SttStatusResultByPage) {
         showSTTStatus()
         Log.d("RecordFragment", "(UpdateUIForSttStatus) STT 상태: $status")
-        binding.sttStatusTextView.text = when {
-            status.isInProgress() -> {
-                binding.sttRefreshButton.show()
-                getString(R.string.stt_in_progress)
-            }
-            status.isCompleted() -> {
-                binding.sttRefreshButton.hide()
-                getString(R.string.stt_completed)
-            }
-            status.isNotRequested() -> {
-                binding.sttRefreshButton.hide()
-                getString(R.string.stt_not_requested)
-            }
-            status.isFailed() -> {
-                binding.sttRefreshButton.hide()
-                getString(R.string.stt_failed)
-            }
-            else -> {
-                binding.sttRefreshButton.hide()
-                getString(R.string.status_unavailable)
-            }
+        if (status.isCompleted()) {
+            binding.sttStatusTextView.text = getString(R.string.stt_completed)
+        } else {
+            binding.sttStatusTextView.text = getString(R.string.stt_empty_message)
         }
     }
 

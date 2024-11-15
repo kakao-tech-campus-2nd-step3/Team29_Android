@@ -19,6 +19,7 @@
     <string name="stt_completed">녹음이 텍스트로 변환되었습니다.</string>
     <string name="stt_failed">녹음이 텍스트로 변환되지 않았습니다.</string>
     <string name="stt_not_requested">STT가 요청되지 않았습니다.</string>
+    <string name="no_stt">현재 페이지에 STT 가 없습니다.</string>
     <string name="recording_in_progress">녹음 중..</string>
     <string name="recording_completed">녹음이 완료되었습니다.</string>
     <string name="recording_failed">녹음이 실패했습니다.</string>
