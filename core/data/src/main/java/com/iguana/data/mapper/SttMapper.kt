@@ -5,7 +5,6 @@ import com.iguana.data.remote.model.GetSTTStatusResponseDto
 import com.iguana.domain.model.record.SttResult
 import com.iguana.domain.model.record.SttItem
 import com.iguana.domain.model.record.SttStatus
-import com.iguana.domain.model.record.SttStatusResult
 import com.iguana.domain.model.record.SttStatusResultByPage
 
 fun GetSTTResultResponseDto.toDomain(documentId: Long): SttResult {

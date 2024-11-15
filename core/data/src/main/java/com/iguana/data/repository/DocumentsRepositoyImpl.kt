@@ -74,7 +74,20 @@ class DocumentsRepositoryImpl @Inject constructor(
 
     override suspend fun getFolderContents(folderId: Long): FolderContent = try {
         val response = api.getFolderContents(folderId)
-        Logger.d(TAG, "폴더($folderId) 응답 - 아이템 개수: ${response.size}")
+
+        // 폴더와 문서 아이템 개수 구하기
+        var folderCount = 0
+        var documentCount = 0
+
+        response.forEach { item ->
+            when (item.folderAndDocumentResponseType) {
+                "FOLDER" -> folderCount++
+                "DOCUMENT" -> documentCount++
+            }
+        }
+
+        Logger.d(TAG, "폴더($folderId) 응답 - 폴더 아이템 개수: $folderCount, 문서 아이템 개수: $documentCount")
+
         response.forEach { item ->
             Logger.d(
                 TAG,
