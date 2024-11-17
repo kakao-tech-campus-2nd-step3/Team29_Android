@@ -4,6 +4,6 @@ data class RecentFile(
     val id: Long,
     val fileName: String,
     val fileUri: String,
-    val lastOpened: Long,
+    val lastOpened: String,
     val bookmarkedPage: Int?
 )

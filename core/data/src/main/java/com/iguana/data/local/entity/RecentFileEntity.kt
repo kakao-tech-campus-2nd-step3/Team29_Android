@@ -9,6 +9,6 @@ data class RecentFileEntity(
     @PrimaryKey val id: Long,
     @ColumnInfo(name = "fileName") val fileName: String,
     @ColumnInfo(name = "fileUri") val fileUri: String,
-    @ColumnInfo(name = "lastOpened") val lastOpened: Long,
+    @ColumnInfo(name = "lastOpened") val lastOpened: String,
     @ColumnInfo(name = "bookmarkedPage") val bookmarkedPage: Int?
 )
