@@ -9,12 +9,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iguana.designsystem.sample.LoadingDialog
 import com.iguana.domain.model.FolderContent
 import com.iguana.domain.model.FolderContentItem
 import com.iguana.domain.model.RecentFile
 import com.iguana.domain.usecase.*
 import com.iguana.notetaking.NotetakingActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +38,9 @@ class DocumentsViewModel @Inject constructor(
     private val saveFileInLocalUsecase: SaveFileInLocalUsecase,
     private val saveFileInRemoteUsecase: SaveFileInRemoteUsecase,
     private val updateDocumentNameUseCase: UpdateDocumentNameUseCase,
-    private val saveRecentFileUsecase: SaveRecentFileUsecase
+    private val saveRecentFileUsecase: SaveRecentFileUsecase,
+    private val deleteRecentFileUseCase: DeleteRecentFileUseCase,
+    private val updateFileNameUseCase: UpdateRecentFileUseCase
 ) : ViewModel() {
 
     private val _documents = MutableStateFlow<List<FolderContentItem>>(emptyList())
@@ -164,9 +168,10 @@ class DocumentsViewModel @Inject constructor(
     }
 
     fun deleteFile(fileId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             deleteFileUseCase(currentFolderId, fileId)
             refreshCurrentFolder()
+            deleteRecentFileUseCase.invoke(fileId)
             Log.d("DocumentsViewModel", "파일이 성공적으로 삭제되었습니다.")
         }
     }
@@ -174,6 +179,9 @@ class DocumentsViewModel @Inject constructor(
     fun uploadPdf(uri: Uri?, context: Context) {
         if (uri != null) {
             val fileName = getFileName(context, uri)
+
+            val loadingDialog = LoadingDialog(context) // 로딩 다이얼로그 초기화
+            loadingDialog.show() // 로딩 다이얼로그 표시
 
             viewModelScope.launch {
                 try {
@@ -205,6 +213,8 @@ class DocumentsViewModel @Inject constructor(
                     }
                 } catch (e: Exception) {
                     Toast.makeText(context, "파일 처리 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                } finally {
+                    loadingDialog.dismiss() // 작업 완료 후 다이얼로그 닫기
                 }
             }
         }
@@ -287,10 +297,11 @@ class DocumentsViewModel @Inject constructor(
     }
 
     fun updateDocumentName(folderId: Long, documentId: Long, newName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             updateDocumentNameUseCase(folderId, documentId, newName)
             // 문서 제목 변경 후 현재 폴더 내용을 새로고침
             refreshCurrentFolder()
+            updateFileNameUseCase(documentId, newName)
         }
     }
 

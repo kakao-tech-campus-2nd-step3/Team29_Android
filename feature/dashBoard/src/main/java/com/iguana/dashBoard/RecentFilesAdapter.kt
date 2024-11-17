@@ -33,7 +33,7 @@ class RecentFilesAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(recentFile: RecentFile, onFileClick: (RecentFile) -> Unit) {
             binding.fileName.text = recentFile.fileName
-            binding.fileTimestamp.text = formatLastOpened(recentFile.lastOpened)
+            binding.fileTimestamp.text = recentFile.lastOpened
 
             // 아이템 클릭 시 파일 열기
             binding.root.setOnClickListener {
@@ -41,8 +41,5 @@ class RecentFilesAdapter(
             }
         }
 
-        private fun formatLastOpened(lastOpened: Long): String {
-            return lastOpened.toString()
-        }
     }
 }

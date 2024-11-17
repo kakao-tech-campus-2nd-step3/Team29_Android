@@ -8,6 +8,7 @@ interface RecentFileRepository {
     suspend fun insertRecentFile(id: Long, fileName: String, fileUri: String)
     fun getRecentFiles(): Flow<List<RecentFile>>
     suspend fun updateBookmark(fileId: Long, bookmarkedPage: Int)
-    suspend fun deleteRecentFile(recentFile: RecentFile)
+    fun updateFileName(fileId: Long, fileName: String)
+    suspend fun deleteRecentFile(id: Long)
     suspend fun cleanupOldFiles(daysToKeep: Int)
 }

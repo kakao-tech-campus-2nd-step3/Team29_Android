@@ -28,6 +28,9 @@ import android.os.Build
 import android.view.Window
 import androidx.activity.OnBackPressedCallback
 import com.iguana.domain.model.RecentFile
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -40,6 +43,8 @@ class DocumentsFragment : Fragment() {
     private val viewModel: DocumentsViewModel by viewModels()
 
     private lateinit var openPdfLauncher: ActivityResultLauncher<Array<String>>
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDocumentsBinding.inflate(inflater, container, false)
@@ -64,7 +69,8 @@ class DocumentsFragment : Fragment() {
                         viewModel.loadFolderContents(item.id, item.name)
                     }
                     is DocumentItem.PdfItem -> {
-                        val recentFile = RecentFile(item.id, item.title, item.url, System.currentTimeMillis(), 0)
+                        val formattedDate = dateFormat.format(Date(System.currentTimeMillis()))
+                        val recentFile = RecentFile(item.id, item.title, item.url, formattedDate, 0)
                         viewModel.openFile(recentFile, requireContext())
                     }
                 }
