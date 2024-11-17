@@ -21,9 +21,12 @@ interface RecentFileDao {
     @Query("UPDATE recent_files SET lastOpened = :lastOpened WHERE id = :id")
     fun updateLastOpened(id: String, lastOpened: Long): Int
 
-    @Delete
-    fun deleteRecentFile(recentFile: RecentFileEntity)
+    @Query("DELETE FROM recent_files WHERE id = :id")
+    fun deleteRecentFile(id: Long)
 
     @Query("DELETE FROM recent_files WHERE lastOpened < datetime('now', '-' || :daysToKeep || ' days')")
     fun deleteOldFiles(daysToKeep: Int): Int
+
+    @Query("UPDATE recent_files SET fileName = :fileName WHERE id = :fileId")
+    fun updateFileName(fileId: Long, fileName: String)
 }

@@ -1,6 +1,7 @@
 package com.iguana.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.iguana.data.local.dao.RecentFileDao
 import com.iguana.data.local.entity.RecentFileEntity
 import com.iguana.data.mapper.toDomainModel
@@ -38,8 +39,13 @@ class RecentFileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteRecentFile(recentFile: RecentFile) {
-        recentFileDao.deleteRecentFile(recentFile.toEntity())
+    override fun updateFileName(fileId: Long, fileName: String) {
+        recentFileDao.updateFileName(fileId, fileName)
+    }
+
+    override suspend fun deleteRecentFile(id: Long) {
+        Log.d("RecentFileRepositoryImpl", "deleteRecentFile: $id")
+        recentFileDao.deleteRecentFile(id)
     }
 
     override suspend fun cleanupOldFiles(daysToKeep: Int) {
