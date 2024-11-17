@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId = "com.iguana.notai"
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
         minSdk = 26
         targetSdk = 34
     }

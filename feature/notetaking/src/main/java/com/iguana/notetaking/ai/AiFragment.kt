@@ -100,7 +100,9 @@ class AiFragment : Fragment() {
         hideAIContent()
         binding.aiStatusTextView.text = when {
             status.isInProgress() -> {
+                binding.aiStatus.show()
                 binding.refreshButton.show()
+                hideAIContent()
                 getString(R.string.ai_in_progress)
             }
             status.isCompleted() -> {
@@ -108,14 +110,21 @@ class AiFragment : Fragment() {
                 getString(R.string.ai_completed)
             }
             status.isNotRequested() -> {
+                binding.aiStatus.show()
                 binding.refreshButton.hide()
+                binding.aiStatusTextView.show()
+                hideAIContent()
                 getString(R.string.ai_not_requested)
             }
             status.isFailed() -> {
+                hideAIContent()
+                binding.aiStatus.show()
                 binding.refreshButton.hide()
                 getString(R.string.ai_failed)
             }
             else -> {
+                hideAIContent()
+                binding.aiStatus.show()
                 binding.refreshButton.hide()
                 getString(R.string.status_unavailable)
             }

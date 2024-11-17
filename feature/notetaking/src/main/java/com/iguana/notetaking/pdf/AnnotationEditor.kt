@@ -37,6 +37,7 @@ class AnnotationEditor(
     private lateinit var resizeHandle: View
 
     private var isEditing: Boolean = false // 텍스트 편집 모드 여부
+    var isDraggingOrResizing = false // 드래그 또는 크기 조정 여부
 
     // 새로운 텍스트 상자를 PDF 페이지에 추가
     fun addTextBox(parentView: ViewGroup, x: Float? = null, y: Float? = null): EditText {
@@ -98,7 +99,6 @@ class AnnotationEditor(
         var dY = 0
 
         editText.setOnTouchListener { view, event ->
-            view.parent.requestDisallowInterceptTouchEvent(true)
             // 우선적으로 GestureDetector 이벤트를 처리
             if (gestureDetector.onTouchEvent(event)) {
                 return@setOnTouchListener true
@@ -109,24 +109,28 @@ class AnnotationEditor(
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    isDraggingOrResizing = false
                     resizing = false // 크기 조정 모드 종료
                     dX = (view.x - event.rawX).roundToInt()
                     dY = (view.y - event.rawY).roundToInt()
                     listener.onDrag(false)
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    // 크기 조정 및 드래그 허용
-                    if (!resizing) {
-                        view.animate()
-                            .x((event.rawX + dX).toFloat())
-                            .y((event.rawY + dY).toFloat())
-                            .setDuration(0)
-                            .start()
-                        updateHandlePosition(view as EditText)
-                    }
+                    isDraggingOrResizing = true
+                    view.animate()
+                        .x(event.rawX + dX)
+                        .y(event.rawY + dY)
+                        .setDuration(0)
+                        .start()
+                    updateHandlePosition(view as EditText) // 드래그 중 핸들러 위치 업데이트
+                    view.parent.requestDisallowInterceptTouchEvent(true)
                 }
                 MotionEvent.ACTION_UP -> {
-                    listener.onDrag(false)
+                    if (!isDraggingOrResizing) {
+                        // 크기 조정이나 드래그가 없으면 부모 이벤트 허용
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                    }
+                    updateHandlePosition(view as EditText)
                     updateAnnotationInfo()
                 }
             }
@@ -285,12 +289,17 @@ class AnnotationEditor(
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     resizing = true
+                    isDraggingOrResizing = true // 크기 조정 시작
                     parentView.requestDisallowInterceptTouchEvent(true)
                 }
-                MotionEvent.ACTION_MOVE -> handleResize(editText, event)
+                MotionEvent.ACTION_MOVE -> {
+                    handleResize(editText, event)
+                    updateHandlePosition(editText) // 크기 조정 후 핸들러 위치 업데이트
+                }
                 MotionEvent.ACTION_UP -> {
                     handleResizeEnd()
                     resizing = false
+                    isDraggingOrResizing = false // 크기 조정 종료
                     updateAnnotationInfo()
                     parentView.requestDisallowInterceptTouchEvent(false)
                 }
@@ -316,8 +325,8 @@ class AnnotationEditor(
 
     private fun handleResizeEnd() {
         resizing = false
-        updateAnnotationInfo()
         listener.onDrag(false)
+        updateAnnotationInfo()
     }
 
 }
